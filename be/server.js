@@ -8,29 +8,7 @@ app.listen(PORT, () => {
 
 
 /*
-const express = require("express");
 const { Pool } = require("pg");
-
-const app = express();
-const PORT = 3000;
-
-app.get("/", (req, res) => {
-  res.send("Ciao dal backend Node.js con Express!");
-});
-
-app.get("/api", (req, res) => {
-  res.json({ message: "Godo" });
-});
-
-app.get("/a", (req, res) => {
-  res.json({ message: "Godo" });
-});
-
-app.listen(PORT, () => {
-  console.log(`Server avviato su http://localhost:${PORT}`);
-});
-
-
 
 const pool = new Pool({
   host: "airgodb",

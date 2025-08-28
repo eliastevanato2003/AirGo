@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 // Importo tutte le sub-routes
-const routeUtenti = require("./utenti");
+const userRoutes = require("./users");
 
 // Registro i moduli sotto un prefisso
-router.use("/utenti", routeUtenti)
+router.use("/useers", userRoutes)
 
 module.exports = router;
