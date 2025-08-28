@@ -1,6 +1,6 @@
 exports.searchFlights = async (req, res, next) => {
   try {
-    res.json("ciao");
+    res.json("ciaooo");
   } catch (err) {
     next(err); // passa all’error handler
   }

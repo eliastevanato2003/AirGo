@@ -1,0 +1,8 @@
+FROM postgres:16
+
+# Imposta le variabili d'ambiente base
+ENV POSTGRES_USER=admin
+ENV POSTGRES_PASSWORD=prova
+ENV POSTGRES_DB=AirGo
+
+COPY airgo.sql /docker-entrypoint-initdb.d/
