@@ -1,10 +1,10 @@
 const express = require("express");
 const router = express.Router();
 
-// Importo tutte le sub-routes
 const userRoutes = require("./users");
+const planeRoutes = require("./planes")
 
-// Registro i moduli sotto un prefisso
-router.use("/useers", userRoutes)
+router.use("/users", userRoutes)
+router.use("/planes", planeRoutes)
 
 module.exports = router;
