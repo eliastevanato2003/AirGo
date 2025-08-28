@@ -10,7 +10,7 @@ docker run -p 3000:3000 --network mynet --name airgobe eliastevanato03/airgobe
 docker run -p 3000:3000 --network mynet --name airgobe airgobe
 #### RUN WITH AUTO UPDATE
 npm install --save-dev nodemon
-docker run -it --name airgobe --network mynet `-v "C:\Users\Elia Stevanato\Documents\Unive\TAW\be:/usr/src/app" ` -w /usr/src/app ` -p 3000:3000 eliastevanato03/airgobe ` npm run dev
+docker run -it --name airgobelive --network mynet `-v "C:\Users\Elia Stevanato\Documents\Unive\TAW\be:/usr/src/app" ` -w /usr/src/app ` -p 3000:3000 eliastevanato03/airgobe ` npm run dev
 #### START
 docker start airgobe
 

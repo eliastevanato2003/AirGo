@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 4S6tNuVoxEUhR6yNeVKIPgSboknduHsuiahVBpjl4V9PgSKoV6dk7ue9kHt515u
+\restrict 5WBuaOilqTda5e9bvnzW1GnBW5EwNaOPMUWjQahWHcrhMtTSPs0Wdm3s4WVTjzx
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -57,7 +57,7 @@ ALTER TABLE public."Aerei" ALTER COLUMN "IdAereo" ADD GENERATED ALWAYS AS IDENTI
 
 CREATE TABLE public."Aeroporti" (
     "IdAeroporto" integer NOT NULL,
-    "CittÔö£├í" text NOT NULL,
+    "Citta" text NOT NULL,
     "Nazione" text NOT NULL,
     "Nome" text NOT NULL,
     "CodiceIdentificativo" text NOT NULL,
@@ -349,7 +349,7 @@ COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", 
 -- Data for Name: Aeroporti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Aeroporti" ("IdAeroporto", "CittÔö£├í", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
+COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
 \.
 
 
@@ -406,6 +406,11 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 --
 
 COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Email", "Password", "Telefono", "DoB", "Admin", "IsActive") FROM stdin;
+2	Maria	Bianchi	maria.bianchi@example.com	password	3498765432	1985-11-03	f	t
+3	Giovanni	Verdi	giovanni.verdi@example.com	password	3334445566	1992-08-20	t	t
+4	Sara	Neri	sara.neri@example.com	password	3381122334	1995-01-15	f	t
+5	Alessandro	Gialli	alessandro.gialli@example.com	password	3379988776	1988-07-30	t	t
+1	Luca	Rossi	luca.rossi@example.com	password	3456789012	1990-05-12	f	f
 \.
 
 
@@ -477,7 +482,7 @@ SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 1, false);
 -- Name: Utenti_IdUtente_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 1, false);
+SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 5, true);
 
 
 --
@@ -723,5 +728,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 4S6tNuVoxEUhR6yNeVKIPgSboknduHsuiahVBpjl4V9PgSKoV6dk7ue9kHt515u
+\unrestrict 5WBuaOilqTda5e9bvnzW1GnBW5EwNaOPMUWjQahWHcrhMtTSPs0Wdm3s4WVTjzx
 
