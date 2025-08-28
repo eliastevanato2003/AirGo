@@ -1,1 +1,42 @@
 be/node_modules
+
+# Compiled output
+fe/dist
+fe/tmp
+fe/out-tsc
+fe/bazel-out
+
+# Node
+fe/node_modules
+fe/npm-debug.log
+fe/yarn-error.log
+
+# IDEs and editors
+fe/.idea/
+fe/.project
+fe/.classpath
+fe/.c9/
+fe/*.launch
+fe/.settings/
+fe/*.sublime-workspace
+
+# Visual Studio Code
+fe/.vscode/*
+fe/!.vscode/settings.json
+fe/!.vscode/tasks.json
+fe/!.vscode/launch.json
+fe/!.vscode/extensions.json
+fe/.history/*
+
+# Miscellaneous
+fe/.angular/cache
+fe/.sass-cache/
+fe/connect.lock
+fe/coverage
+fe/libpeerconnection.log
+fe/testem.log
+fe/typings
+
+# System files
+fe/.DS_Store
+fe/Thumbs.db
