@@ -2,9 +2,9 @@ const express = require("express");
 const router = express.Router();
 
 const userRoutes = require("./users");
-const planeRoutes = require("./planes")
+const airlineRoutes = require("./airlines");
 
 router.use("/users", userRoutes)
-router.use("/planes", planeRoutes)
+router.use("/airlines", airlineRoutes);
 
 module.exports = router;

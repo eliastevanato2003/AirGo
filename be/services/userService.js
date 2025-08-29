@@ -20,11 +20,11 @@ exports.newUser = async (name, surname, email, password, number, dob) => {
 exports.login = async (email, password) => {
     const user = await userModel.getUsers(undefined, undefined, undefined, email);
     const airline = await airlineModel.getAirlines(undefined, undefined, email);
-    if (!user || !(await bcrypt.compare(password, user[0].Password))) 
-        if (!airline || !(await bcrypt.compare(password, airline[0].Password))) 
+    if (!user || !(await bcrypt.compare(password, user[0].Password)))
+        if (!airline || !(await bcrypt.compare(password, airline[0].Password)))
             throw new Error('Invalid credentials');
     const role = !user ? 1 : user[0].Admin ? 0 : 2;
-    const token = jwt.sign({ email: user[0].Email, role: role, id: user[0].IdUtente }, JWT_SECRET, { expiresIn: '1h' });    
+    const id = !user ? airline[0].IdCompagniaAerea : user[0].IdUtente;
+    const token = jwt.sign({ email: email, role: role, id: id }, JWT_SECRET, { expiresIn: '1h' });
     return token;
-
 }

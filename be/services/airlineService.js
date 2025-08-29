@@ -1,9 +1,14 @@
 const bcrypt = require("bcrypt");
-const userModel = require("../models/airlineModel");
+const airlineModel = require("../models/airlineModel");
 
-exports.getAirlines = async (name, surname, email) => await userModel.getAirlines(name, surname, email);
+exports.getAirlines = async (id, name, surname, email) => await airlineModel.getAirlines(id, name, surname, email);
+
+exports.getAirline = async (id) => {
+    const airlines = await airlineModel.this.getAirlines(id, undefined, undefined, undefined);
+    return airlines?.[0] ?? {};
+}
 
 exports.newAirline = async (name, identificationcode, email, password) => {
     const hashedpassword = await bcrypt.hash(password, 10);
-    return await userModel.newAirline(name, identificationcode, email, hashedpassword);
+    return await airlineModel.newAirline(name, identificationcode, email, hashedpassword);
 }
