@@ -1,8 +1,8 @@
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const userModel = require("../models/userModel");
 
-const JWT_SECRET = 'prova'; 
+const JWT_SECRET = require("../configure");
 
 
 exports.getUsers = async (name, surname, email) => await userModel.getUsers(name, surname, email);

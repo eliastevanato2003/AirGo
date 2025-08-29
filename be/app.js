@@ -2,8 +2,6 @@ const express = require("express");
 const app = express();
 const routes = require("./routes");
 
-const JWT_SECRET = 'prova'; 
-
 app.use(express.json());
 
 app.use("/api", routes);  
