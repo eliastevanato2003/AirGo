@@ -8,6 +8,7 @@ exports.authenticateToken = (req, res, next) => {
     jwt.verify(token, JWT_SECRET, (err, user) => {
         if (err) return res.status(401).json({message: ("Invalid token")});
         req.email = user.email;
+        req.id = user.id;
         req.role = user.role;
         next();
     });

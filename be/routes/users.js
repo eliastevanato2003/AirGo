@@ -2,12 +2,13 @@ const express = require("express");
 const router = express.Router();
 const userController= require('../controllers/userController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
+const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
 /**
  * @route GET api/users/getUsers
  * 
  */
-router.get("/getUsers", authenticateToken,userController.getUsers);
+router.get("/getUsers", authenticateToken, authorizeRoles(0),userController.getUsers);
 
 /**
  * @route GET /api/users/getUser

@@ -12,8 +12,8 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
     try {
-        const email =  req.email;
-        const user = await userService.getUser(email);
+        const id =  req.id;
+        const user = await userService.getUser(id);
         res.json(user);
     } catch (err) {
         next();
