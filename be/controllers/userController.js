@@ -13,8 +13,8 @@ exports.getUsers = async (req, res, next) => {
 exports.newUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
-        const user = await userService.newUser(name, surname, email, password, number, dob);
-        res.json(user);
+        const nuser = await userService.newUser(name, surname, email, password, number, dob);
+        res.json({"nutenti" : nuser});
     } catch (err) {
         next(err);
     }
