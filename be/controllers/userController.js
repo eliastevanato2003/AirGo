@@ -6,17 +6,30 @@ exports.getUsers = async (req, res, next) => {
         const users = await userService.getUsers(name, surname, email);
         res.json(users);
     } catch (err) {
-        next(err);
+        next();
     }
 };
+
+exports.getUser = async (req, res, next) => {
+    try {
+        const email =  req.email;
+        const user = await userService.getUser(email);
+        res.json(user);
+    } catch (err) {
+        next();
+    }
+}
 
 exports.newUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
+        if(!name || !surname || !email || !password || !number || !dob) res.status(400).json({message: "Required data missing"});
         const nuser = await userService.newUser(name, surname, email, password, number, dob);
-        res.json({"nutenti" : nuser});
+        res.json({ "nutenti": nuser });
     } catch (err) {
-        next(err);
+        if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
+        else if (err.code = '23505' && err.constraint == 'Utenti_Email_key') res.status(409).json({ message: "Email already in use" })
+        else next(err);
     }
 }
 
