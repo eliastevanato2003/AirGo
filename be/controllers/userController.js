@@ -1,5 +1,3 @@
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const userService = require("../services/userService");
 
 exports.getUsers = async (req, res, next) => {
@@ -28,6 +26,6 @@ exports.login = async (req, res, next) => {
         const token = await userService.login(email, password);
         res.json({ "token": token });
     } catch (err) {
-        res.status(401).json({ message: "Credenziali non valide" });
+        res.status(401).json({ message: "Invalid credentials" });
     }
 };
