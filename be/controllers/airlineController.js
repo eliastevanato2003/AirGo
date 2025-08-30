@@ -2,7 +2,7 @@ const airlineService = require("../services/airlineService");
 
 exports.getAirlines = async (req, res, next) => {
     try {
-        const { id, name, identificationcode, email } = req.body ?? {};
+        const { id, name, identificationcode, email } = req.query    ?? {};
         const airlines = await airlineService.getAirlines(id, name, identificationcode, email);
         res.json(airlines);
     } catch (err) {
