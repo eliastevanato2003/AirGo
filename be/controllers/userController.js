@@ -28,7 +28,7 @@ exports.newUser = async (req, res, next) => {
         res.json({ "nusers": nuser });
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
-        else if (err.code = '23505' && err.constraint == 'Utenti_Email_key') res.status(409).json({ message: "Email already in use" })
+        else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
         else next(err);
     }
 }

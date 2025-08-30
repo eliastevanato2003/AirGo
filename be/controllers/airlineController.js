@@ -28,7 +28,7 @@ exports.newAirline = async (req, res, next) => {
         res.json({ "nairlines": nairline });
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
-        else if (err.code = '23505' && err.constraint == 'CompagnieAeree_Email_key') res.status(409).json({ message: "Email already in use" })
+        else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
         else next(err);
     }
 }
