@@ -16,7 +16,6 @@ exports.newUser = async (name, surname, email, password, number, dob) => {
     return await userModel.newUser(name, surname, email, hashedpassword, number, dob);
 }
 
-//Trigger per l'email
 exports.login = async (email, password) => {
     const user = await userModel.getUsers(undefined, undefined, undefined, email);
     const airline = await airlineModel.getAirlines(undefined, undefined, undefined, email);
