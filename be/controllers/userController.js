@@ -6,7 +6,7 @@ exports.getUsers = async (req, res, next) => {
         const users = await userService.getUsers(id, name, surname, email);
         res.json(users);
     } catch (err) {
-        next();
+        next(err);
     }
 };
 
@@ -16,7 +16,7 @@ exports.getUser = async (req, res, next) => {
         const user = await userService.getUser(id);
         res.json(user);
     } catch (err) {
-        next();
+        next(err);
     }
 }
 

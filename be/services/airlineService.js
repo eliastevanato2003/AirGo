@@ -4,7 +4,7 @@ const airlineModel = require("../models/airlineModel");
 exports.getAirlines = async (id, name, surname, email) => await airlineModel.getAirlines(id, name, surname, email);
 
 exports.getAirline = async (id) => {
-    const airlines = await airlineModel.this.getAirlines(id, undefined, undefined, undefined);
+    const airlines = await airlineModel.getAirlines(id, undefined, undefined, undefined);
     return airlines?.[0] ?? {};
 }
 

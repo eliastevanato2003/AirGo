@@ -16,7 +16,7 @@ exports.getAirline = async (req, res, next) => {
         const airline = await airlineService.getAirline(id);
         res.json(airline);
     } catch (err) {
-        next();
+        next(err);
     }
 }
 
