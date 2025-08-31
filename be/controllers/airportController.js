@@ -1,5 +1,15 @@
 const airportService = require("../services/airportService");
 
+exports.getAirports = async (req, res, next) => {
+    try {
+        const { city, country, identificationcode } = req.query ?? {};
+        const airports = await airportService.getAirports(city, country, identificationcode);
+        res.json(airports);
+    } catch (err) {
+        next(err);
+    }
+}
+
 exports.newAirport = async (req, res, next) => {
     try {
         const { city, country, name, identificationcode } = req.body ?? {};
