@@ -12,7 +12,7 @@ exports.getUsers = async (req, res, next) => {
 
 exports.getUser = async (req, res, next) => {
     try {
-        const id =  req.id;
+        const id = req.id;
         const user = await userService.getUser(id);
         res.json(user);
     } catch (err) {
@@ -23,12 +23,15 @@ exports.getUser = async (req, res, next) => {
 exports.newUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
-        if(!name || !surname || !email || !password || !number || !dob) res.status(400).json({message: "Required data missing"});
-        const nuser = await userService.newUser(name, surname, email, password, number, dob);
-        res.json({ "nusers": nuser });
+        if (!name || !surname || !email || !password || !number || !dob) res.status(400).json({ message: "Required data missing" });
+        else {
+            const nuser = await userService.newUser(name, surname, email, password, number, dob);
+            res.json({ "nusers": nuser });
+        }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
         else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
+        else if (err.routine = 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
         else next(err);
     }
 }

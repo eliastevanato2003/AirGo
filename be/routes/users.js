@@ -34,8 +34,9 @@ router.get("/getUser", authenticateToken, authorizeRoles(0,2), userController.ge
  * @number Il numero di telefono dell'utente, che deve essere univoco
  * @dob La data di nascita dell'utente 
  * @returns {200} {nusers: number} Il numero di utenti creati
- * @returns {400} {error: string} Dati mancanti
- * @returns {409} {error: string} Dati già in uso
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {409} {message: string} Dati già in uso
+ * @returns {400} {message: string} Data non valida
  */ 
 router.post("/newUser", userController.newUser);
 

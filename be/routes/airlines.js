@@ -33,8 +33,8 @@ router.get("/getAirline", authenticateToken, authorizeRoles(1), airlineControlle
  * @email L'email della compagnia aerea, che deve essere univoca
  * @password La password della compagnia aerea
  * @returns {200} {nairlines: number} Il numero di compagnie aeree create
- * @returns {400} {error: string} Dati mancanti
- * @returns {409} {error: string} Dati già in uso
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {409} {message: string} Dati già in uso
  */ 
 router.post("/newAirline", authenticateToken, authorizeRoles(0), airlineController.newAirline);
 

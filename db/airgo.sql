@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict sZ0eemCkikgNl3sNBwHA5jtnp4zyYfh6MJYmcM1ieEFjicOxbCINLfEDv2WEtSn
+\restrict ZTTsTdgBP8czpsKnUa6LmXdrcEyMviBCu2IWdBflwOZcWPg5ZsjEC3ds9aUAT8B
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -57,7 +57,7 @@ ALTER TABLE public."Aerei" ALTER COLUMN "IdAereo" ADD GENERATED ALWAYS AS IDENTI
 
 CREATE TABLE public."Aeroporti" (
     "IdAeroporto" integer NOT NULL,
-    "Citt├ö├Â┬úÔö£├¡" text NOT NULL,
+    "CittÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬í" text NOT NULL,
     "Nazione" text NOT NULL,
     "Nome" text NOT NULL,
     "CodiceIdentificativo" text NOT NULL,
@@ -123,9 +123,9 @@ CREATE TABLE public."CompagnieAeree" (
     "IdCompagniaAerea" integer NOT NULL,
     "Nome" text NOT NULL,
     "CodiceIdentificativo" text NOT NULL,
-    "Email" text NOT NULL,
     "Password" text NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL
+    "IsActive" boolean DEFAULT true NOT NULL,
+    "Mail" integer NOT NULL
 );
 
 
@@ -137,6 +137,33 @@ ALTER TABLE public."CompagnieAeree" OWNER TO admin;
 
 ALTER TABLE public."CompagnieAeree" ALTER COLUMN "IdCompagniaAerea" ADD GENERATED ALWAYS AS IDENTITY (
     SEQUENCE NAME public."CompagnieAeree_IdCompagniaAerea_seq"
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: IndirizziEmail; Type: TABLE; Schema: public; Owner: admin
+--
+
+CREATE TABLE public."IndirizziEmail" (
+    "IdEmail" integer NOT NULL,
+    "Email" text NOT NULL,
+    "IsActive" boolean DEFAULT true NOT NULL
+);
+
+
+ALTER TABLE public."IndirizziEmail" OWNER TO admin;
+
+--
+-- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE; Schema: public; Owner: admin
+--
+
+ALTER TABLE public."IndirizziEmail" ALTER COLUMN "IdEmail" ADD GENERATED ALWAYS AS IDENTITY (
+    SEQUENCE NAME public."IndirizziEmail_IdEmail_seq"
     START WITH 1
     INCREMENT BY 1
     NO MINVALUE
@@ -273,12 +300,12 @@ CREATE TABLE public."Utenti" (
     "IdUtente" integer NOT NULL,
     "Nome" text NOT NULL,
     "Cognome" text NOT NULL,
-    "Email" text NOT NULL,
     "Password" text NOT NULL,
     "Telefono" text NOT NULL,
     "DoB" date NOT NULL,
     "Admin" boolean DEFAULT false NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL
+    "IsActive" boolean DEFAULT true NOT NULL,
+    "Mail" integer NOT NULL
 );
 
 
@@ -349,7 +376,7 @@ COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", 
 -- Data for Name: Aeroporti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Aeroporti" ("IdAeroporto", "Citt├ö├Â┬úÔö£├¡", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
+COPY public."Aeroporti" ("IdAeroporto", "CittÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬í", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
 \.
 
 
@@ -365,7 +392,21 @@ COPY public."Biglietti" ("IdVolo", "Utente", "Posto", "Volo", "Nome", "Cognome",
 -- Data for Name: CompagnieAeree; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo", "Email", "Password", "IsActive") FROM stdin;
+COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo", "Password", "IsActive", "Mail") FROM stdin;
+8	Alitalia	ALITA	$2b$10$c/vxGlxc0xeHoh8l9IErHuzE2JHAdJua38euJWpbTCgsppwKogfue	t	19
+\.
+
+
+--
+-- Data for Name: IndirizziEmail; Type: TABLE DATA; Schema: public; Owner: admin
+--
+
+COPY public."IndirizziEmail" ("IdEmail", "Email", "IsActive") FROM stdin;
+5	elia.stevanato@example.com	t
+11	filippo.pizzo@example.com	t
+14	dario.caberlotto@example.com	t
+16	francesco.pasqualato@example.com	t
+19	alitalia@example.com	t
 \.
 
 
@@ -405,13 +446,11 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 -- Data for Name: Utenti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Email", "Password", "Telefono", "DoB", "Admin", "IsActive") FROM stdin;
-1	Luca	Rossi	luca.rossi@example.com	password123	3456789012	1990-05-12	f	t
-2	Maria	Bianchi	maria.bianchi@example.com	passw0rd	3498765432	1985-11-03	f	t
-4	Sara	Neri	sara.neri@example.com	sara1234	3381122334	1995-01-15	f	t
-3	Giovanni	Verdi	giovanni.verdi@example.com	mypassword	3334445566	1992-08-20	f	t
-5	Alessandro	Gialli	alessandro.gialli@example.com	alessandro!	3379988776	1988-07-30	f	t
-8	Elia	Stevanato	elia.stevanato@example.com	$2b$10$YpGGaJ/ez0tRn5WWFPZC..dhl/lGSzGFiAh2s25VmYAogyAHD58kO	3347359679	2003-12-08	f	t
+COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "DoB", "Admin", "IsActive", "Mail") FROM stdin;
+37	Filippo	Pizzo	$2b$10$segRmt2k.cO0MRwH041VAOx/tdqECfSsr7TZGQ8iFdHcDNgWRx9Du	2234567890	2003-11-06	f	t	11
+39	Dario	Caberlotto	$2b$10$pEeh21J1f7R4wIyDaZ4UuOLKAZTWdAK12WrW8XEMY.pfh0YwPjKFS	3234567890	2003-09-24	f	t	14
+41	Francesco	Pasqualato	$2b$10$X0Dg5dbm08CykYaSTpvVh.BfUnI7fMSQaECvV9qlyJPc5HqqEWwnS	4234567890	2003-10-19	f	t	16
+31	Elia	Stevanato	$2b$10$Pu4B/XGjeYgs9jUrb461cebDWk6yarcir4RMjvJDpqLrkNDQd9HA.	1234567890	2003-12-08	t	t	5
 \.
 
 
@@ -448,7 +487,14 @@ SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 1, false);
 -- Name: CompagnieAeree_IdCompagniaAerea_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 1, false);
+SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 9, true);
+
+
+--
+-- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
+--
+
+SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 22, true);
 
 
 --
@@ -483,7 +529,7 @@ SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 1, false);
 -- Name: Utenti_IdUtente_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 8, true);
+SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 41, true);
 
 
 --
@@ -546,7 +592,7 @@ ALTER TABLE ONLY public."CompagnieAeree"
 --
 
 ALTER TABLE ONLY public."CompagnieAeree"
-    ADD CONSTRAINT "CompagnieAeree_Email_key" UNIQUE ("Email");
+    ADD CONSTRAINT "CompagnieAeree_Email_key" UNIQUE ("Mail");
 
 
 --
@@ -555,6 +601,22 @@ ALTER TABLE ONLY public."CompagnieAeree"
 
 ALTER TABLE ONLY public."CompagnieAeree"
     ADD CONSTRAINT "CompagnieAeree_pkey" PRIMARY KEY ("IdCompagniaAerea");
+
+
+--
+-- Name: IndirizziEmail IndirizziEmail_Email_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."IndirizziEmail"
+    ADD CONSTRAINT "IndirizziEmail_Email_key" UNIQUE ("Email");
+
+
+--
+-- Name: IndirizziEmail IndirizziEmail_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."IndirizziEmail"
+    ADD CONSTRAINT "IndirizziEmail_pkey" PRIMARY KEY ("IdEmail");
 
 
 --
@@ -602,7 +664,7 @@ ALTER TABLE ONLY public."Rotte"
 --
 
 ALTER TABLE ONLY public."Utenti"
-    ADD CONSTRAINT "Utenti_Email_key" UNIQUE ("Email");
+    ADD CONSTRAINT "Utenti_Email_key" UNIQUE ("Mail");
 
 
 --
@@ -670,6 +732,14 @@ ALTER TABLE ONLY public."Biglietti"
 
 
 --
+-- Name: CompagnieAeree CompagnieAeree_Email_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."CompagnieAeree"
+    ADD CONSTRAINT "CompagnieAeree_Email_fkey" FOREIGN KEY ("Mail") REFERENCES public."IndirizziEmail"("IdEmail") ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
 -- Name: Posti Posti_Aereo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -710,6 +780,14 @@ ALTER TABLE ONLY public."Rotte"
 
 
 --
+-- Name: Utenti Utenti_Email_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."Utenti"
+    ADD CONSTRAINT "Utenti_Email_fkey" FOREIGN KEY ("Mail") REFERENCES public."IndirizziEmail"("IdEmail") ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
+
+
+--
 -- Name: Voli Voli_Aereo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -729,5 +807,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict sZ0eemCkikgNl3sNBwHA5jtnp4zyYfh6MJYmcM1ieEFjicOxbCINLfEDv2WEtSn
+\unrestrict ZTTsTdgBP8czpsKnUa6LmXdrcEyMviBCu2IWdBflwOZcWPg5ZsjEC3ds9aUAT8B
 
