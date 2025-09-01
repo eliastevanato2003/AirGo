@@ -2,12 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css',
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, NavbarComponent]
 })
 export class UserLoginComponent {
 

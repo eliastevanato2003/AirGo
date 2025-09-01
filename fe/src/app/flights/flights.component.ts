@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-flight-search',
   templateUrl: './flights.component.html',
-  styleUrls: ['./flights.component.css']
+  styleUrls: ['./flights.component.css'],
+  imports: [NavbarComponent]
 })
 export class FlightsComponent {
   from: string = 'London Stansted';
@@ -23,11 +25,5 @@ export class FlightsComponent {
     alert(`Searching flights from ${this.from} to ${this.to}`);
   }
 
-  login() {
-    this.router.navigate(['/login']);
-  }
-
-  signup() {
-    this.router.navigate(['/signup']);
-  }
+  
 }
