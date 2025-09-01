@@ -37,7 +37,8 @@ exports.newUser = async (req, res, next) => {
 }
 
 exports.login = async (req, res, next) => {
-    const { email, password } = req.body;
+    const { email, password } = req.body ?? {};
+    if (!email || !password) res.status(400).json({message: "Required data missing"});
     try {
         const token = await userService.login(email, password);
         res.json({ "token": token });

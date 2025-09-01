@@ -1,6 +1,6 @@
 const airportModel = require("../models/airportModel")
 
-exports.getAirports = async (city, country, identificationcode) => await airportModel.getAirports(city, country, identificationcode);
+exports.getAirports = async (id, city, country, identificationcode) => await airportModel.getAirports(id, city, country, identificationcode);
 
 exports.newAirport = async (city, country, name, identificationcode) => await airportModel.newAirport(city, country, name, identificationcode); 
 
