@@ -1,0 +1,59 @@
+<div class="profile-container">
+  <h2>Il mio Profilo</h2>
+  
+  <div class="profile-card">
+    <div class="card-header">
+      <h3>Dati Personali</h3>
+      <button *ngIf="!isEditingPersonal" (click)="enableEditMode('personal')" class="edit-btn">Modifica</button>
+      <div *ngIf="isEditingPersonal">
+        <button (click)="saveChanges('personal')" [disabled]="personalForm.invalid" class="save-btn">Salva</button>
+        <button (click)="cancelEdit('personal')" class="cancel-btn">Annulla</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="!isEditingPersonal">
+        <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
+        <p><strong>Password:</strong> {{ userProfile?.password }}</p>
+      </div>
+      
+      <form *ngIf="isEditingPersonal" [formGroup]="personalForm">
+        <div class="form-field">
+          <label for="name-input">Nome:</label>
+          <input type="text" formControlName="name">
+        </div>
+        <div class="form-field">
+          <label for="password-input">Password:</label>
+          <input type="password" formControlName="password">
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="profile-card">
+    <div class="card-header">
+      <h3>Contatti</h3>
+      <button *ngIf="!isEditingContact" (click)="enableEditMode('contact')" class="edit-btn">Modifica</button>
+      <div *ngIf="isEditingContact">
+        <button (click)="saveChanges('contact')" [disabled]="contactForm.invalid" class="save-btn">Salva</button>
+        <button (click)="cancelEdit('contact')" class="cancel-btn">Annulla</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <div *ngIf="!isEditingContact">
+        <p><strong>Email:</strong> {{ userProfile?.email }}</p>
+        <p><strong>Telefono:</strong> {{ userProfile?.phone }}</p>
+      </div>
+      
+      <form *ngIf="isEditingContact" [formGroup]="contactForm">
+        <div class="form-field">
+          <label for="email-input">Email:</label>
+          <input type="email" formControlName="email">
+        </div>
+        <div class="form-field">
+          <label for="phone-input">Telefono:</label>
+          <input type="tel" formControlName="phone">
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
