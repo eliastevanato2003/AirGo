@@ -1,8 +1,9 @@
 const pool = require("../db");
 
 exports.getFlightRoutes = async (id, departure, arrival, airline) => {
-    const sql = 'SELECT * FROM "Rotte" WHERE ("IdRotta" = $1 OR $1 IS NULL) AND ("Partenza" = $2 OR $2 IS NULL) AND ("Arrivo" = $3 OR $3 IS NULL) AND ("CompagniaAerea" = $4 OR $4 IS NULL) AND "IsActive" = true'
-    const result = await pool.query(sql, [id, departure, arrival, airline]);
+    const as = 'SELECT "IdRotta", "Partenza" AS "IdPartenza", "A1"."Nome" AS "NomePartenza", "A1"."Citta" AS "CittaPartenza", "A1"."Nazione" AS "NazionePartenza", "A1"."CodiceIdentificativo" AS "CodicePartenza", "Destinazione" AS "IdDestinazione", "A2"."Nome" AS "NomeDestinazione", "A2"."Citta" AS "CittaDestinazione", "A2"."Nazione" AS "NazioneDestinazione", "A2"."CodiceIdentificativo" AS "CodiceDestinazione", "CompagniaAerea" AS "IdCompagniaAerea", "C"."Nome" AS "NomeCompagnia", "C"."CodiceIdentificativo" AS "CodiceCompagnia"';
+    const sql = ' FROM "Rotte" JOIN "Aeroporti" AS "A1" ON "A1"."IdAeroporto" = "Partenza" JOIN "Aeroporti" AS "A2" ON "A2"."IdAeroporto" = "Destinazione" JOIN "CompagnieAeree" AS "C" ON "C"."IdCompagniaAerea" = "CompagniaAerea" WHERE ("IdRotta" = $1 OR $1 IS NULL) AND ("Partenza" = $2 OR $2 IS NULL) AND ("Destinazione" = $3 OR $3 IS NULL) AND ("CompagniaAerea" = $4 OR $4 IS NULL) AND "Rotte"."IsActive" = true'
+    const result = await pool.query(as + sql, [id, departure, arrival, airline]);
     return result.rows;
 }
 
@@ -13,7 +14,7 @@ exports.newFlightRoute = async (departure, arrival, airline) => {
 }
 
 exports.updateFlightRoute = async (id, departure, arrival, airline) => {
-    const sql = 'UPDATE "Rotte" SET "Partenza" = $1, "Arrivo" = $2, "CompagniaAerea" = $3 WHERE "IdRotta" = $4 AND "IsActive" = true;';
+    const sql = 'UPDATE "Rotte" SET "Partenza" = $1, "Destinazione" = $2, "CompagniaAerea" = $3 WHERE "IdRotta" = $4 AND "IsActive" = true;';
     const result = await pool.query(sql, [departure, arrival, airline, id]);
     return result.rowCount;
 }

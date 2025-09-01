@@ -17,6 +17,7 @@ router.get("/getAirports", airportController.getAirports);
 
 /**
  * @route POST /api/airports/newAirport
+ * @access role: 0, 1
  * @description Crea un nuovo aeroporto
  * @city La città dell'aeroporto
  * @country La nazione dell'aeroporto
