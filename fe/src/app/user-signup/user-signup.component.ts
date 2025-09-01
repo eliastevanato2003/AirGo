@@ -37,22 +37,25 @@ export class UserSignupComponent {
     const formData = this.signupForm.value;
     const url = 'http://localhost:3000/api/users/newUser';
 
-    const message = `{"name": ${formData.name},
-                    "surname": ${formData.surname},
-                    "email": ${formData.email},
-                    "password": ${formData.password1},
-                    "number": ${formData.phone},
-                    "dob": ${formData.dob}}`;
+    const message = {
+      name: formData.name,
+      surname: formData.surname,
+      email: formData.email,
+      password: formData.password1,
+      number: formData.phone,
+      dob: formData.dob
+    };
 
+    console.log(message);
     // Invio dei dati al backend
     this.http.post(url, message).subscribe({
-      next: (response) => {
-        console.log('Risposta dal backend:', response);
+      next: () => {
+        console.log('Signed up');
         // Esempio: reindirizza l'utente a una pagina di login
         this.router.navigate(['/login']);
       },
       error: (error) => {
-        console.error('Errore durante la registrazione:', error);
+        console.error('Sign up error:', error);
         // Gestisci l'errore, magari mostrando un messaggio all'utente
       }
     });
