@@ -10,14 +10,14 @@ exports.getUsers = async (id, name, surname, email) => {
 
 exports.newUser = async (name, surname, email, password, number, dob) => {
     const sql = 'INSERT INTO "Utenti" ("Nome", "Cognome", "Mail", "Password", "Telefono", "DoB") VALUES ($1, $2, $3, $4, $5, $6)';
-    const result2 = await pool.query(sql, [name, surname, email, password, number, dob]);
-    return result2.rowCount;
+    const result = await pool.query(sql, [name, surname, email, password, number, dob]);
+    return result.rowCount;
 }
 
 exports.updateUser = async (id, name, surname, number, dob) => {
-    const sql1 = 'UPDATE "Utenti" SET "Nome" = $1, "Cognome" = $2, "Telefono" = $3, "DoB" = $4 WHERE "IdUtente" = $5 AND "IsActive" = true';
-    const result2 = await pool.query(sql2, [name, surname, number, dob, id]);
-    return result2.rowCount;
+    const sql = 'UPDATE "Utenti" SET "Nome" = $1, "Cognome" = $2, "Telefono" = $3, "DoB" = $4 WHERE "IdUtente" = $5 AND "IsActive" = true';
+    const result = await pool.query(sql, [name, surname, number, dob, id]);
+    return result.rowCount;
 }
 
 exports.updatePassword = async (id, password) => {

@@ -18,6 +18,12 @@ exports.updateEmail = async (id, email) => {
     return result.rowCount;
 }
 
+exports.deactivateEmail = async (email) => {
+    const sql = 'UPDATE "IndirizziEmail" SET "IsActive" = false WHERE "Email" = $1 AND "IsActive" = true'
+    const result = await pool.query(sql, [email]);
+    return result.rowCount;
+}
+
 exports.deleteEmail = async (email) => {
     const sql = 'DELETE FROM "IndirizziEmail" WHERE "Email" = $1 AND "IsActive" = true';
     const result = await pool.query(sql, [email]);

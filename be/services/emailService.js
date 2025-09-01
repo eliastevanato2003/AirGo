@@ -6,4 +6,6 @@ exports.newEmail = async (email) => emailModel.newEmail(email);
 
 exports.updateEmail = async (id, email) => emailModel.updateEmail(id, email);
 
+exports.deactivateEmail = async (email) => emailModel.deactivateEmail(email);
+
 exports.deleteEmail = async (email) => emailModel.deleteEmail(email);

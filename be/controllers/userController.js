@@ -1,6 +1,5 @@
 const userService = require("../services/userService");
 const emailService = require("../services/emailService");
-const { use } = require("react");
 
 exports.getUsers = async (req, res, next) => {
     try {
@@ -34,18 +33,20 @@ exports.newUser = async (req, res, next) => {
             } else res.status(500).json({ message: "Error during email insertion" });
         }
     } catch (err) {
-        await emailService.deleteEmail(req.body.email);
-        if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
-        else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
-        else if (err.routine = 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
-        else next(err);
+        if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" });
+        else {
+            await emailService.deleteEmail(req.body.email);
+            if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
+            else if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
+            else next(err);
+        }
     }
 }
 
 exports.updateUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
-        const user = userService.getUser(req.id);
+        const user = await userService.getUser(req.id);
         if (user) {
             if (email) await emailService.updateEmail(user.Mail, email);
             const nuser = await userService.updateUser(req.id, name || user.Nome, surname || user.Cognome, number || user.Telefono, dob || user.DoB, password);
@@ -53,8 +54,8 @@ exports.updateUser = async (req, res, next) => {
         }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
-        else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
-        else if (err.routine = 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
+        else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
+        else if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
         else next(err);
     }
 }
@@ -62,6 +63,7 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
         const nuser = await userService.deleteUser(req.id);
+        if(nuser == 1) await emailService.deactivateEmail(req.email);
         res.json({ nuser: nuser });
     } catch (err) {
         next(err);
