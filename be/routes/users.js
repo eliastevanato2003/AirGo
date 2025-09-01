@@ -40,7 +40,10 @@ router.get("/getUser", authenticateToken, authorizeRoles(0,2), userController.ge
  */ 
 router.post("/newUser", userController.newUser);
 
-//Riguarda info caricate x compagnia aerea
+router.post("/updateUser", authenticateToken, authorizeRoles(2), userController.updateUser);
+
+router.post("/deleteUser", authenticateToken, authorizeRoles(2), userController.deleteUser);
+
 router.post("/login", userController.login);
 
 module.exports = router;

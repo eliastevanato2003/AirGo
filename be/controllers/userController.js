@@ -1,4 +1,6 @@
 const userService = require("../services/userService");
+const emailService = require("../services/emailService");
+const { use } = require("react");
 
 exports.getUsers = async (req, res, next) => {
     try {
@@ -25,8 +27,29 @@ exports.newUser = async (req, res, next) => {
         const { name, surname, email, password, number, dob } = req.body ?? {};
         if (!name || !surname || !email || !password || !number || !dob) res.status(400).json({ message: "Required data missing" });
         else {
-            const nuser = await userService.newUser(name, surname, email, password, number, dob);
-            res.json({ "nusers": nuser });
+            const mail = await emailService.newEmail(email);
+            if (mail[0]) {
+                const nuser = await userService.newUser(name, surname, mail[0].IdEmail, password, number, dob);
+                res.json({ nuser: nuser });
+            } else res.status(500).json({ message: "Error during email insertion" });
+        }
+    } catch (err) {
+        await emailService.deleteEmail(req.body.email);
+        if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
+        else if (err.code = '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
+        else if (err.routine = 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
+        else next(err);
+    }
+}
+
+exports.updateUser = async (req, res, next) => {
+    try {
+        const { name, surname, email, password, number, dob } = req.body ?? {};
+        const user = userService.getUser(req.id);
+        if (user) {
+            if (email) await emailService.updateEmail(user.Mail, email);
+            const nuser = await userService.updateUser(req.id, name || user.Nome, surname || user.Cognome, number || user.Telefono, dob || user.DoB, password);
+            res.json({ nuser: nuser });
         }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
@@ -36,9 +59,18 @@ exports.newUser = async (req, res, next) => {
     }
 }
 
+exports.deleteUser = async (req, res, next) => {
+    try {
+        const nuser = await userService.deleteUser(req.id);
+        res.json({ nuser: nuser });
+    } catch (err) {
+        next(err);
+    }
+}
+
 exports.login = async (req, res, next) => {
     const { email, password } = req.body ?? {};
-    if (!email || !password) res.status(400).json({message: "Required data missing"});
+    if (!email || !password) res.status(400).json({ message: "Required data missing" });
     try {
         const token = await userService.login(email, password);
         res.json({ "token": token });
