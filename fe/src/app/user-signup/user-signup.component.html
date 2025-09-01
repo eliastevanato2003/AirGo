@@ -1,0 +1,43 @@
+<header>
+    <div class="logo">AirGo</div>
+</header>
+
+<main class="signup-container">
+    <div class="signup-box">
+        <h1>Registrati</h1>
+        <form [formGroup]="signupForm" method="post">
+            <div class="input-group">
+                <label for="name">Nome</label>
+                <input type="text" id="name" name="name" formControlName="name" required>
+            </div>
+            <div class="input-group">
+                <label for="surname">Cognome</label>
+                <input type="text" id="surname" name="surname" formControlName="surname" required>
+            </div>
+            <div class="input-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" formControlName="email" required>
+            </div>
+            <div class="input-group">
+                <label for="password1">Password</label>
+                <input type="password" id="password1" name="password1" formControlName="password1" required>
+            </div>
+            <div class="input-group">
+                <label for="password2">Conferma password</label>
+                <input type="password" id="password2" name="password2" formControlName="password2" required>
+            </div>
+            <div class="input-group">
+                <label for="phone">Telefono</label>
+                <input type="number" id="phone" name="phone" formControlName="phone" required>
+            </div>
+            <div class="input-group">
+                <label for="dob">Data di nascita</label>
+                <input type="date" id="dob" name="dob" formControlName="dob" required>
+            </div>
+            <button type="submit" class="signup-button" (click)="signup()">Registrati</button>
+        </form>
+        <div class="links">
+            <a (click)="login()">Hai già un account? Accedi</a>
+        </div>
+    </div>
+</main>
