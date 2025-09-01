@@ -1,0 +1,7 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Indispensabile per far occupare al body l'intera altezza della viewport */
+  width: 100%;  /* Indispensabile per far occupare al body l'intera larghezza della viewport */
+  overflow-x: hidden; /* Previene lo scroll orizzontale non desiderato */
+}
