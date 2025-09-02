@@ -47,11 +47,11 @@ exports.updateUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
         const user = await userService.getUser(req.id);
-        if (user) {
+        if (user.IdUtente) {
             if (email) await emailService.updateEmail(user.Mail, email);
             const nuser = await userService.updateUser(req.id, name || user.Nome, surname || user.Cognome, number || user.Telefono, dob || user.DoB, password);
             res.json({ nuser: nuser });
-        }
+        } else res.status(500).json({message: "User not found"});
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
