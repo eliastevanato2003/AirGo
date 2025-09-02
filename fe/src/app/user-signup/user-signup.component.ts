@@ -29,6 +29,9 @@ export class UserSignupComponent {
   login() {
     this.router.navigate(['/login']);
   }
+  goBack(){
+    this.router.navigate(['/']);
+  }
 
   async signup() {
     if (!this.signupForm.valid) {

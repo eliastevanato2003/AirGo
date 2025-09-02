@@ -8,10 +8,13 @@
 }
 
 .logo {
-  font-size: 30px;
+  font-size: 40px;
   font-weight: bold;
   color: white;
   cursor: pointer;
+  padding-left: 6%;
+  padding-top:10px;
+  padding-bottom:10px;
 }
 
 nav ul {

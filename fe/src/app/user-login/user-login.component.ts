@@ -25,6 +25,10 @@ export class UserLoginComponent {
     this.router.navigate(['/signup']);
   }
 
+  goBack(){
+    this.router.navigate(['/']);
+  }
+
   async login() {
 
     const formData = this.loginForm.value;
