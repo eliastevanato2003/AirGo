@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ZTTsTdgBP8czpsKnUa6LmXdrcEyMviBCu2IWdBflwOZcWPg5ZsjEC3ds9aUAT8B
+\restrict yLgvINHQV5h9CA2gHdBwIIAHqWs6bcV2HlCB4XglAJyiwIF3YiUzUXNAb5iZtgh
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -57,7 +57,7 @@ ALTER TABLE public."Aerei" ALTER COLUMN "IdAereo" ADD GENERATED ALWAYS AS IDENTI
 
 CREATE TABLE public."Aeroporti" (
     "IdAeroporto" integer NOT NULL,
-    "CittÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬í" text NOT NULL,
+    "Citta" text NOT NULL,
     "Nazione" text NOT NULL,
     "Nome" text NOT NULL,
     "CodiceIdentificativo" text NOT NULL,
@@ -376,7 +376,11 @@ COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", 
 -- Data for Name: Aeroporti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Aeroporti" ("IdAeroporto", "CittÔö£├ÂÔö£├éÔö¼├║├ö├Â┬úÔö£┬í", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
+COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdentificativo", "IsActive") FROM stdin;
+2	Venezia	Italia	Marco Polo	VCE	t
+7	Lamezia Terme	Italia	Sant'Eufemia	SUF	t
+8	Roma	Italia	Leonardo Da Vinci	FCO	t
+9	Roma	Italia	G. B. Pastine	CIA	t
 \.
 
 
@@ -393,7 +397,9 @@ COPY public."Biglietti" ("IdVolo", "Utente", "Posto", "Volo", "Nome", "Cognome",
 --
 
 COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo", "Password", "IsActive", "Mail") FROM stdin;
-8	Alitalia	ALITA	$2b$10$c/vxGlxc0xeHoh8l9IErHuzE2JHAdJua38euJWpbTCgsppwKogfue	t	19
+8	Alitalia	AZ	$2b$10$c/vxGlxc0xeHoh8l9IErHuzE2JHAdJua38euJWpbTCgsppwKogfue	t	19
+10	Easyjet	U2	$2b$10$X1iVlNXZNMog.Pj4hbN3Ru25PqCf7mqcyti2/1BA6rGmThESHbmPC	t	27
+11	Volotea	V7	$2b$10$DznFWksihS3yWV2SKABj9.5FNXApgrtRFCwtGC.iY41PX96x6k9B2	t	28
 \.
 
 
@@ -405,8 +411,11 @@ COPY public."IndirizziEmail" ("IdEmail", "Email", "IsActive") FROM stdin;
 5	elia.stevanato@example.com	t
 11	filippo.pizzo@example.com	t
 14	dario.caberlotto@example.com	t
-16	francesco.pasqualato@example.com	t
 19	alitalia@example.com	t
+27	easyjet@example.com	t
+28	volotea@example.com	t
+34	francesco.pasqualato@example.com	t
+54	francesca.pasqualato@example.com	f
 \.
 
 
@@ -415,6 +424,9 @@ COPY public."IndirizziEmail" ("IdEmail", "Email", "IsActive") FROM stdin;
 --
 
 COPY public."Modelli" ("IdModello", "Nome", "PostiPc", "RigheB", "ColonneB", "RigheE", "ColonneE", "IsActive") FROM stdin;
+1	Boeing 737	20	10	4	20	6	t
+3	Boeing 737v2	20	10	4	20	6	t
+8	Boeing 737v4	20	10	4	20	6	t
 \.
 
 
@@ -431,6 +443,9 @@ COPY public."Posti" ("IdPosto", "Aereo", "Numero", "Lettera", "LegRoom", "Classe
 --
 
 COPY public."RigheExtraLegRoom" ("IdRiga", "Modello", "NRiga", "IsActive") FROM stdin;
+1	3	1	t
+2	3	5	t
+3	3	10	t
 \.
 
 
@@ -439,6 +454,14 @@ COPY public."RigheExtraLegRoom" ("IdRiga", "Modello", "NRiga", "IsActive") FROM 
 --
 
 COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "IsActive") FROM stdin;
+1	2	7	8	t
+4	2	8	8	t
+5	7	8	8	t
+6	7	8	10	t
+7	7	9	11	t
+8	7	8	11	t
+9	7	2	8	t
+10	7	2	11	t
 \.
 
 
@@ -449,8 +472,9 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "DoB", "Admin", "IsActive", "Mail") FROM stdin;
 37	Filippo	Pizzo	$2b$10$segRmt2k.cO0MRwH041VAOx/tdqECfSsr7TZGQ8iFdHcDNgWRx9Du	2234567890	2003-11-06	f	t	11
 39	Dario	Caberlotto	$2b$10$pEeh21J1f7R4wIyDaZ4UuOLKAZTWdAK12WrW8XEMY.pfh0YwPjKFS	3234567890	2003-09-24	f	t	14
-41	Francesco	Pasqualato	$2b$10$X0Dg5dbm08CykYaSTpvVh.BfUnI7fMSQaECvV9qlyJPc5HqqEWwnS	4234567890	2003-10-19	f	t	16
 31	Elia	Stevanato	$2b$10$Pu4B/XGjeYgs9jUrb461cebDWk6yarcir4RMjvJDpqLrkNDQd9HA.	1234567890	2003-12-08	t	t	5
+45	Francesco	Pasqualato	$2b$10$mZszo8lBAPR2p/ZN.jKXjueC1bJhNok5qx6yZTfg1eu7Mz4SLogyi	4234567890	2003-10-19	f	t	34
+61	Francesca	Pasqualato	$2b$10$lyWukshe9vJtEwAlNKqivutLNbyv5dapI.o..ZN2j3HHSRM8XB7t6	5234567890	2003-10-20	f	f	54
 \.
 
 
@@ -473,7 +497,7 @@ SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 1, false);
 -- Name: Aereoporti_IdAeroporto_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 1, true);
+SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 9, true);
 
 
 --
@@ -487,21 +511,21 @@ SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 1, false);
 -- Name: CompagnieAeree_IdCompagniaAerea_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 9, true);
+SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 11, true);
 
 
 --
 -- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 22, true);
+SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 56, true);
 
 
 --
 -- Name: Modelli_IdModello_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Modelli_IdModello_seq"', 1, false);
+SELECT pg_catalog.setval('public."Modelli_IdModello_seq"', 12, true);
 
 
 --
@@ -515,21 +539,21 @@ SELECT pg_catalog.setval('public."Posti_IdPosto_seq"', 1, false);
 -- Name: RigheExtraLegRoom_IdRiga_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 1, false);
+SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 6, true);
 
 
 --
 -- Name: Rotte_IdRotta_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 1, false);
+SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 10, true);
 
 
 --
 -- Name: Utenti_IdUtente_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 41, true);
+SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 61, true);
 
 
 --
@@ -617,6 +641,14 @@ ALTER TABLE ONLY public."IndirizziEmail"
 
 ALTER TABLE ONLY public."IndirizziEmail"
     ADD CONSTRAINT "IndirizziEmail_pkey" PRIMARY KEY ("IdEmail");
+
+
+--
+-- Name: Modelli Modelli_Nome_key; Type: CONSTRAINT; Schema: public; Owner: admin
+--
+
+ALTER TABLE ONLY public."Modelli"
+    ADD CONSTRAINT "Modelli_Nome_key" UNIQUE ("Nome");
 
 
 --
@@ -807,5 +839,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ZTTsTdgBP8czpsKnUa6LmXdrcEyMviBCu2IWdBflwOZcWPg5ZsjEC3ds9aUAT8B
+\unrestrict yLgvINHQV5h9CA2gHdBwIIAHqWs6bcV2HlCB4XglAJyiwIF3YiUzUXNAb5iZtgh
 

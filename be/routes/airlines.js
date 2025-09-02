@@ -38,4 +38,8 @@ router.get("/getAirline", authenticateToken, authorizeRoles(1), airlineControlle
  */ 
 router.post("/newAirline", authenticateToken, authorizeRoles(0), airlineController.newAirline);
 
+router.post("/updateAirline", authenticateToken, authorizeRoles(1), airlineController.updateAirline);
+
+router.post("/deleteAirline", authenticateToken, authorizeRoles(1), airlineController.deleteAirline);
+
 module.exports = router;

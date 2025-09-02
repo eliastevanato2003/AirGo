@@ -63,7 +63,7 @@ exports.updateUser = async (req, res, next) => {
 exports.deleteUser = async (req, res, next) => {
     try {
         const nuser = await userService.deleteUser(req.id);
-        if(nuser == 1) await emailService.deactivateEmail(req.email);
+        if(nuser >= 1) await emailService.deactivateEmail(req.email);
         res.json({ nuser: nuser });
     } catch (err) {
         next(err);
