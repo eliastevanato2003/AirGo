@@ -46,11 +46,12 @@ exports.updateAirline = async (req, res, next) => {
     try {
         const { name, identificationcode, email, password } = req.body ?? {};
         const airline = await airlineService.getAirline(req.id);
-        if (airline) {
+        console.log(airline);
+        if (airline.IdCompagniaAerea) {
             if (email) await emailService.updateEmail(airline.Mail, email);
             const nairline = await airlineService.updateAirline(req.id, name || airline.Nome, identificationcode || airline.CodiceIdentificativo, password);
             res.json({ nairline: nairline });
-        }
+        } else res.status(500).json({message: "Airline not found"});
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
