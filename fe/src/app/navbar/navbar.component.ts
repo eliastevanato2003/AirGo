@@ -1,14 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { CommonModule, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
-  imports: [],
+  imports: [CommonModule, NgIf],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.css'
 })
-export class NavbarComponent {
-  constructor(private router: Router) {}
+export class NavbarComponent implements OnInit {
+
+  public isLoggedIn = false;
+
+  constructor(private router: Router, private authService: AuthService) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = !!this.authService?.getToken();
+  }
+
   login() {
     this.router.navigate(['/login']);
   }
@@ -17,6 +27,13 @@ export class NavbarComponent {
     this.router.navigate(['/']);
   }
 
-  
+  profile() {
+    this.router.navigate(['/profile'])
+  }
 
+  logout() {
+    this.authService.logout();
+    this.home();
+    window.location.reload();
+  }
 }

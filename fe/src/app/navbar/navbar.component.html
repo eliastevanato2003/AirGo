@@ -1,10 +1,15 @@
 <header class="header">
     <div class="logo" (click)="home()">AirGo</div>
     <nav>
-      <ul>
+      <ul *ngIf="isLoggedIn">
         <li><a href="#">Aiuto & FAQ</a></li>
         <li><a href="#">I miei voli</a></li>
-        <li><button class="log-in-btn" (click)="login()">Accedi</button></li>
+        <li><a href="#" (click)="logout()">Esci</a></li>
+        <li><button id="button" class="log-in-btn" (click)="profile()">Profilo</button></li>
+      </ul>
+      <ul *ngIf="!isLoggedIn">
+        <li><a href="#">Aiuto & FAQ</a></li>
+        <li><button id="button" class="log-in-btn" (click)="login()">Accedi</button></li>
       </ul>
     </nav>
   </header>
