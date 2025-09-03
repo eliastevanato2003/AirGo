@@ -1,8 +1,8 @@
-import { CommonModule, isPlatformBrowser, NgIf } from '@angular/common';
-import { Component, Inject, OnInit, PLATFORM_ID } from '@angular/core';
+import { CommonModule, NgIf } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -25,7 +25,7 @@ export class UserProfileComponent implements OnInit {
   personalForm: FormGroup;
   contactForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(private fb: FormBuilder, private http: HttpClient, private authService: AuthService) {
     this.personalForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
@@ -40,11 +40,8 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const url = 'http://localhost:3000/api/users/getUser';
-
-    if (!isPlatformBrowser(this.platformId))
-      this.router.navigate(['login']);
     
-    const token = localStorage.getItem('jwt_token');
+    const token = this.authService.getToken();
 
     // Crea l'intestazione di autorizzazione
     const headers = new HttpHeaders({

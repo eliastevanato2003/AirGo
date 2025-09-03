@@ -50,13 +50,12 @@ export class UserSignupComponent {
       dob: formData.dob
     };
 
-    console.log(message);
     // Invio dei dati al backend
     this.http.post(url, message).subscribe({
       next: () => {
         console.log('Signed up');
         // Esempio: reindirizza l'utente a una pagina di login
-        this.router.navigate(['/login']);
+        this.login();
       },
       error: (error) => {
         console.error('Sign up error:', error);

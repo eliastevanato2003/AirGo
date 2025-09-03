@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NavbarComponent } from '../navbar/navbar.component';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-user-login',
@@ -14,7 +15,7 @@ export class UserLoginComponent {
 
   public loginForm;
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private http: HttpClient, private authService: AuthService) {
     this.loginForm = new FormGroup({
       email: new FormControl(''),
       password: new FormControl('')
@@ -28,8 +29,6 @@ export class UserLoginComponent {
   goBack(){
     this.router.navigate(['/']);
   }
-
-
 
   async login() {
 
@@ -49,7 +48,7 @@ export class UserLoginComponent {
         const token = authResponse.token; 
 
         // Salva il token in un luogo sicuro, come il localStorage
-        localStorage.setItem('jwt_token', token);
+        this.authService.login(token);
         console.log('Logged in');
         // Esempio: reindirizza l'utente a una pagina home
         this.router.navigate(['']);
