@@ -23,8 +23,6 @@ export class FlightsComponent {
     console.log(`To: ${this.to}`);
     console.log(`Departure: ${this.departureDate}`);
     console.log(`Return: ${this.returnDate}`);
-    alert(`Searching flights from ${this.from} to ${this.to}`);
+    this.router.navigate(['flightslist']);
   }
-
-  
 }

@@ -43,7 +43,7 @@ export class UserProfileComponent implements OnInit {
 
   ngOnInit(): void {
     const url = 'http://localhost:3000/api/users/getUser';
-    
+
     const token = this.authService.getToken();
 
     // Crea l'intestazione di autorizzazione
@@ -107,12 +107,62 @@ export class UserProfileComponent implements OnInit {
     if (section === 'personal' && this.personalForm.valid) {
       this.userProfile!.name = this.personalForm.value.name;
       this.userProfile!.surname = this.personalForm.value.surname;
-      // TODO: Inviare i dati al backend
+      this.userProfile!.password = this.personalForm.value.password;
+      const url = 'http://localhost:3000/api/users/updateUser';
+      
+      const message = {
+        name: this.userProfile?.name,
+        surname: this.userProfile?.surname,
+        password: this.userProfile?.password
+      }
+
+      const token = this.authService.getToken();
+
+      // Crea l'intestazione di autorizzazione
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+
+      // Richiesta dei dati
+      this.http.post(url, message, { headers: headers }).subscribe({
+        next: () => {
+          alert('Dati aggiornati');
+        },
+        error: (error) => {
+          console.error('UpdateUser error:', error);
+          // Gestisci l'errore, magari mostrando un messaggio all'utente
+        }
+      });
       this.isEditingPersonal = false;
     } else if (section === 'contact' && this.contactForm.valid) {
       this.userProfile!.email = this.contactForm.value.email;
       this.userProfile!.phone = this.contactForm.value.phone;
-      // TODO: Inviare i dati al backend
+      const url = 'http://localhost:3000/api/users/updateUser';
+
+      const message = {
+        email: this.userProfile?.email,
+        number: this.userProfile?.phone
+      }
+
+      const token = this.authService.getToken();
+
+      // Crea l'intestazione di autorizzazione
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      });
+
+      // Richiesta dei dati
+      this.http.post(url, message, { headers: headers }).subscribe({
+        next: () => {
+          alert('Dati aggiornati');
+        },
+        error: (error) => {
+          console.error('UpdateUser error:', error);
+          // Gestisci l'errore, magari mostrando un messaggio all'utente
+        }
+      });
       this.isEditingContact = false;
     }
   }
