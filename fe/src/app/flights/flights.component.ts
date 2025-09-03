@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-flight-search',
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.css'],
-  imports: [NavbarComponent]
+  imports: [NavbarComponent, FooterComponent]
 })
 export class FlightsComponent {
   from: string = 'London Stansted';

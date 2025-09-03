@@ -3,12 +3,15 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
-  imports: [ReactiveFormsModule, CommonModule, NgIf]
+  imports: [ReactiveFormsModule, CommonModule, NgIf, NavbarComponent, FooterComponent]
 })
 export class UserProfileComponent implements OnInit {
   userProfile: {
