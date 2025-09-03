@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { FooterComponent } from '../footer/footer.component';
 
 @Component({
   selector: 'app-flight-search',
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.css'],
-  imports: [NavbarComponent]
+  imports: [NavbarComponent, FooterComponent]
 })
 export class FlightsComponent {
   from: string = 'London Stansted';
@@ -22,8 +23,6 @@ export class FlightsComponent {
     console.log(`To: ${this.to}`);
     console.log(`Departure: ${this.departureDate}`);
     console.log(`Return: ${this.returnDate}`);
-    alert(`Searching flights from ${this.from} to ${this.to}`);
+    this.router.navigate(['flightslist']);
   }
-
-  
 }
