@@ -1,0 +1,135 @@
+.footer {
+  background-color: #3b5998; 
+  color: #dfe3ee; 
+  padding-top: 40px;
+  font-family: sans-serif;
+}
+
+.footer-container {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  padding: 0 20px 30px 20px;
+  gap: 20px;
+}
+
+.footer-column {
+  flex: 1;
+  min-width: 220px; 
+  padding: 0 15px;
+}
+
+
+.footer-about .logo-footer {
+  font-size: 32px; 
+  font-weight: bold;
+  color: white;
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.footer-about p {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.footer-column h4 {
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  margin-top: 0;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+
+.footer-column h4::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -5px;
+  width: 40px;
+  height: 2px;
+  background-color: white;
+}
+
+.footer-links ul, .footer-social ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-links li, .footer-social li {
+  margin-bottom: 10px;
+}
+
+.footer-links a, .footer-social a {
+  text-decoration: none;
+  color: #dfe3ee; 
+  transition: color 0.3s ease;
+}
+
+.footer-links a:hover, .footer-social a:hover {
+  color: white; 
+}
+
+
+.footer-bottom {
+  background-color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  text-align: center;
+  font-size: 13px;
+}
+
+.footer-bottom p {
+  margin: 5px 0;
+  flex-grow: 1;
+  color: #333;
+}
+
+.footer-legal-links {
+  margin: 5px 0;
+  flex-grow: 1;
+  text-align: right;
+}
+
+.footer-legal-links a {
+  color: #dfe3ee;
+  text-decoration: none;
+  margin: 0 10px;
+}
+
+.footer-legal-links a:hover {
+  color: white;
+}
+
+.footer-legal-links span {
+  color: rgba(223, 227, 238, 0.5);
+}
+
+
+@media (max-width: 768px) {
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-column h4::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .footer-bottom {
+    flex-direction: column;
+  }
+
+  .footer-legal-links {
+    text-align: center;
+    margin-top: 10px;
+  }
+}

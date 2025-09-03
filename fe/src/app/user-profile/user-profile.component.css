@@ -12,6 +12,8 @@ body {
 .profile-container {
   max-width: 800px;
   margin: auto;
+  margin-top: 20px;
+  margin-bottom: 40px;
   background-color: #ffffff;
   padding: 30px;
   border-radius: 8px;
@@ -62,12 +64,12 @@ body {
 }
 
 .edit-btn {
-  background-color: #007bff;
+  background-color: #ff7f50;
   color: white;
 }
 
 .edit-btn:hover {
-  background-color: #0056b3;
+  background-color: #e67345;
   transform: translateY(-1px);
 }
 
