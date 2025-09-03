@@ -72,3 +72,68 @@
   font-size: 20px;
   align-self: flex-end;
 }
+
+
+.why-us {
+  padding: 60px 20px;
+  background-color: #f8f9fa; 
+  text-align: center;
+}
+
+.why-us h2 {
+  font-size: 36px;
+  color: #333;
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap; 
+}
+
+
+.card {
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  max-width: 320px;
+  flex: 1; 
+  min-width: 280px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-10px); 
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.card-icon .icon {
+  font-size: 48px;
+  line-height: 1;
+  margin-bottom: 20px;
+  display: inline-block;
+}
+
+.card h3 {
+  font-size: 22px;
+  color: #3b5998; 
+  margin-top: 0;
+  margin-bottom: 15px;
+}
+
+.card p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #666;
+}
+
+
+@media (max-width: 768px) {
+  .why-us h2 {
+    font-size: 30px;
+  }
+}
