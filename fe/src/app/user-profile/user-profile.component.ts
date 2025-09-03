@@ -4,13 +4,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Router } from '@angular/router';
 
-export interface UserProfile {
-  name: string;
-  password: string;
-  email: string;
-  phone: string;
-}
-
 @Component({
   selector: 'app-profile',
   templateUrl: './user-profile.component.html',
@@ -20,9 +13,10 @@ export interface UserProfile {
 export class UserProfileComponent implements OnInit {
   userProfile: {
     name: string;
+    surname: string;
     password: string;
     email: string;
-    phone: number;
+    phone: string;
   } | undefined;
 
   isEditingPersonal = false;
@@ -34,6 +28,7 @@ export class UserProfileComponent implements OnInit {
   constructor(private fb: FormBuilder, private http: HttpClient, private router: Router, @Inject(PLATFORM_ID) private platformId: Object) {
     this.personalForm = this.fb.group({
       name: ['', Validators.required],
+      surname: ['', Validators.required],
       password: ['', Validators.required]
     });
 
@@ -60,28 +55,37 @@ export class UserProfileComponent implements OnInit {
     // Richiesta dei dati
     this.http.get(url, { headers: headers }).subscribe({
       next: (response) => {
-        console.log(response);
         const data = response as {
-          admin: null,
-          surname: string,
-          dob: null,
-          email: string,
-          idemail: null,
-          idutente: null,
-          isactive: null,
-          mail: null,
-          name: string,
-          password: string,
-          phone: string
+          Admin: null,
+          Cognome: string,
+          Dob: null,
+          Email: string,
+          IdEmail: null,
+          IdUtente: null,
+          IsActive: null,
+          Mail: null,
+          Nome: string,
+          Password: string,
+          Telefono: string
         };
+
+        this.userProfile = {
+          name: data.Nome,
+          surname: data.Cognome,
+          password: '*********',
+          email: data.Email,
+          phone: data.Telefono
+        }
+
         // Inizializza entrambi i form con i dati dell'utente al caricamento
         this.personalForm.patchValue({
-          name: data.name + ' ' + data.surname,
+          name: data.Nome,
+          surname: data.Cognome,
           password: '*********'
         });
         this.contactForm.patchValue({
-          email: data.email,
-          phone: data.phone
+          email: data.Email,
+          phone: data.Telefono
         });
       },
       error: (error) => {
@@ -102,6 +106,7 @@ export class UserProfileComponent implements OnInit {
   saveChanges(section: 'personal' | 'contact'): void {
     if (section === 'personal' && this.personalForm.valid) {
       this.userProfile!.name = this.personalForm.value.name;
+      this.userProfile!.surname = this.personalForm.value.surname;
       // TODO: Inviare i dati al backend
       this.isEditingPersonal = false;
     } else if (section === 'contact' && this.contactForm.valid) {
@@ -114,7 +119,7 @@ export class UserProfileComponent implements OnInit {
 
   cancelEdit(section: 'personal' | 'contact'): void {
     if (section === 'personal') {
-      this.personalForm.patchValue({ name: this.userProfile?.name, password: this.userProfile?.password });
+      this.personalForm.patchValue({ name: this.userProfile?.name, surname: this.userProfile?.surname, password: this.userProfile?.password });
       this.isEditingPersonal = false;
     } else if (section === 'contact') {
       this.contactForm.patchValue({ email: this.userProfile?.email, phone: this.userProfile?.phone });

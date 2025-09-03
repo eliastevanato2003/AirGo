@@ -13,6 +13,7 @@
     <div class="card-body">
       <div *ngIf="!isEditingPersonal">
         <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
+        <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
         <p><strong>Password:</strong> {{ userProfile?.password }}</p>
       </div>
       
@@ -20,6 +21,10 @@
         <div class="form-field">
           <label for="name-input">Nome:</label>
           <input type="text" formControlName="name">
+        </div>
+        <div class="form-field">
+          <label for="surname-input">Cogome:</label>
+          <input type="text" formControlName="surname">
         </div>
         <div class="form-field">
           <label for="password-input">Password:</label>
