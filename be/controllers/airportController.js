@@ -35,7 +35,10 @@ exports.updateAirport = async (req, res, next) => {
         else if (!routes1[0] && !routes2[0]) {
             const nairport = await airportService.updateAirport(id, city || airport[0].Citta, country || airport[0].Nazione, name || airport[0].Nome, identificationcode || airport[0].CodiceIdentificativo);
             res.json({ nairport: nairport });
-        } else res.status(409).json({ message: "Airport is being used in one or more routes" });
+        } else if (!city && !country && !identificationcode && name) {
+            const nairport = await airportService.updateAirport(id, airport[0].Citta, airport[0].Nazione, name, airport[0].CodiceIdentificativo);
+            res.json({ nairport: nairport });
+        } else res.status(409).json({ message: "Airport is being used in one or more routes, only the name can be changed" });
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Aereoporti_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
         else next(err);
@@ -50,7 +53,7 @@ exports.deleteAirport = async (req, res, next) => {
         const routes2 = await flightRouteService.getFlightRoutes(undefined, undefined, id, undefined);
         if (!routes1[0] && !routes2[0]) {
             const nairport = await airportService.deleteAirport(id);
-            res.json({nairport: nairport});
+            res.json({ nairport: nairport });
         } else res.status(409).json({ message: "Airport is being used in one or more routes" });
     } catch (err) {
         next(err);

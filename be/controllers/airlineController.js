@@ -42,6 +42,7 @@ exports.newAirline = async (req, res, next) => {
     }
 }
 
+//check voli attivi
 exports.updateAirline = async (req, res, next) => {
     try {
         const { name, identificationcode, email, password } = req.body ?? {};
@@ -59,6 +60,7 @@ exports.updateAirline = async (req, res, next) => {
     }
 }
 
+//check voli attivi
 exports.deleteAirline = async (req, res, next) => {
     try {
         const nairline = await airlineService.deleteAirline(req.id);

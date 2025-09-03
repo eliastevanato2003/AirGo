@@ -43,6 +43,7 @@ exports.newUser = async (req, res, next) => {
     }
 }
 
+//check biglietti attivi
 exports.updateUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
@@ -60,6 +61,7 @@ exports.updateUser = async (req, res, next) => {
     }
 }
 
+//check biglietti attivi
 exports.deleteUser = async (req, res, next) => {
     try {
         const nuser = await userService.deleteUser(req.id);

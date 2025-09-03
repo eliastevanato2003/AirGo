@@ -1,7 +1,7 @@
 const pool = require("../db");
 
 exports.getAirlines = async (id, name, identificationcode, email) => {
-    const sel = 'SELECT * FROM "CompagnieAeree" JOIN "IndirizziEmail" ON "CompagnieAeree"."Mail" = "IndirizziEmail"."IdEmail" '
+    const sel = 'SELECT * FROM "CompagnieAeree" JOIN "IndirizziEmail" ON "CompagnieAeree"."Mail" = "IndirizziEmail"."IdEmail" AND "IndirizziEmail"."IsActive" = true ';
     const whe = 'WHERE ("IdCompagniaAerea" = $1 OR $1 IS NULL) AND ("Nome" = $2 OR $2 IS NULL) AND ("CodiceIdentificativo" = $3 OR $3 IS NULL) AND ("Email" = $4 OR $4 IS NULL) AND "CompagnieAeree"."IsActive" = true';
     const sql = sel + whe;
     const result = await pool.query(sql, [id, name, identificationcode, email]);
