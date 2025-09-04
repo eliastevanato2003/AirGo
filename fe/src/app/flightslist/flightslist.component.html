@@ -1,1 +1,27 @@
-<p>flightslist works!</p>
+<div class="flight-container">
+  <h1>Risultati della ricerca voli</h1>
+  <div *ngIf="flights.length === 0" class="no-flights">
+    Nessun volo trovato
+  </div>
+  <div class="flight-card" *ngFor="let flight of flights">
+    <div class="flight-header">
+      <span class="airline">{{ flight.airline }}</span>
+      <span class="price">€{{ flight.price }}</span>
+    </div>
+    <div class="flight-details">
+      <div>
+        <strong>Da:</strong> {{ flight.from }}
+      </div>
+      <div>
+        <strong>A:</strong> {{ flight.to }}
+      </div>
+      <div>
+        <strong>P.</strong> {{ flight.departure }}
+      </div>
+      <div>
+        <strong>A.</strong> {{ flight.arrival }}
+      </div>
+    </div>
+    <button class="book-btn">Acquista</button>
+  </div>
+</div>
