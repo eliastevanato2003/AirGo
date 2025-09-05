@@ -4,9 +4,9 @@ const flightRoutesController = require("../services/flightRouteService");
 
 exports.getFlights = async (req, res, next) => {
     try {
-        const { id } = req.body ?? {};
-        const flights = await flightService.getFlights(id);
-        res.json({ flights });
+        const { id, departure, arrival } = req.query ?? {};
+        const flights = await flightService.getFlights(id, departure, arrival);
+        res.json({flights});
     } catch (err) {
         next(err);
     }
