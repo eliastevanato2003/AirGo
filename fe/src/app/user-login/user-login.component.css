@@ -2,8 +2,6 @@
     font-family: 'Roboto';
 }
 
-
-
 .login-container {
     display: flex;
     justify-content: center;
@@ -31,6 +29,7 @@
 }
 
 .input-group {
+    position: relative;
     margin-bottom: 20px;
     text-align: left;
 }
@@ -93,4 +92,13 @@
   cursor: pointer;
   padding-left: 8%;
   padding-top: 10px;
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  cursor: pointer;
+  font-size: 18px;
+  user-select: none;
 }
