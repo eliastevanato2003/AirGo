@@ -4,8 +4,19 @@ const flightRoutesController = require("../services/flightRouteService");
 
 exports.getFlights = async (req, res, next) => {
     try {
-        const { id, departure, arrival } = req.query ?? {};
-        const flights = await flightService.getFlights(id, departure, arrival);
+        const { id, departure, arrival, datestart, datearrival } = req.query ?? {};
+        let maxdatestart, mindatestart, maxdatearrival, mindatearrival;
+        if (datestart) {
+            mindatestart = datestart;
+            maxdatestart = new Date(datestart);
+            maxdatestart.setDate((new Date(datestart)).getDate() + 1);
+        }
+        if (datearrival) {
+            mindatearrival = datearrival;
+            maxdatearrival = new Date(datearrival);
+            maxdatearrival.setDate((new Date(datearrival)).getDate() + 1);
+        }
+        const flights = await flightService.getFlights(id, departure, arrival, mindatestart, maxdatestart, mindatearrival, maxdatearrival);
         res.json({flights});
     } catch (err) {
         next(err);
