@@ -72,7 +72,7 @@ export class UserProfileComponent implements OnInit {
         this.userProfile = {
           name: data.Nome,
           surname: data.Cognome,
-          password: '*********',
+          password: '',
           email: data.Email,
           phone: data.Telefono
         }
@@ -81,7 +81,7 @@ export class UserProfileComponent implements OnInit {
         this.personalForm.patchValue({
           name: data.Nome,
           surname: data.Cognome,
-          password: '*********'
+          password: ''
         });
         this.contactForm.patchValue({
           email: data.Email,
@@ -109,7 +109,7 @@ export class UserProfileComponent implements OnInit {
       this.userProfile!.surname = this.personalForm.value.surname;
       this.userProfile!.password = this.personalForm.value.password;
       const url = 'http://localhost:3000/api/users/updateUser';
-      
+
       const message = {
         name: this.userProfile?.name,
         surname: this.userProfile?.surname,

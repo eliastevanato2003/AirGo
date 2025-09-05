@@ -18,11 +18,7 @@ export class FlightsComponent {
   constructor(private router: Router) {}
 
   searchFlights() {
-    console.log('Searching flights...');
-    console.log(`From: ${this.from}`);
-    console.log(`To: ${this.to}`);
-    console.log(`Departure: ${this.departureDate}`);
-    console.log(`Return: ${this.returnDate}`);
+    
     this.router.navigate(['flightslist']);
   }
 }

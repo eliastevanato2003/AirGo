@@ -16,7 +16,7 @@
       <div *ngIf="!isEditingPersonal">
         <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
         <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
-        <p><strong>Password:</strong> {{ userProfile?.password }}</p>
+        <p><strong>Password:</strong> ********</p>
       </div>
       
       <form *ngIf="isEditingPersonal" [formGroup]="personalForm">
