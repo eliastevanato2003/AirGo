@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict yLgvINHQV5h9CA2gHdBwIIAHqWs6bcV2HlCB4XglAJyiwIF3YiUzUXNAb5iZtgh
+\restrict 2oSMlbOErnR4xGCPltgWpBNpL9bzhwf3bN5OuVMiu5uhoa13Zyb5wIidVirJ234
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -88,14 +88,15 @@ ALTER TABLE public."Aeroporti" ALTER COLUMN "IdAeroporto" ADD GENERATED ALWAYS A
 CREATE TABLE public."Biglietti" (
     "IdVolo" integer NOT NULL,
     "Utente" integer NOT NULL,
-    "Posto" integer,
     "Volo" integer NOT NULL,
     "Nome" text NOT NULL,
     "Cognome" text NOT NULL,
     "DoB" date NOT NULL,
     "Classe" text NOT NULL,
     "NBagagliExtra" integer NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL
+    "IsActive" boolean DEFAULT true NOT NULL,
+    "ColPosto" text,
+    "RigPosto" text
 );
 
 
@@ -205,37 +206,6 @@ ALTER TABLE public."Modelli" ALTER COLUMN "IdModello" ADD GENERATED ALWAYS AS ID
 
 
 --
--- Name: Posti; Type: TABLE; Schema: public; Owner: admin
---
-
-CREATE TABLE public."Posti" (
-    "IdPosto" integer NOT NULL,
-    "Aereo" integer NOT NULL,
-    "Numero" integer NOT NULL,
-    "Lettera" text NOT NULL,
-    "LegRoom" boolean NOT NULL,
-    "Classe" text NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL
-);
-
-
-ALTER TABLE public."Posti" OWNER TO admin;
-
---
--- Name: Posti_IdPosto_seq; Type: SEQUENCE; Schema: public; Owner: admin
---
-
-ALTER TABLE public."Posti" ALTER COLUMN "IdPosto" ADD GENERATED ALWAYS AS IDENTITY (
-    SEQUENCE NAME public."Posti_IdPosto_seq"
-    START WITH 1
-    INCREMENT BY 1
-    NO MINVALUE
-    NO MAXVALUE
-    CACHE 1
-);
-
-
---
 -- Name: RigheExtraLegRoom; Type: TABLE; Schema: public; Owner: admin
 --
 
@@ -333,10 +303,10 @@ CREATE TABLE public."Voli" (
     "IdVolo" integer NOT NULL,
     "Aereo" integer NOT NULL,
     "Rotta" integer NOT NULL,
-    "DataPartenzaPrev" date NOT NULL,
-    "DateArrivoPrev" date NOT NULL,
-    "DataPartenzaEff" date,
-    "DataArrivoEff" date,
+    "DataPartenzaPrev" timestamp without time zone NOT NULL,
+    "DateArrivoPrev" timestamp without time zone NOT NULL,
+    "DataPartenzaEff" timestamp without time zone,
+    "DataArrivoEff" timestamp without time zone,
     "Stato" text NOT NULL,
     "CostoPC" real NOT NULL,
     "CostoB" real NOT NULL,
@@ -369,6 +339,9 @@ ALTER TABLE public."Voli" ALTER COLUMN "IdVolo" ADD GENERATED ALWAYS AS IDENTITY
 --
 
 COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", "IsActive") FROM stdin;
+1	12	1	2020	t
+2	8	1	2020	t
+3	8	1	2024	t
 \.
 
 
@@ -380,6 +353,7 @@ COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdent
 2	Venezia	Italia	Marco Polo	VCE	t
 7	Lamezia Terme	Italia	Sant'Eufemia	SUF	t
 8	Roma	Italia	Leonardo Da Vinci	FCO	t
+10	Milan	Italia	Enrico Fornalini	LIN	t
 9	Roma	Italia	G. B. Pastine	CIA	t
 \.
 
@@ -388,7 +362,7 @@ COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdent
 -- Data for Name: Biglietti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Biglietti" ("IdVolo", "Utente", "Posto", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "IsActive") FROM stdin;
+COPY public."Biglietti" ("IdVolo", "Utente", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "IsActive", "ColPosto", "RigPosto") FROM stdin;
 \.
 
 
@@ -400,6 +374,7 @@ COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo"
 8	Alitalia	AZ	$2b$10$c/vxGlxc0xeHoh8l9IErHuzE2JHAdJua38euJWpbTCgsppwKogfue	t	19
 10	Easyjet	U2	$2b$10$X1iVlNXZNMog.Pj4hbN3Ru25PqCf7mqcyti2/1BA6rGmThESHbmPC	t	27
 11	Volotea	V7	$2b$10$DznFWksihS3yWV2SKABj9.5FNXApgrtRFCwtGC.iY41PX96x6k9B2	t	28
+12	Air France	AF	$2b$10$i40yVwnd0GXW2Ve0oYbDeODVK3xt3Rn/Jy18lXx.korxioyHTCmda	t	66
 \.
 
 
@@ -415,7 +390,9 @@ COPY public."IndirizziEmail" ("IdEmail", "Email", "IsActive") FROM stdin;
 27	easyjet@example.com	t
 28	volotea@example.com	t
 34	francesco.pasqualato@example.com	t
-54	francesca.pasqualato@example.com	f
+60	irene.massarotto@example.com	t
+66	airfrance@example.com	t
+54	francesca.pasqualato@example.com	t
 \.
 
 
@@ -427,14 +404,6 @@ COPY public."Modelli" ("IdModello", "Nome", "PostiPc", "RigheB", "ColonneB", "Ri
 1	Boeing 737	20	10	4	20	6	t
 3	Boeing 737v2	20	10	4	20	6	t
 8	Boeing 737v4	20	10	4	20	6	t
-\.
-
-
---
--- Data for Name: Posti; Type: TABLE DATA; Schema: public; Owner: admin
---
-
-COPY public."Posti" ("IdPosto", "Aereo", "Numero", "Lettera", "LegRoom", "Classe", "IsActive") FROM stdin;
 \.
 
 
@@ -462,6 +431,7 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 8	7	8	11	t
 9	7	2	8	t
 10	7	2	11	t
+11	10	2	12	t
 \.
 
 
@@ -474,7 +444,8 @@ COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "Do
 39	Dario	Caberlotto	$2b$10$pEeh21J1f7R4wIyDaZ4UuOLKAZTWdAK12WrW8XEMY.pfh0YwPjKFS	3234567890	2003-09-24	f	t	14
 31	Elia	Stevanato	$2b$10$Pu4B/XGjeYgs9jUrb461cebDWk6yarcir4RMjvJDpqLrkNDQd9HA.	1234567890	2003-12-08	t	t	5
 45	Francesco	Pasqualato	$2b$10$mZszo8lBAPR2p/ZN.jKXjueC1bJhNok5qx6yZTfg1eu7Mz4SLogyi	4234567890	2003-10-19	f	t	34
-61	Francesca	Pasqualato	$2b$10$lyWukshe9vJtEwAlNKqivutLNbyv5dapI.o..ZN2j3HHSRM8XB7t6	5234567890	2003-10-20	f	f	54
+62	Irene	Massarotto	$2b$10$QesnwrPmIQajlfm/f.xlz.3Kl1Q8T9/aOqSmQXlAQWBcUKCKHLFX6	6234567890	2002-05-22	f	t	60
+61	Francesca	Pasqualato	$2b$10$dvdbFaWYkRYxdZb5HZyUMOExkzue.25n69dHOZioiCCXZ6Rs/ESc2	5234567890	2003-10-20	f	t	54
 \.
 
 
@@ -483,6 +454,8 @@ COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "Do
 --
 
 COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DateArrivoPrev", "DataPartenzaEff", "DataArrivoEff", "Stato", "CostoPC", "CostoB", "CostoE", "CostoBag", "CostoLegRoom", "CostoSceltaPosto", "IsActive") FROM stdin;
+4	3	1	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	100	70	50.5	20.25	10	3	t
+5	1	11	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	100	70	50.5	20.25	10	3	t
 \.
 
 
@@ -490,14 +463,14 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DateArrivoP
 -- Name: Aerei_IdAereo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 1, false);
+SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 3, true);
 
 
 --
 -- Name: Aereoporti_IdAeroporto_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 9, true);
+SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 13, true);
 
 
 --
@@ -511,14 +484,14 @@ SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 1, false);
 -- Name: CompagnieAeree_IdCompagniaAerea_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 11, true);
+SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 13, true);
 
 
 --
 -- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 56, true);
+SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 68, true);
 
 
 --
@@ -526,13 +499,6 @@ SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 56, true);
 --
 
 SELECT pg_catalog.setval('public."Modelli_IdModello_seq"', 12, true);
-
-
---
--- Name: Posti_IdPosto_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
---
-
-SELECT pg_catalog.setval('public."Posti_IdPosto_seq"', 1, false);
 
 
 --
@@ -546,21 +512,21 @@ SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 6, true);
 -- Name: Rotte_IdRotta_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 10, true);
+SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 11, true);
 
 
 --
 -- Name: Utenti_IdUtente_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 61, true);
+SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 63, true);
 
 
 --
 -- Name: Voli_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 1, false);
+SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 5, true);
 
 
 --
@@ -585,14 +551,6 @@ ALTER TABLE ONLY public."Aeroporti"
 
 ALTER TABLE ONLY public."Aeroporti"
     ADD CONSTRAINT "Aereoporti_pkey" PRIMARY KEY ("IdAeroporto");
-
-
---
--- Name: Biglietti Biglietti_Posto_Volo_key; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public."Biglietti"
-    ADD CONSTRAINT "Biglietti_Posto_Volo_key" UNIQUE ("Posto", "Volo");
 
 
 --
@@ -657,14 +615,6 @@ ALTER TABLE ONLY public."Modelli"
 
 ALTER TABLE ONLY public."Modelli"
     ADD CONSTRAINT "Modelli_pkey" PRIMARY KEY ("IdModello");
-
-
---
--- Name: Posti Posti_pkey; Type: CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public."Posti"
-    ADD CONSTRAINT "Posti_pkey" PRIMARY KEY ("IdPosto");
 
 
 --
@@ -740,14 +690,6 @@ ALTER TABLE ONLY public."Aerei"
 
 
 --
--- Name: Biglietti Biglietti_Posto_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public."Biglietti"
-    ADD CONSTRAINT "Biglietti_Posto_fkey" FOREIGN KEY ("Posto") REFERENCES public."Posti"("IdPosto") ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
 -- Name: Biglietti Biglietti_Utente_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
 --
 
@@ -769,14 +711,6 @@ ALTER TABLE ONLY public."Biglietti"
 
 ALTER TABLE ONLY public."CompagnieAeree"
     ADD CONSTRAINT "CompagnieAeree_Email_fkey" FOREIGN KEY ("Mail") REFERENCES public."IndirizziEmail"("IdEmail") ON UPDATE CASCADE ON DELETE CASCADE NOT VALID;
-
-
---
--- Name: Posti Posti_Aereo_fkey; Type: FK CONSTRAINT; Schema: public; Owner: admin
---
-
-ALTER TABLE ONLY public."Posti"
-    ADD CONSTRAINT "Posti_Aereo_fkey" FOREIGN KEY ("Aereo") REFERENCES public."Aerei"("IdAereo") ON UPDATE CASCADE ON DELETE CASCADE;
 
 
 --
@@ -839,5 +773,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict yLgvINHQV5h9CA2gHdBwIIAHqWs6bcV2HlCB4XglAJyiwIF3YiUzUXNAb5iZtgh
+\unrestrict 2oSMlbOErnR4xGCPltgWpBNpL9bzhwf3bN5OuVMiu5uhoa13Zyb5wIidVirJ234
 

@@ -1,7 +1,13 @@
 const pool = require("../db")
 
 exports.getFlights = async (id) => {
-    const sql = 'SELECT * FROM "Voli" WHERE ("IdVolo" = $1 OR $1 IS NULL) AND "IsActive" = true';
+    const sel = 'SELECT "Voli".*, "A1"."Nome" AS "NomePartenza", "A1"."Citta" AS "CittaPartenza", "A1"."CodiceIdentificativo" AS "CodicePartenza", "A2"."Nome" AS "NomeArrivo", "A2"."Citta" AS "CittaArrivo", "A2"."CodiceIdentificativo" AS "CodiceArrivo" FROM "Voli" ';
+    const jo1 = 'JOIN "Rotte" AS "R" ON "Rotta" = "IdRotta" AND "R"."IsActive" = true '
+    const jo2 = 'JOIN "Aeroporti" AS "A1" ON "A1"."IdAeroporto" = "Partenza" AND "A1"."IsActive" = true ';
+    const jo3 = 'JOIN "Aeroporti" AS "A2" ON "A2"."IdAeroporto" = "Destinazione" AND "A2"."IsActive" = true ';
+    const whe = 'WHERE ("IdVolo" = $1 OR $1 IS NULL) AND "Voli"."IsActive" = true';
+    const sql = sel + jo1 + jo2 + jo3 + whe;
+    console.log(sql);
     const result = await pool.query(sql, [id]);
     return result.rows;
 }
