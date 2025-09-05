@@ -19,7 +19,7 @@
 
                 <!-- Icona per mostra/nascondi -->
                 <span class="toggle-password" (click)="hidePassword = !hidePassword">
-                    <fa-icon [icon]="hidePassword ? 'eye' : 'eye-slash'"></fa-icon>
+                    <mat-icon fontSet="material-symbols-outlined">{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
                 </span>
             </div>
             <button type="submit" class="login-button" (click)="login()">Accedi</button>

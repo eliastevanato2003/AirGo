@@ -4,13 +4,13 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AuthService } from '../services/auth.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css',
-  imports: [ReactiveFormsModule, NavbarComponent, FontAwesomeModule]
+  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule]
 })
 export class UserLoginComponent {
 
