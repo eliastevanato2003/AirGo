@@ -4,16 +4,18 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NavbarComponent } from '../navbar/navbar.component';
 import { AuthService } from '../services/auth.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css',
-  imports: [ReactiveFormsModule, NavbarComponent]
+  imports: [ReactiveFormsModule, NavbarComponent, FontAwesomeModule]
 })
 export class UserLoginComponent {
 
   public loginForm;
+  public hidePassword = true;
 
   constructor(private router: Router, private http: HttpClient, private authService: AuthService) {
     this.loginForm = new FormGroup({
