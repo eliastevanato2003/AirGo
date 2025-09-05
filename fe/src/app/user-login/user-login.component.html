@@ -18,8 +18,9 @@
                     formControlName="password" required>
 
                 <!-- Icona per mostra/nascondi -->
-                <span class="toggle-password" (click)="hidePassword = !hidePassword">
-                    <mat-icon fontSet="material-symbols-outlined">{{ hidePassword ? 'visibility' : 'visibility_off' }}</mat-icon>
+                <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+                    (click)="hidePassword = !hidePassword">
+                    {{ hidePassword ? 'visibility' : 'visibility_off' }}
                 </span>
             </div>
             <button type="submit" class="login-button" (click)="login()">Accedi</button>

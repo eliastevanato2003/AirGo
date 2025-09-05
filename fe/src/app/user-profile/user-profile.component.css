@@ -26,7 +26,6 @@ body {
   margin-bottom: 25px;
 }
 
-/* Stile delle card */
 .profile-card {
   border: 1px solid #e0e6ed;
   border-radius: 6px;
@@ -53,7 +52,6 @@ body {
   color: #555;
 }
 
-/* Stile dei pulsanti */
 .edit-btn, .save-btn, .cancel-btn {
   padding: 8px 16px;
   border: none;
@@ -92,7 +90,6 @@ body {
   background-color: #c82333;
 }
 
-/* Stile del corpo delle card */
 .card-body {
   padding: 20px;
 }
@@ -107,8 +104,8 @@ body {
   margin-right: 5px;
 }
 
-/* Stile per i campi del form (quando in modalità modifica) */
 .form-field {
+  position: relative;
   margin-bottom: 15px;
 }
 
@@ -124,5 +121,15 @@ body {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
-  box-sizing: border-box; /* Assicura che padding e border siano inclusi nella larghezza */
+  box-sizing: border-box; 
+}
+
+.toggle-password {
+  position: absolute;
+  right: 10px;
+  top: 52%;
+  cursor: pointer;
+  font-size: 24px;
+  color: #555;
+  user-select: none;
 }

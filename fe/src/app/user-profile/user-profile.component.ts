@@ -25,6 +25,8 @@ export class UserProfileComponent implements OnInit {
   isEditingPersonal = false;
   isEditingContact = false;
 
+  hidePassword = true;
+
   personalForm: FormGroup;
   contactForm: FormGroup;
 

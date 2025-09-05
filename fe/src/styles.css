@@ -5,3 +5,17 @@ html, body {
   width: 100%;  /* Indispensabile per far occupare al body l'intera larghezza della viewport */
   overflow-x: hidden; /* Previene lo scroll orizzontale non desiderato */
 }
+
+.material-symbols-outlined {
+  font-family: 'Material Symbols Outlined' !important;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+}
