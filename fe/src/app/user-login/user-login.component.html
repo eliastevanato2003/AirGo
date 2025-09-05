@@ -1,9 +1,9 @@
 <app-navbar></app-navbar>
-<div>     
-        <a (click)="goBack()" class="back-link">&lt; annulla</a>
+<div>
+    <a (click)="goBack()" class="back-link">&lt; annulla</a>
 </div>
 <main class="login-container">
-    
+
     <div class="login-box">
         <h1>Accedi al tuo account</h1>
         <form method="post" [formGroup]="loginForm">
@@ -11,9 +11,17 @@
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" formControlName="email" required>
             </div>
-            <div class="input-group">
+            <div class="input-group password-container">
                 <label for="password">Password</label>
-                <input type="password" id="password" name="password" formControlName="password" required>
+
+                <input [type]="hidePassword ? 'password' : 'text'" id="password" name="password"
+                    formControlName="password" required>
+
+                <!-- Icona per mostra/nascondi -->
+                <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+                    (click)="hidePassword = !hidePassword">
+                    {{ hidePassword ? 'visibility' : 'visibility_off' }}
+                </span>
             </div>
             <button type="submit" class="login-button" (click)="login()">Accedi</button>
         </form>

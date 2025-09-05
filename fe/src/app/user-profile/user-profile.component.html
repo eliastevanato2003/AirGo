@@ -28,9 +28,14 @@
           <label for="surname-input">Cognome:</label>
           <input type="text" formControlName="surname">
         </div>
-        <div class="form-field">
+        <div class="form-field password-container">
           <label for="password-input">Password:</label>
           <input type="password" formControlName="password">
+          <!-- Icona per mostra/nascondi -->
+                <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+                    (click)="hidePassword = !hidePassword">
+                    {{ hidePassword ? 'visibility' : 'visibility_off' }}
+                </span>
         </div>
       </form>
     </div>

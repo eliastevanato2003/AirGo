@@ -3,16 +3,19 @@ import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-user-signup',
-  imports: [ReactiveFormsModule, NavbarComponent],
+  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule],
   templateUrl: './user-signup.component.html',
   styleUrl: './user-signup.component.css'
 })
 export class UserSignupComponent {
 
   public signupForm;
+  public hidePassword1 = true;
+  public hidePassword2 = true;
 
   constructor(private router: Router, private http: HttpClient) {
     this.signupForm = new FormGroup({
