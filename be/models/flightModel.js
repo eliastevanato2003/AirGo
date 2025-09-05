@@ -1,7 +1,7 @@
 const pool = require("../db")
 
 exports.getFlights = async (id) => {
-    const sql = 'SELECT * FROM "Voli" WHERE ("IdVolo" = $1 OR $1 IS NULL) "IsActive" = true';
+    const sql = 'SELECT * FROM "Voli" WHERE ("IdVolo" = $1 OR $1 IS NULL) AND "IsActive" = true';
     const result = await pool.query(sql, [id]);
     return result.rows;
 }

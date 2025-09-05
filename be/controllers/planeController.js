@@ -2,7 +2,7 @@ const planeService = require("../services/planeService");
 
 exports.getPlanes = async (req, res, next) => {
     try {
-        const { id, airline, model, constructionyear } = req.body ?? {};
+        const { id, airline, model, constructionyear } = req.query ?? {};
         const planes = await planeService.getPlanes(id, airline, model, constructionyear);
         res.json({planes});
     } catch (err) {
@@ -12,7 +12,8 @@ exports.getPlanes = async (req, res, next) => {
 
 exports.newPlane = async (req, res, next) => {
     try {
-        const { airline, model, constructionyear } = req.body ?? {};
+        const { model, constructionyear } = req.body ?? {};
+        const airline = req.id;
         const nplane = await planeService.newPlane(airline, model, constructionyear);
         res.json({nplane: nplane});
     } catch (err) {

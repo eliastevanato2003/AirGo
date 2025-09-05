@@ -4,7 +4,7 @@ const flightModel = require('../controllers/flightController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
-router.get("/getFlight", flightModel.getFlights);
+router.get("/getFlights", flightModel.getFlights);
 
 router.post("/newFlight", authenticateToken, authorizeRoles(1), flightModel.newFlight);
 
