@@ -36,6 +36,7 @@ exports.newModel = async (req, res, next) => {
         }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Modelli_Nome_key') res.status(409).json({ message: "Name already in use" });
+        else if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }

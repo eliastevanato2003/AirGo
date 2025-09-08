@@ -8,7 +8,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @route GET api/models/getModels
  * @description Restituisce le informazioni dei modelli che rispettano i filtri indicati
  * @id (Opzionale) L'id del modello
- * @name (Opzionale) Il nome del modelloe
+ * @name (Opzionale) Il nome del modello
  * @returns {200} {object} Le info del modello
  * @returns{400} {message: string} Uno o più parametri invalidi 
  */
@@ -18,10 +18,10 @@ router.get("/getModels", modelController.getModels);
  * @route POST /api/models/newModel
  * @description Crea un nuovo modello
  * @access role: 0,1
- * @name Il nome del modello
+ * @name Il nome del modello, che deve essere univoco
  * @seatspc Il numero di posti in prima classe
  * @rowsb Il numero di righe in business
- * @columnsb Il numero di colonne inn business, deve essere pari
+ * @columnsb Il numero di colonne in business, deve essere pari
  * @rowse Il numero di righe in economy
  * @columnse Il numero di colonne in economy, deve essere pari
  * @extralegrows Array con le righe con spazio extra per le gambe
