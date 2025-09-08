@@ -4,7 +4,7 @@ exports.getPlanes = async (req, res, next) => {
     try {
         const { id, airline, model, constructionyear } = req.query ?? {};
         const planes = await planeService.getPlanes(id, airline, model, constructionyear);
-        res.json({planes});
+        res.json(planes);
     } catch (err) {
         next(err);
     }
