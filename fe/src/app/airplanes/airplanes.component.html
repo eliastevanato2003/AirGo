@@ -1,0 +1,50 @@
+<app-navbar></app-navbar>
+
+<div class="airplanes-container">
+  <div class="header">
+     <div class="title-group">
+        <h2>Gestione Aerei</h2>
+        <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
+    </div>
+    <button class="add-airplane-btn"  (click)="showModal=true">Nuovo aereo</button>
+  </div>
+
+  <div class="airplane-list">
+    <div class="airplane-bar" *ngFor="let airplane of airplanes">
+      <div class="airplane-info">
+        <p><strong>ID:</strong>     {{ airplane.id }}</p>
+        <p><strong>Modello:</strong>    {{ airplane.model }}</p>
+        <p><strong>Anno di costruzione:</strong>    {{ airplane.constructionYear }}</p>
+      </div>
+      <button class="delete-btn">Elimina</button>
+    </div>
+  </div>
+
+  
+    <div class="modal-overlay" *ngIf="showModal">
+    <div class="modal-content">
+        <h3>Nuovo aereo</h3>
+        <form >
+        <label>ID:</label>
+        <input type="text"  name="id">
+
+        <label>Modello:</label>
+        <input type="text" name="model">
+
+        <label>Anno di costruzione:</label>
+        <input type="number" name="constructionYear">
+
+        <div class="modal-buttons">
+            <button type="submit" class="add-btn">Aggiungi</button>
+            <button type="button" class="cancel-btn" (click)="showModal= false">Annulla</button>
+        </div>
+        </form>
+    </div>
+    </div>
+
+
+</div>
+
+
+
+<app-footer></app-footer>
