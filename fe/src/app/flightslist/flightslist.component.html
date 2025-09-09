@@ -16,10 +16,10 @@
         <strong>A:</strong> {{ flight.to }}
       </div>
       <div>
-        <strong>P.</strong> {{ flight.departure }}
+        <strong>Partenza:</strong> {{ flight.departure | date: 'dd/MM/yyyy HH:mm' }}
       </div>
       <div>
-        <strong>A.</strong> {{ flight.arrival }}
+        <strong>Arrivo:</strong> {{ flight.arrival | date: 'dd/MM/yyyy HH:mm' }}
       </div>
     </div>
     <button class="book-btn">Acquista</button>
