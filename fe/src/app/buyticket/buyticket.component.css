@@ -1,0 +1,100 @@
+* {
+    font-family: 'Roboto', sans-serif;
+    box-sizing: border-box;
+}
+
+.img-container{
+    background-image: url('../assets/img/pistadecollo.png');
+    background-size: cover;
+    background-position: center;
+}/*DA VEDERE SE METTERE L'IMMAGINE DIETRO C'E IL DIV NELL'HTML*/
+
+.ticket-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px;
+    margin-top: 30px;
+    margin-bottom: 50px;
+}
+
+.ticket-container h2 {
+    font-size: 26px;
+    color: #3b5998;
+    margin-bottom: 8px;
+}
+
+.ticket-container p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+
+.passenger-card {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.passenger-card h3 {
+    font-size: 18px;
+    font-weight: bold;
+    color: #444;
+    margin-bottom: 20px;
+}
+
+
+
+.passenger-form {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.form-group-inline {
+    flex: 1;
+    min-width: 200px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group-inline label {
+    font-size: 14px;
+    color: #3b5998;
+    font-weight: 500;
+    margin-bottom: 6px;
+}
+
+.form-group-inline input {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.form-group-inline input:focus {
+    border-color: #ff7f50;
+    outline: none;
+    box-shadow: 0 0 4px rgba(255, 127, 80, 0.3);
+}
+
+
+.submit-button {
+    width: 100%;
+    padding: 15px;
+    background: #ff7f50;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 15px;
+}
+
+.submit-button:hover {
+    background: #e67345;
+}

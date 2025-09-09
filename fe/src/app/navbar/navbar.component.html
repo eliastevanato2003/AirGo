@@ -1,13 +1,16 @@
 <header class="header">
     <div class="logo" (click)="home()">AirGo</div>
     <nav>
-      <ul *ngIf="isLoggedIn">
+      <ul>
+      <li><a href="#" (click)="home()">Home</a></li>
+      <ng-container *ngIf="isLoggedIn">
         <li><a href="#">I miei voli</a></li>
         <li><button id="button" class="log-in-btn" (click)="profile()">Profilo</button></li>
         <li><a href="#" (click)="logout()">Esci</a></li>
-      </ul>
-      <ul *ngIf="!isLoggedIn">
+      </ng-container>
+      <ng-container *ngIf="!isLoggedIn">
         <li><button id="button" class="log-in-btn" (click)="login()">Accedi</button></li>
-      </ul>
+      </ng-container>
+    </ul>
     </nav>
   </header>
