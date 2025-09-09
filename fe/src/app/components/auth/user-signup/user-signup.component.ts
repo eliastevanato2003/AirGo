@@ -32,20 +32,26 @@ export class UserSignupComponent {
   login() {
     this.router.navigate(['/login']);
   }
-  goBack(){
+  goBack() {
     this.router.navigate(['/']);
   }
 
-  async signup() {
+  signup() {
     if (!this.signupForm.valid) {
       return null;
     }
 
     const formData = this.signupForm.value;
-    if(this.authService.signup(formData.name!, formData.surname!, formData.email!, formData.password1!, formData.phone!, formData.dob!)) {
-      this.login();
-    }
-    return true;
+    this.authService.signup(formData.name!, formData.surname!, formData.email!, formData.password1!, formData.phone!, formData.dob!).subscribe({
+      next: () => {
+        console.log('Registrazione avvenuta con successo');
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        console.error('Errore signup:', err);
+      }
+    });
+    return false;
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {

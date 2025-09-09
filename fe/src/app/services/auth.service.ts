@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +54,7 @@ export class AuthService {
     return this.loggedIn$.asObservable();
   }
 
-  login(email: string, password: string): boolean {
+  login(email: string, password: string) {
     const url = 'http://localhost:3000/api/users/login';
 
     const message = {
@@ -63,26 +63,15 @@ export class AuthService {
     };
 
     // Invio dei dati al backend
-    this.http.post(url, message).subscribe({
-      next: (response) => {
-        const authResponse = response as { token: string };
-        // La risposta dal server è un oggetto con la proprietà 'token'
-        const token = authResponse.token;
-
-        // Salva il token in un luogo sicuro, come il localStorage
-        this.saveToken(token);
-        console.log('Logged in');
-        return true;
-      },
-      error: (error) => {
-        console.error('Login error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
-      }
-    });
-    return false;
+    return this.http.post<{ token: string }>(url, message).pipe(
+      tap(response => {
+        this.saveToken(response.token);
+        console.log('Logged in, token salvato:', response.token);
+      })
+    );
   }
 
-  signup(name: string, surname: string, email: string, password: string, number: string, dob: string): boolean {
+  signup(name: string, surname: string, email: string, password: string, number: string, dob: string) {
     const url = 'http://localhost:3000/api/users/newUser';
 
     const message = {
@@ -95,16 +84,10 @@ export class AuthService {
     };
 
     // Invio dei dati al backend
-    this.http.post(url, message).subscribe({
-      next: () => {
-        console.log('Signed up');
-        return true;
-      },
-      error: (error) => {
-        console.error('Sign up error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
-      }
-    });
-    return false;
+    return this.http.post(url, message).pipe(
+      tap(response => {
+        console.log(response);
+      })
+    );
   }
 }
