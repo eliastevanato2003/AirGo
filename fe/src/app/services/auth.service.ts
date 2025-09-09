@@ -1,4 +1,5 @@
 import { isPlatformBrowser } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
@@ -8,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthService {
   private loggedIn$ = new BehaviorSubject<boolean>(false);
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
     if (this.isBrowser()) {
       const token = localStorage.getItem('authToken');
       this.loggedIn$.next(!!token);
@@ -20,8 +21,8 @@ export class AuthService {
   }
 
   // Salva il token in localStorage
-  login(token: string) {
-    if(this.isBrowser()) {
+  saveToken(token: string) {
+    if (this.isBrowser()) {
       localStorage.setItem('authToken', token);
       this.loggedIn$.next(true);
     }
@@ -34,7 +35,7 @@ export class AuthService {
 
   // Rimuovi il token da localStorage
   logout() {
-    if(this.isBrowser()) {
+    if (this.isBrowser()) {
       localStorage.removeItem('authToken');
       this.loggedIn$.next(false);
     }
@@ -42,14 +43,68 @@ export class AuthService {
 
   // Esempio con sessionStorage
   saveTemporaryData(data: string) {
-    if(this.isBrowser()) sessionStorage.setItem('tempData', data);
+    if (this.isBrowser()) sessionStorage.setItem('tempData', data);
   }
 
   getTemporaryData(): string | null {
-    return this.isBrowser() ? sessionStorage.getItem('tempData'): null;
+    return this.isBrowser() ? sessionStorage.getItem('tempData') : null;
   }
 
   isLoggedIn() {
     return this.loggedIn$.asObservable();
+  }
+
+  login(email: string, password: string): boolean {
+    const url = 'http://localhost:3000/api/users/login';
+
+    const message = {
+      email: email,
+      password: password
+    };
+
+    // Invio dei dati al backend
+    this.http.post(url, message).subscribe({
+      next: (response) => {
+        const authResponse = response as { token: string };
+        // La risposta dal server è un oggetto con la proprietà 'token'
+        const token = authResponse.token;
+
+        // Salva il token in un luogo sicuro, come il localStorage
+        this.saveToken(token);
+        console.log('Logged in');
+        return true;
+      },
+      error: (error) => {
+        console.error('Login error:', error);
+        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      }
+    });
+    return false;
+  }
+
+  signup(name: string, surname: string, email: string, password: string, number: string, dob: string): boolean {
+    const url = 'http://localhost:3000/api/users/newUser';
+
+    const message = {
+      name: name,
+      surname: surname,
+      email: email,
+      password: password,
+      number: number,
+      dob: dob
+    };
+
+    // Invio dei dati al backend
+    this.http.post(url, message).subscribe({
+      next: () => {
+        console.log('Signed up');
+        return true;
+      },
+      error: (error) => {
+        console.error('Sign up error:', error);
+        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      }
+    });
+    return false;
   }
 }

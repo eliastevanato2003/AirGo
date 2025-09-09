@@ -7,7 +7,8 @@ exports.getFlightRoutes = async (req, res, next) => {
         const routes = await flightRouteService.getFlightRoutes(id, departure, arrival, airline);
         res.json(routes);
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
     }
 }
 
@@ -15,7 +16,7 @@ exports.newFlightRoute = async (req, res, next) => {
     try {
         const { departure, arrival } = req.body ?? {};
         const airline = req.id;
-        if (!departure || !arrival || !airline) res.status(400).json({ message: "Required data missing" });
+        if (departure == undefined || arrival == undefined) res.status(400).json({ message: "Required data missing" });
         else if (departure == arrival) res.status(400).json({ message: "Departure and destination airports cannot be the same" });
         else {
             const departureairport = await airportService.getAirports(departure, undefined, undefined, undefined);
@@ -27,6 +28,7 @@ exports.newFlightRoute = async (req, res, next) => {
         }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Rotte_Partenza_Destinazione_CompagniaAerea_key') res.status(409).json({ message: "Flight route already exists" });
+        else if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }

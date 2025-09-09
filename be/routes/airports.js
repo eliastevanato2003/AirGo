@@ -12,6 +12,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @country (Opzionale) La nazione dell'aeroporto
  * @identificationcode (Opzionale) Il codice identificativo dell'aeroporto
  * @returns {200} {object} Le info degli aeroporti 
+ * @returns {400} {message: string} Uno o più parametri invalidi 
  */
 router.get("/getAirports", airportController.getAirports);
 
@@ -25,9 +26,10 @@ router.get("/getAirports", airportController.getAirports);
  * @identificationcode Il codice identificativo dell'aeroporto, che deve essere univoco
  * @returns {200} {nairport: number} Il numero di aeroporti creati
  * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Codice identificativo già in uso
- */ 
-router.post("/newAirport", authenticateToken, authorizeRoles(0,1), airportController.newAirport);
+ */
+router.post("/newAirport", authenticateToken, authorizeRoles(0, 1), airportController.newAirport);
 
 /**
  * @route POST /api/airports/updateAirport
@@ -44,7 +46,7 @@ router.post("/newAirport", authenticateToken, authorizeRoles(0,1), airportContro
  * @returns {500} {message: string} Aeroporto da aggiornare non trovato
  * @returns {500} {message: string} Trovati aeroporti multipli con l'id indicato
  */
-router.post("/updateAirport", authenticateToken, authorizeRoles(0,1), airportController.updateAirport);
+router.post("/updateAirport", authenticateToken, authorizeRoles(0, 1), airportController.updateAirport);
 
 /**
  * @route POST /api/airports/deleteAirport
@@ -55,6 +57,6 @@ router.post("/updateAirport", authenticateToken, authorizeRoles(0,1), airportCon
  * @returns {400} {message: string} Id mancante
  * @returns {409} {message: string} Aeroporto in uso in rotte attive
  */
-router.post("/deleteAirport", authenticateToken, authorizeRoles(0,1), airportController.deleteAirport);
+router.post("/deleteAirport", authenticateToken, authorizeRoles(0, 1), airportController.deleteAirport);
 
 module.exports = router;

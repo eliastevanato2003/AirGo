@@ -12,6 +12,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @arrival (Opzionale) L'id dell'aeroporto di arrivo
  * @airline (Opzionale) L'id della compagnia aerea della rotta
  * @returns {200} {object} Le info delle rotte 
+ * @returns {400} {message: string} Uno o più parametri invalidi
  */
 router.get("/getFlightRoutes", flightRoutesController.getFlightRoutes);
 
@@ -25,6 +26,7 @@ router.get("/getFlightRoutes", flightRoutesController.getFlightRoutes);
  * @returns {400} {message: string} Dati mancanti
  * @returns {400} {message: string} Aeroporto di partenza e destinazione uguali
  * @returns {400} {message: string} Aeroporto di partenza o destinazione non esistenti
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Rotta già esistente
  */ 
 router.post("/newFlightRoute", authenticateToken, authorizeRoles(1), flightRoutesController.newFlightRoute);

@@ -7,18 +7,22 @@ exports.getAirports = async (req, res, next) => {
         const airports = await airportService.getAirports(id, city, country, identificationcode);
         res.json(airports);
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
     }
 }
 
 exports.newAirport = async (req, res, next) => {
     try {
         const { city, country, name, identificationcode } = req.body ?? {};
-        if (!city || !country || !name || !identificationcode) res.status(400).json({ message: "Required data missing" });
-        const nairport = await airportService.newAirport(city, country, name, identificationcode);
-        res.json({ nairport: nairport });
+        if (city == undefined || country == undefined || name == undefined || identificationcode == undefined) res.status(400).json({ message: "Required data missing" });
+        else {
+            const nairport = await airportService.newAirport(city, country, name, identificationcode);
+            res.json({ nairport: nairport });
+        }
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Aereoporti_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
+        else if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }

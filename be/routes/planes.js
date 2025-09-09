@@ -12,7 +12,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @model (Opzionale) L'id del modello dell'aereo
  * @costructionyear (Opzionale) L'anno di costruzione dell'aereo
  * @returns {200} {object} Le info dell'aereo
- * @returns{400} {message: string} Uno o più parametri invalidi 
+ * @returns {400} {message: string} Uno o più parametri invalidi 
  */
 router.get("/getPlanes", planeController.getPlanes);
     

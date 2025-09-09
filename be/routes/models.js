@@ -10,7 +10,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @id (Opzionale) L'id del modello
  * @name (Opzionale) Il nome del modello
  * @returns {200} {object} Le info del modello
- * @returns{400} {message: string} Uno o più parametri invalidi 
+ * @returns {400} {message: string} Uno o più parametri invalidi 
  */
 router.get("/getModels", modelController.getModels);
 
