@@ -24,20 +24,19 @@
     <div class="modal-overlay" *ngIf="showModal">
     <div class="modal-content">
         <h3>Nuovo aereo</h3>
-        <form >
-        <label>ID:</label>
-        <input type="text"  name="id">
+        <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
+          <label>Modello:</label>
+          <select formControlName="model">
+            <option value="" disabled>Seleziona un modello</option>
+            <option *ngFor="let model of airplaneModels" [value]="model.idModello">{{ model }}</option>
+          </select>
+          <label>Anno di costruzione:</label>
+          <input type="number" formControlName="constructionyear">
 
-        <label>Modello:</label>
-        <input type="text" name="model">
-
-        <label>Anno di costruzione:</label>
-        <input type="number" name="constructionYear">
-
-        <div class="modal-buttons">
-            <button type="submit" class="add-btn">Aggiungi</button>
-            <button type="button" class="cancel-btn" (click)="showModal= false">Annulla</button>
-        </div>
+          <div class="modal-buttons">
+            <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
+            <button type="button" class="cancel-btn" (click)="showModal = false">Annulla</button>
+          </div>
         </form>
     </div>
     </div>
