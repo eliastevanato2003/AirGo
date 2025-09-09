@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
-import { NavbarComponent } from '../navbar/navbar.component';
-import { AuthService } from '../services/auth.service';
+import { NavbarComponent } from '../../../navbar/navbar.component';
+import { AuthService } from '../../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -33,34 +33,9 @@ export class UserLoginComponent {
   }
 
   async login() {
-
     const formData = this.loginForm.value;
-    const url = 'http://localhost:3000/api/users/login';
-
-    const message = {
-      email: formData.email,
-      password: formData.password
-    };
-
-    // Invio dei dati al backend
-    this.http.post(url, message).subscribe({
-      next: (response) => {
-        const authResponse = response as {token: string};
-        // La risposta dal server è un oggetto con la proprietà 'token'
-        const token = authResponse.token; 
-
-        // Salva il token in un luogo sicuro, come il localStorage
-        this.authService.login(token);
-        console.log('Logged in');
-        // Esempio: reindirizza l'utente a una pagina home
-        this.router.navigate(['']);
-      },
-      error: (error) => {
-        console.error('Login error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
-      }
-    });
-
+    if(this.authService.login(formData.email!, formData.password!))
+      this.router.navigate(['']);
     return true;
   }
 }
