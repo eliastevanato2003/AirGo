@@ -12,7 +12,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @country (Opzionale) La nazione dell'aeroporto
  * @identificationcode (Opzionale) Il codice identificativo dell'aeroporto
  * @returns {200} {object} Le info degli aeroporti 
- * @returns{400} {message: string} Uno o più parametri invalidi 
+ * @returns {400} {message: string} Uno o più parametri invalidi 
  */
 router.get("/getAirports", airportController.getAirports);
 
@@ -26,6 +26,7 @@ router.get("/getAirports", airportController.getAirports);
  * @identificationcode Il codice identificativo dell'aeroporto, che deve essere univoco
  * @returns {200} {nairport: number} Il numero di aeroporti creati
  * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Codice identificativo già in uso
  */
 router.post("/newAirport", authenticateToken, authorizeRoles(0, 1), airportController.newAirport);
