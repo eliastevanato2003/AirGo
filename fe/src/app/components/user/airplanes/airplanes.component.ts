@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { NavbarComponent } from '../navbar/navbar.component';
-import { FooterComponent } from '../footer/footer.component';
+import { NavbarComponent } from '../../../navbar/navbar.component';
+import { FooterComponent } from '../../../footer/footer.component';
 import { CommonModule, NgIf } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { AuthService } from '../services/auth.service';
+import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
@@ -28,39 +28,33 @@ export class AirplanesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const token = this.authService.getToken();
+  const airlineUrl = 'http://localhost:3000/api/airlines/getAirline';
+  const token = this.authService.getToken();
 
-    console.log('Token PORCODIO:', token);
+  console.log('Token JWT:', token);
+  const headers = new HttpHeaders({
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  });
 
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    });
+  this.http.get<any>(airlineUrl, { headers }).subscribe({
+    next: (airline) => {
+      console.log('Dati compagnia aerea:', airline);
+      const airlineId = airline.IdCompagniaAerea;
 
-    const airlineUrl = 'http://localhost:3000/api/airlines/getAirline';
+      const planesUrl = `http://localhost:3000/api/planes/getPlanes?airline=${airlineId}`;
 
-    this.http.get(airlineUrl, { headers: headers }).subscribe({
-      next: (airline) => {
-        const data = airline as{
-          id: string;
-        }
+      this.http.get<any[]>(planesUrl, { headers }).subscribe({
+        next: (planes) => {
+          this.airplanes = planes;
+        },
+        error: (err) => console.error('Errore caricamento aerei', err)
+      });
+    },
+    error: (err) => console.error('Errore caricamento compagnia', err)
+  });
+}
 
-        const planesUrl = `http://localhost:3000/api/planes/getPlanes?airline=${data.id}`;
-
-        this.http.get<any[]>(planesUrl, { headers : headers }).subscribe({
-          next: (planes) => {
-            this.airplanes = planes;
-          },
-          error: (err) => {
-            console.error('Errore caricamento aerei', err);
-          }
-        });
-      },
-      error: (err) => {
-        console.error('Errore caricamento compagnia', err);
-      }
-    });
-  }
 
   addPlane(): void {
     if (this.newPlaneForm.invalid) return;

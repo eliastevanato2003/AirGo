@@ -1,6 +1,6 @@
 <div class="flight-container">
   <h1>Risultati della ricerca voli</h1>
-  <div *ngIf="flights.length === 0" class="no-flights">
+  <div *ngIf="flights?.length === 0" class="no-flights">
     Nessun volo trovato
   </div>
   <div class="flight-card" *ngFor="let flight of flights">
