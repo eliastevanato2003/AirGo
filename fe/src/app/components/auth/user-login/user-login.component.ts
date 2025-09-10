@@ -35,7 +35,7 @@ export class UserLoginComponent {
   async login() {
     const formData = this.loginForm.value;
     if(this.authService.login(formData.email!, formData.password!))
-      this.router.navigate(['']);
+      this.router.navigate(['/']);
     return true;
   }
 }

@@ -5,18 +5,18 @@ import { Injectable } from "@angular/core";
 @Injectable({ providedIn: 'root' })
 export class FlightService {
 
-    private flights: Flight[] = [];
+  private flights: Flight[] = [];
 
-    constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-    getFlights() {
-        const url = 'http://localhost:3000/api/flights/getFlights';
+  getFlights() {
+    const url = 'http://localhost:3000/api/flights/getFlights';
 
     // Filtri della get
     const message = {};
 
     // Richiesta dei dati
-    this.http.get<{flights: any[]}>(url).subscribe({
+    this.http.get<{ flights: any[] }>(url).subscribe({
       next: (response) => {
         response.flights.forEach((res) => {
           let flight = res as FlightDb;
@@ -38,5 +38,5 @@ export class FlightService {
       }
     });
     return null;
-    }
+  }
 }
