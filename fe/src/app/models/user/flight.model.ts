@@ -23,6 +23,7 @@ export interface FlightDb {
 }
 
 export interface Flight {
+    id: number;
     airline: string;
     from: string;
     to: string;

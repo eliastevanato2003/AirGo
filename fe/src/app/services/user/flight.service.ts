@@ -22,6 +22,7 @@ export class FlightService {
           let flight = res as FlightDb;
           // Inserimento dei dati in this.flights
           this.flights.push({
+            id: flight.IdVolo,
             from: flight.CittaPartenza + ' (' + flight.CodicePartenza + ')',
             to: flight.CittaArrivo + ' (' + flight.CodiceArrivo + ')',
             departure: flight.DataPartenzaPrev,
