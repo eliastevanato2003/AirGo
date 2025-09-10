@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "../auth.service";
 import { Airline, NewAirline } from "../../models/admin/airline.model";
+import { tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class AirlineService {
@@ -10,7 +11,7 @@ export class AirlineService {
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    async getAirlines(): Promise<Airline[] | null> {
+    getAirlines() {
         const url = 'http://localhost:3000/api/airlines/getAirlines'
 
         const token = this.authService.getToken();
@@ -21,16 +22,9 @@ export class AirlineService {
             'Authorization': `Bearer ${token}`
         });
 
-        try {
-            await this.http.get<any[]>(url, { headers: headers }).subscribe({
-                next: (response) => {
-                    console.log(response);
-                }
-            });
-        } catch (error) {
-            console.error('GetAirlines error:', error);
-        }
-        return null;
+        return this.http.get<any[]>(url, { headers: headers }).pipe(
+            tap()
+        );
     }
 
     addAirline(airline: NewAirline) {

@@ -29,8 +29,11 @@ export class AirlinesComponent implements OnInit {
   }
 
   async loadAirlines() {
-    this.airlines = await this.airlineService.getAirlines();
-    console.log(this.airlines);
+    this.airlineService.getAirlines().subscribe({
+      next: (response) => {
+        this.airlines = response as Airline[];
+      }
+    });
   }
 
   addAirline() {
@@ -42,6 +45,7 @@ export class AirlinesComponent implements OnInit {
     this.newAirline = { name: '', code: '', email: '', password: 'password' };
   }
 
+  // TODO: finire delete
   deleteAirline(id: number): void {
     if (confirm('Sei sicuro di voler eliminare questa compagnia aerea?')) {
       //this.airlineService.deleteAirline(id).subscribe(() => this.loadAirlines());
