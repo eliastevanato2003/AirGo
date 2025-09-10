@@ -17,7 +17,7 @@ export class UserLoginComponent {
   public loginForm;
   public hidePassword = true;
 
-  constructor(private router: Router, private http: HttpClient, private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService) {
     this.loginForm = new FormGroup({
       email: new FormControl(''),
       password: new FormControl('')
@@ -28,14 +28,20 @@ export class UserLoginComponent {
     this.router.navigate(['/signup']);
   }
 
-  goBack(){
+  goBack() {
     this.router.navigate(['/']);
   }
 
   async login() {
     const formData = this.loginForm.value;
-    if(this.authService.login(formData.email!, formData.password!))
-      this.router.navigate(['/']);
-    return true;
+    this.authService.login(formData.email!, formData.password!).subscribe({
+      next: () => {
+        console.log('Login avvenuto con successo');
+        this.router.navigate(['']);
+      },
+      error: (err) => {
+        console.error('Errore login:', err);
+      }
+    });
   }
 }
