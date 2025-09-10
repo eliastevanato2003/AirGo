@@ -6,6 +6,7 @@ import { UserProfileComponent } from './components/user/user-profile/user-profil
 import { FlightsListComponent } from './components/user/flightslist/flightslist.component';
 import { BuyticketComponent } from './components/user/buyticket/buyticket.component';
 import { AirplanesComponent } from './components/user/airplanes/airplanes.component';
+import { AirlinesComponent } from './components/admin/airlines/airlines.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'profile', component: UserProfileComponent },
     { path: 'flightslist', component: FlightsListComponent },
     { path: 'buyticket', component: BuyticketComponent},
-    { path: 'airplanes', component: AirplanesComponent }
+    { path: 'airplanes', component: AirplanesComponent },
+    { path: 'admin-airlines', component: AirlinesComponent }
 ];
