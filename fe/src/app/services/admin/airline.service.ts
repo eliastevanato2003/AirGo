@@ -28,7 +28,7 @@ export class AirlineService {
     }
 
     addAirline(airline: NewAirline) {
-        const url = 'http://localhost:3000/api/airlines/updateAirlines'
+        const url = 'http://localhost:3000/api/airlines/newAirline'
 
         const token = this.authService.getToken();
 
@@ -45,18 +45,28 @@ export class AirlineService {
             password: airline.password
         };
 
-        this.http.post(url, { headers: headers }).subscribe({
-            next: () => {
-                console.log('Airline aggiunta correttamente');
-            },
-            error: (error) => {
-                console.error('GetAirlines error:', error);
-                // Gestisci l'errore, magari mostrando un messaggio all'utente
-            }
-        });
+        return this.http.post(url, message, { headers: headers }).pipe(
+            tap(() => console.log('Airline aggiunta correttamente'))
+        );
     }
 
     deleteAirline(id: number) {
+        const url = 'http://localhost:3000/api/airlines/deleteAirline'
 
+        const token = this.authService.getToken();
+
+        // Crea l'intestazione di autorizzazione
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        const message = {
+            id: id
+        };
+
+        return this.http.post(url, message, { headers: headers }).pipe(
+            tap(() => console.log('Airline eliminata correttamente'))
+        );
     }
 }

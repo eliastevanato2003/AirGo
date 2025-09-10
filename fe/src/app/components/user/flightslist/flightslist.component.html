@@ -1,27 +1,31 @@
 <div class="flight-container">
   <h1>Risultati della ricerca voli</h1>
-  <div *ngIf="flights?.length === 0" class="no-flights">
-    Nessun volo trovato
-  </div>
-  <div class="flight-card" *ngFor="let flight of flights">
-    <div class="flight-header">
-      <span class="airline">{{ flight.airline }}</span>
-      <span class="price">€{{ flight.price }}</span>
+  @if(flights?.length === 0) {
+    <div class="no-flights">
+      Nessun volo trovato
     </div>
-    <div class="flight-details">
-      <div>
-        <strong>Da:</strong> {{ flight.from }}
+  }
+  @for(flight of flights; track flight.id) {
+    <div class="flight-card">
+      <div class="flight-header">
+        <span class="airline">{{ flight.airline }}</span>
+        <span class="price">€{{ flight.price }}</span>
       </div>
-      <div>
-        <strong>A:</strong> {{ flight.to }}
+      <div class="flight-details">
+        <div>
+          <strong>Da:</strong> {{ flight.from }}
+        </div>
+        <div>
+          <strong>A:</strong> {{ flight.to }}
+        </div>
+        <div>
+          <strong>Partenza:</strong> {{ flight.departure | date: 'dd/MM/yyyy HH:mm' }}
+        </div>
+        <div>
+          <strong>Arrivo:</strong> {{ flight.arrival | date: 'dd/MM/yyyy HH:mm' }}
+        </div>
       </div>
-      <div>
-        <strong>Partenza:</strong> {{ flight.departure | date: 'dd/MM/yyyy HH:mm' }}
-      </div>
-      <div>
-        <strong>Arrivo:</strong> {{ flight.arrival | date: 'dd/MM/yyyy HH:mm' }}
-      </div>
+      <button class="book-btn">Acquista</button>
     </div>
-    <button class="book-btn">Acquista</button>
-  </div>
+  }
 </div>

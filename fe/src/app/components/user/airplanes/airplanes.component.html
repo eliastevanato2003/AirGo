@@ -2,44 +2,49 @@
 
 <div class="airplanes-container">
   <div class="header">
-     <div class="title-group">
-        <h2>Gestione Aerei</h2>
-        <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
+    <div class="title-group">
+      <h2>Gestione Aerei</h2>
+      <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
     </div>
-    <button class="add-airplane-btn"  (click)="showModal=true">Nuovo aereo</button>
+    <button class="add-airplane-btn" (click)="showModal=true">Nuovo aereo</button>
   </div>
 
   <div class="airplane-list">
-    <div class="airplane-bar" *ngFor="let airplane of airplanes">
-      <div class="airplane-info">
-        <p><strong>ID:</strong>     {{ airplane.id }}</p>
-        <p><strong>Modello:</strong>    {{ airplane.model }}</p>
-        <p><strong>Anno di costruzione:</strong>    {{ airplane.constructionYear }}</p>
+    @for(airplane of airplanes; track airplane.id) {
+      <div class="airplane-bar">
+        <div class="airplane-info">
+          <p><strong>ID:</strong> {{ airplane.id }}</p>
+          <p><strong>Modello:</strong> {{ airplane.model }}</p>
+          <p><strong>Anno di costruzione:</strong> {{ airplane.constructionYear }}</p>
+        </div>
+        <button class="delete-btn">Elimina</button>
       </div>
-      <button class="delete-btn">Elimina</button>
-    </div>
+    }
   </div>
 
-  
-    <div class="modal-overlay" *ngIf="showModal">
+  @if(showModal) {
+  <div class="modal-overlay">
     <div class="modal-content">
-        <h3>Nuovo aereo</h3>
-        <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
-          <label>Modello:</label>
-          <select formControlName="model">
-            <option value="" disabled>Seleziona un modello</option>
-            <option *ngFor="let model of airplaneModels" [value]="model.idModello">{{ model }}</option>
-          </select>
-          <label>Anno di costruzione:</label>
-          <input type="number" formControlName="constructionyear">
+      <h3>Nuovo aereo</h3>
+      <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
+        <label>Modello:</label>
+        <select formControlName="model">
+          <option value="" disabled>Seleziona un modello</option>
+          @for(model of airplaneModels; track model.idModello) {
+          <option [value]="model.idModello">{{ model }}</option>
+          }
+        </select>
+        <label>Anno di costruzione:</label>
+        <input type="number" formControlName="constructionyear">
 
-          <div class="modal-buttons">
-            <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
-            <button type="button" class="cancel-btn" (click)="showModal = false">Annulla</button>
-          </div>
-        </form>
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="showModal = false">Annulla</button>
+        </div>
+      </form>
     </div>
-    </div>
+  </div>
+  }
 
 
 </div>

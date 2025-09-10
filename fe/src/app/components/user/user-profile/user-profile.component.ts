@@ -1,4 +1,3 @@
-import { CommonModule, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +10,7 @@ import { UserService } from '../../../services/user/user.service';
   selector: 'app-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
-  imports: [ReactiveFormsModule, CommonModule, NgIf, NavbarComponent, FooterComponent]
+  imports: [ReactiveFormsModule, NavbarComponent, FooterComponent]
 })
 export class UserProfileComponent implements OnInit {
   userProfile: userProfile | undefined;

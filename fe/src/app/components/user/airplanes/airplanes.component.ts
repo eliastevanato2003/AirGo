@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
-import { CommonModule, NgIf } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,7 +9,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule, NgIf]
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule]
 })
 export class AirplanesComponent implements OnInit {
 

@@ -6,66 +6,76 @@
   <div class="profile-card">
     <div class="card-header">
       <h3>Dati Personali</h3>
-      <button *ngIf="!isEditingPersonal" (click)="enableEditMode('personal')" class="edit-btn">Modifica</button>
-      <div *ngIf="isEditingPersonal">
-        <button (click)="saveChanges('personal')" [disabled]="personalForm.invalid" class="save-btn">Salva</button>
-        <button (click)="cancelEdit('personal')" class="cancel-btn">Annulla</button>
-      </div>
+      @if(!isEditingPersonal) {
+        <button (click)="enableEditMode('personal')" class="edit-btn">Modifica</button>
+      } @else {
+        <div>
+          <button (click)="saveChanges('personal')" [disabled]="personalForm.invalid" class="save-btn">Salva</button>
+          <button (click)="cancelEdit('personal')" class="cancel-btn">Annulla</button>
+        </div>
+      }
     </div>
     <div class="card-body">
-      <div *ngIf="!isEditingPersonal">
-        <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
-        <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
-        <p><strong>Password:</strong> ********</p>
-      </div>
-      
-      <form *ngIf="isEditingPersonal" [formGroup]="personalForm">
-        <div class="form-field">
-          <label for="name-input">Nome:</label>
-          <input type="text" formControlName="name">
+      @if(!isEditingPersonal) {
+        <div>
+          <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
+          <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
+          <p><strong>Password:</strong> ********</p>
         </div>
-        <div class="form-field">
-          <label for="surname-input">Cognome:</label>
-          <input type="text" formControlName="surname">
-        </div>
-        <div class="form-field password-container">
-          <label for="password-input">Password:</label>
-          <input type="password" formControlName="password">
-          <!-- Icona per mostra/nascondi -->
-                <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
-                    (click)="hidePassword = !hidePassword">
-                    {{ hidePassword ? 'visibility' : 'visibility_off' }}
-                </span>
-        </div>
-      </form>
+      } @else {
+        <form [formGroup]="personalForm">
+          <div class="form-field">
+            <label for="name-input">Nome:</label>
+            <input type="text" formControlName="name">
+          </div>
+          <div class="form-field">
+            <label for="surname-input">Cognome:</label>
+            <input type="text" formControlName="surname">
+          </div>
+          <div class="form-field password-container">
+            <label for="password-input">Password:</label>
+            <input type="password" formControlName="password">
+            <!-- Icona per mostra/nascondi -->
+                  <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+                      (click)="hidePassword = !hidePassword">
+                      {{ hidePassword ? 'visibility' : 'visibility_off' }}
+                  </span>
+          </div>
+        </form>
+      }
     </div>
   </div>
 
   <div class="profile-card">
     <div class="card-header">
       <h3>Contatti</h3>
-      <button *ngIf="!isEditingContact" (click)="enableEditMode('contact')" class="edit-btn">Modifica</button>
-      <div *ngIf="isEditingContact">
-        <button (click)="saveChanges('contact')" [disabled]="contactForm.invalid" class="save-btn">Salva</button>
-        <button (click)="cancelEdit('contact')" class="cancel-btn">Annulla</button>
-      </div>
+      @if(!isEditingContact) {
+        <button (click)="enableEditMode('contact')" class="edit-btn">Modifica</button>
+      } @else {
+        <div>
+          <button (click)="saveChanges('contact')" [disabled]="contactForm.invalid" class="save-btn">Salva</button>
+          <button (click)="cancelEdit('contact')" class="cancel-btn">Annulla</button>
+        </div>
+      }
     </div>
     <div class="card-body">
-      <div *ngIf="!isEditingContact">
-        <p><strong>Email:</strong> {{ userProfile?.email }}</p>
-        <p><strong>Telefono:</strong> {{ userProfile?.phone }}</p>
-      </div>
-      
-      <form *ngIf="isEditingContact" [formGroup]="contactForm">
-        <div class="form-field">
-          <label for="email-input">Email:</label>
-          <input type="email" formControlName="email">
+      @if(!isEditingContact) {
+        <div>
+          <p><strong>Email:</strong> {{ userProfile?.email }}</p>
+          <p><strong>Telefono:</strong> {{ userProfile?.phone }}</p>
         </div>
-        <div class="form-field">
-          <label for="phone-input">Telefono:</label>
-          <input type="tel" formControlName="phone">
-        </div>
-      </form>
+      } @else {
+        <form [formGroup]="contactForm">
+          <div class="form-field">
+            <label for="email-input">Email:</label>
+            <input type="email" formControlName="email">
+          </div>
+          <div class="form-field">
+            <label for="phone-input">Telefono:</label>
+            <input type="tel" formControlName="phone">
+          </div>
+        </form>
+      }
     </div>
   </div>
 </div>
