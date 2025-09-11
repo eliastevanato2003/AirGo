@@ -3,14 +3,17 @@
     <nav>
       <ul>
       <li><a href="#" (click)="home()">Home</a></li>
-      <ng-container *ngIf="isLoggedIn">
-        <li><a href="#">I miei voli</a></li>
-        <li><button id="button" class="log-in-btn" (click)="profile()">Profilo</button></li>
-        <li><a href="#" (click)="logout()">Esci</a></li>
-      </ng-container>
-      <ng-container *ngIf="!isLoggedIn">
-        <li><button id="button" class="log-in-btn" (click)="login()">Accedi</button></li>
-      </ng-container>
+      @if(isLoggedIn) {
+        <ng-container>
+          <li><a href="#">I miei voli</a></li>
+          <li><button id="button" class="log-in-btn" (click)="profile()">Profilo</button></li>
+          <li><a href="#" (click)="logout()">Esci</a></li>
+        </ng-container>
+      } @else {
+        <ng-container>
+          <li><button id="button" class="log-in-btn" (click)="login()">Accedi</button></li>
+        </ng-container>
+      }
     </ul>
     </nav>
   </header>

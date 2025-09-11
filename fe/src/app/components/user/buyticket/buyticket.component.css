@@ -4,7 +4,7 @@
 }
 
 .img-container{
-    background-image: url('../assets/img/pistadecollo.png');
+    background-image: url('../../../assets/img/pistadecollo.png');
     background-size: cover;
     background-position: center;
 }/*DA VEDERE SE METTERE L'IMMAGINE DIETRO C'E IL DIV NELL'HTML*/

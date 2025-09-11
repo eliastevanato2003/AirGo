@@ -1,0 +1,33 @@
+export interface FlightDb {
+    IdVolo: number,
+    Aereo: number,
+    Rotta: number,
+    DataPartenzaPrev: string,
+    DateArrivoPrev: string,
+    DataPartenzaEff: null,
+    DataArrivoEff: null,
+    Stato: string,
+    CostoPC: number,
+    CostoB: number,
+    CostoE: number,
+    CostoBag: number,
+    CostoLegRoom: number,
+    CostoSceltaPosto: number,
+    IsActive: null,
+    NomePartenza: string,
+    CittaPartenza: string,
+    CodicePartenza: string,
+    NomeArrivo: string,
+    CittaArrivo: string,
+    CodiceArrivo: string
+}
+
+export interface Flight {
+    id: number;
+    airline: string;
+    from: string;
+    to: string;
+    departure: string;
+    arrival: string;
+    price: number;
+}

@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { UserLoginComponent } from './user-login/user-login.component';
-import { UserSignupComponent } from './user-signup/user-signup.component';
-import { FlightsComponent } from './flights/flights.component';
-import { UserProfileComponent } from './user-profile/user-profile.component';
-import { FlightsListComponent } from './flightslist/flightslist.component';
-import { BuyticketComponent } from './buyticket/buyticket.component';
-import { AirplanesComponent } from './airplanes/airplanes.component';
+import { UserLoginComponent } from './components/auth/user-login/user-login.component';
+import { UserSignupComponent } from './components/auth/user-signup/user-signup.component';
+import { FlightsComponent } from './components/user/flights/flights.component';
+import { UserProfileComponent } from './components/user/user-profile/user-profile.component';
+import { FlightsListComponent } from './components/user/flightslist/flightslist.component';
+import { BuyticketComponent } from './components/user/buyticket/buyticket.component';
+import { AirplanesComponent } from './components/user/airplanes/airplanes.component';
+import { AirlinesComponent } from './components/admin/airlines/airlines.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -14,5 +15,6 @@ export const routes: Routes = [
     { path: 'profile', component: UserProfileComponent },
     { path: 'flightslist', component: FlightsListComponent },
     { path: 'buyticket', component: BuyticketComponent},
-    { path: 'airplanes', component: AirplanesComponent }
+    { path: 'airplanes', component: AirplanesComponent },
+    { path: 'admin-airlines', component: AirlinesComponent }
 ];

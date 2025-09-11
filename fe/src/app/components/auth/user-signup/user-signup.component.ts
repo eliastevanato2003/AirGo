@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
-import { NavbarComponent } from '../navbar/navbar.component';
+import { NavbarComponent } from '../../../navbar/navbar.component';
 import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-signup',
@@ -17,7 +17,7 @@ export class UserSignupComponent {
   public hidePassword1 = true;
   public hidePassword2 = true;
 
-  constructor(private router: Router, private http: HttpClient) {
+  constructor(private router: Router, private authService: AuthService) {
     this.signupForm = new FormGroup({
       name: new FormControl(''),
       surname: new FormControl(''),
@@ -32,41 +32,26 @@ export class UserSignupComponent {
   login() {
     this.router.navigate(['/login']);
   }
-  goBack(){
+  goBack() {
     this.router.navigate(['/']);
   }
 
-  async signup() {
+  signup() {
     if (!this.signupForm.valid) {
       return null;
     }
 
     const formData = this.signupForm.value;
-    const url = 'http://localhost:3000/api/users/newUser';
-
-    const message = {
-      name: formData.name,
-      surname: formData.surname,
-      email: formData.email,
-      password: formData.password1,
-      number: formData.phone,
-      dob: formData.dob
-    };
-
-    // Invio dei dati al backend
-    this.http.post(url, message).subscribe({
+    this.authService.signup(formData.name!, formData.surname!, formData.email!, formData.password1!, formData.phone!, formData.dob!).subscribe({
       next: () => {
-        console.log('Signed up');
-        // Esempio: reindirizza l'utente a una pagina di login
-        this.login();
+        console.log('Registrazione avvenuta con successo');
+        this.router.navigate(['']);
       },
-      error: (error) => {
-        console.error('Sign up error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      error: (err) => {
+        console.error('Errore signup:', err);
       }
     });
-
-    return true;
+    return false;
   }
 
   passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
