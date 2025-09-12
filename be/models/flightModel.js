@@ -17,7 +17,7 @@ exports.getFlights = async (id, airline, departure, arrival, mindatedeparture, m
 }
 
 exports.getFlightStatus = async (id) => {
-    const sql = 'SELECT * FROM "aereiposti" WHERE "IdVolo" = $1 AND "IsActive" = ture';
+    const sql = 'SELECT * FROM "aereiposti" WHERE "IdVolo" = $1 AND "IsActive" = true';
     const result = await pool.query(sql, [id]);
     return result.rows;
 }

@@ -1,6 +1,7 @@
 const flightService = require("../services/flightService");
 const planeService = require("../services/planeService");
-const flightRoutesController = require("../services/flightRouteService");
+const flightRouteService = require("../services/flightRouteService");
+const extraLegService = require("../services/extraLegService");
 
 exports.getFlights = async (req, res, next) => {
     try {
@@ -31,6 +32,8 @@ exports.getFlightStatus = async (req, res, next) => {
     try {
         const { id } = req.query ?? {};
         const flights = await flightService.getFlightStatus(id);
+        const rows = await extraLegService.getExtraLegs(undefined, flights[0].IdModello, undefined);
+        flights[0].RigheExtraLeg = rows;
         res.json(flights);
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
@@ -45,7 +48,7 @@ exports.newFlight = async (req, res, next) => {
         if (plane == undefined || route == undefined || schdepdate == undefined || scharrdate == undefined || pcprize == undefined || bprize == undefined || eprize == undefined || bagprize == undefined || lrprize == undefined || scprize == undefined) res.status(400).json({ message: "Required data missing" });
         else {
             const getplane = await planeService.getPlanes(plane, undefined, undefined, undefined);
-            const getroute = await flightRoutesController.getFlightRoutes(route, undefined, undefined);
+            const getroute = await flightRouteService.getFlightRoutes(route, undefined, undefined);
             if (getplane[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Plane not found" });
             else if (getroute[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Flight route not found" });
             else {

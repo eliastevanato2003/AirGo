@@ -49,6 +49,6 @@ router.get("/getFlights", flightController.getFlights);
  */ 
 router.post("/newFlight", authenticateToken, authorizeRoles(1), flightController.newFlight);
 
-router.get("/flightStatus", authenticateToken, flightController.getFlightStatus);
+router.get("/getFlightStatus", authenticateToken, flightController.getFlightStatus);
 
 module.exports = router;
