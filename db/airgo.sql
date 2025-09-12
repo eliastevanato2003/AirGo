@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict PMnMjQcV3hB2x6cCKPz6s3mPk9B78JeEk28VcB4RxotTWwG9iMXRhou1s7fflxy
+\restrict ye8wiRf5VZ1hXsgtgBFYh2VvSZtNod7c8JDUvoopnj6Xfr3WvEp5ZNd0qg2hgI9
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -388,6 +388,9 @@ COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdent
 8	Roma	Italia	Leonardo Da Vinci	FCO	t
 10	Milan	Italia	Enrico Fornalini	LIN	t
 9	Roma	Italia	G. B. Pastine	CIA	t
+14	Treviso	Italia	Sant'Angelo	TSF	t
+20	Verona	Italia	Valerio Catullo	VRN	t
+28	Torino	Italia	Sandro Pertini	TRN	t
 \.
 
 
@@ -475,6 +478,10 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 10	7	2	11	t
 11	10	2	12	t
 12	8	2	11	t
+13	8	2	10	t
+15	8	10	10	t
+16	28	2	10	t
+17	2	28	10	t
 \.
 
 
@@ -500,6 +507,8 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoP
 4	3	1	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	100	70	35	20.25	10	3	t
 7	4	12	2025-10-14 22:30:00	2025-10-15 00:15:00	\N	\N	Programmato	100	70	20	20.25	10	3	t
 5	1	11	2025-10-17 10:30:00	2025-10-17 11:45:00	\N	\N	Programmato	100	70	25.5	20.25	10	3	t
+8	2	4	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+11	2	5	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 \.
 
 
@@ -514,7 +523,7 @@ SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 8, true);
 -- Name: Aereoporti_IdAeroporto_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 13, true);
+SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 29, true);
 
 
 --
@@ -556,7 +565,7 @@ SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 20, true);
 -- Name: Rotte_IdRotta_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 12, true);
+SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 17, true);
 
 
 --
@@ -570,7 +579,7 @@ SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 63, true);
 -- Name: Voli_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 7, true);
+SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 11, true);
 
 
 --
@@ -848,5 +857,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict PMnMjQcV3hB2x6cCKPz6s3mPk9B78JeEk28VcB4RxotTWwG9iMXRhou1s7fflxy
+\unrestrict ye8wiRf5VZ1hXsgtgBFYh2VvSZtNod7c8JDUvoopnj6Xfr3WvEp5ZNd0qg2hgI9
 

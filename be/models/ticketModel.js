@@ -6,9 +6,9 @@ exports.getTickets = async (id, user, flight) => {
     return result.rows;
 }
 
-exports.newTicket = async (user, flight, name, surname, dob, clas, nextrabag, row, col) => {
-    const sql = 'INSERT INTO "Biglietti" ("Utente", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "ColPosto", "RigPosto") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);';
-    const result = await pool.query(sql, [user, flight, name, surname, dob, clas, nextrabag, row, col]);
+exports.newTicket = async (user, flight, name, surname, dob, clas, nextrabag, row, col, nseat) => {
+    const sql = 'INSERT INTO "Biglietti" ("Utente", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "ColPosto", "RigPosto", "NPosto") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);';
+    const result = await pool.query(sql, [user, flight, name, surname, dob, clas, nextrabag, row, col, nseat]);
     return result.rowCount;
 }
 

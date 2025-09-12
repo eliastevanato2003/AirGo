@@ -20,6 +20,9 @@ export class UserProfileComponent implements OnInit {
 
   hidePassword = true;
 
+  public submittedPf = false;
+  public submittedCf = false;
+
   personalForm: FormGroup;
   contactForm: FormGroup;
 
@@ -36,9 +39,12 @@ export class UserProfileComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    const data = this.userService.getData();
-    if(data) {
+  ngOnInit() {
+    this.userService.getData().subscribe({
+      next: response => {
+        const data = response as User;
+
+        if(data) {
         this.userProfile = {
           name: data.Nome,
           surname: data.Cognome,
@@ -58,6 +64,12 @@ export class UserProfileComponent implements OnInit {
           phone: data.Telefono
         });
     }
+      },
+      error: (error) => {
+        console.error('getUser error:', error);
+        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      }
+    });
   }
 
   enableEditMode(section: 'personal' | 'contact'): void {
@@ -69,17 +81,21 @@ export class UserProfileComponent implements OnInit {
   }
 
   saveChanges(section: 'personal' | 'contact'): void {
-    if (section === 'personal' && this.personalForm.valid) {
+    if (section === 'personal') {
+      this.submittedPf = true;
       this.userProfile!.name = this.personalForm.value.name;
       this.userProfile!.surname = this.personalForm.value.surname;
       this.userProfile!.password = this.personalForm.value.password;
       this.userService.editPersonal(this.userProfile!.name, this.userProfile!.surname, this.userProfile!.password);
       this.isEditingPersonal = false;
-    } else if (section === 'contact' && this.contactForm.valid) {
+      this.submittedPf = false;
+    } else if (section === 'contact') {
+      this.submittedCf = true;
       this.userProfile!.email = this.contactForm.value.email;
       this.userProfile!.phone = this.contactForm.value.phone;
       this.userService.editContact(this.userProfile!.email, this.userProfile!.phone);      
       this.isEditingContact = false;
+      this.submittedCf = false;
     }
   }
 
@@ -91,5 +107,13 @@ export class UserProfileComponent implements OnInit {
       this.contactForm.patchValue({ email: this.userProfile?.email, phone: this.userProfile?.phone });
       this.isEditingContact = false;
     }
+  }
+
+  get cf() {
+    return this.contactForm.controls;
+  }
+
+  get pf() {
+    return this.personalForm.controls;
   }
 }

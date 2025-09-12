@@ -17,6 +17,8 @@ export class UserLoginComponent {
   public loginForm;
   public hidePassword = true;
 
+  public submitted = false;
+
   constructor(private router: Router, private authService: AuthService) {
     this.loginForm = new FormGroup({
       email: new FormControl(''),
@@ -32,7 +34,8 @@ export class UserLoginComponent {
     this.router.navigate(['/']);
   }
 
-  async login() {
+  login() {
+    this.submitted = true;
     const formData = this.loginForm.value;
     this.authService.login(formData.email!, formData.password!).subscribe({
       next: () => {
@@ -43,5 +46,9 @@ export class UserLoginComponent {
         console.error('Errore login:', err);
       }
     });
+  }
+
+  get f() {
+    return this.loginForm.controls;
   }
 }

@@ -47,7 +47,6 @@ exports.updateAirline = async (req, res, next) => {
     try {
         const { name, identificationcode, email, password } = req.body ?? {};
         const airline = await airlineService.getAirline(req.id);
-        console.log(airline);
         if (airline.IdCompagniaAerea) {
             if (email) await emailService.updateEmail(airline.Mail, email);
             const nairline = await airlineService.updateAirline(req.id, name || airline.Nome, identificationcode || airline.CodiceIdentificativo, password);
