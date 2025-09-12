@@ -27,6 +27,17 @@ exports.getFlights = async (req, res, next) => {
     }
 }
 
+exports.getFlightStatus = async (req, res, next) => {
+    try {
+        const { id } = req.query ?? {};
+        const flights = await flightService.getFlightStatus(id);
+        res.json(flights);
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
+    }
+}
+
 //se c'è tempo controllare utilizzo contemporaneo aerei
 exports.newFlight = async (req, res, next) => {
     try {

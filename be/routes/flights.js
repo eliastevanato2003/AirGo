@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const flightModel = require('../controllers/flightController');
+const flightController = require('../controllers/flightController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
@@ -23,7 +23,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @returns {400} {message: string} Data invalida 
  * @returns {400} {message: string} Uno o più parametri invalidi
  */
-router.get("/getFlights", flightModel.getFlights);
+router.get("/getFlights", flightController.getFlights);
 
 
 /**
@@ -47,6 +47,8 @@ router.get("/getFlights", flightModel.getFlights);
  * @returns {409} {message: string} Aereo non esistente
  * @returns {409} {message: string} Rotta non esistente
  */ 
-router.post("/newFlight", authenticateToken, authorizeRoles(1), flightModel.newFlight);
+router.post("/newFlight", authenticateToken, authorizeRoles(1), flightController.newFlight);
+
+router.get("/flightStatus", authenticateToken, flightController.getFlightStatus);
 
 module.exports = router;

@@ -6,6 +6,6 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
 router.get("/getTickets", ticketController.getTickets);
 
-router.post("/newTicket", ticketController.newTicket);
+router.post("/newTicket", authenticateToken, authorizeRoles(2), ticketController.newTicket);
 
 module.exports = router;

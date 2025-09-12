@@ -16,6 +16,12 @@ exports.getFlights = async (id, airline, departure, arrival, mindatedeparture, m
     return result.rows;
 }
 
+exports.getFlightStatus = async (id) => {
+    const sql = 'SELECT * FROM "aereiposti" WHERE "IdVolo" = $1 AND "IsActive" = ture';
+    const result = await pool.query(sql, [id]);
+    return result.rows;
+}
+
 exports.newFlight = async (plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize) => {
     const sql = 'INSERT INTO "Voli" ("Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoPrev", "Stato", "CostoPC", "CostoB", "CostoE", "CostoBag", "CostoLegRoom", "CostoSceltaPosto") VALUES ($1, $2, $3, $4, \'Programmato\', $5, $6, $7, $8, $9, $10)';
     const result = await pool.query(sql, [plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize]);

@@ -4,12 +4,7 @@ const extraLegService = require("../services/extraLegService");
 exports.getModels = async (req, res, next) => {
     try {
         const { id, name } = req.query ?? {};
-        const tempmodels = await modelService.getModels(id, name);
-        let models = [];
-        for (const model of tempmodels) {
-            model.RigheExtraLeg = await extraLegService.getExtraLegs(undefined, model.IdModello, undefined);
-            models.push(model);
-        };
+        const models = await modelService.getModels(id, name);        
         res.json(models);
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
