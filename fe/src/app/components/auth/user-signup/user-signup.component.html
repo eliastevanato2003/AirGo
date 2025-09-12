@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
-<div>     
-        <a (click)="goBack()" class="back-link">&lt; annulla</a>
+<div>
+    <a (click)="goBack()" class="back-link">&lt; annulla</a>
 </div>
 <main class="signup-container">
     <div class="signup-box">
@@ -9,14 +9,23 @@
             <div class="input-group">
                 <label for="name">Nome</label>
                 <input type="text" id="name" name="name" formControlName="name" required>
+                @if(f['name'].invalid && (f['name'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group">
                 <label for="surname">Cognome</label>
                 <input type="text" id="surname" name="surname" formControlName="surname" required>
+                @if(f['surname'].invalid && (f['surname'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" formControlName="email" required>
+                @if(f['email'].invalid && (f['email'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group password-container">
                 <label for="password1">Password</label>
@@ -26,6 +35,9 @@
                     (click)="hidePassword1 = !hidePassword1">
                     {{ hidePassword1 ? 'visibility' : 'visibility_off' }}
                 </span>
+                @if(f['password1'].invalid && (f['password1'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group password-container">
                 <label for="password2">Conferma password</label>
@@ -35,14 +47,23 @@
                     (click)="hidePassword2 = !hidePassword2">
                     {{ hidePassword2 ? 'visibility' : 'visibility_off' }}
                 </span>
+                @if(f['password2'].invalid && (f['password2'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group">
                 <label for="phone">Telefono</label>
                 <input type="number" id="phone" name="phone" formControlName="phone" required>
+                @if(f['phone'].invalid && (f['phone'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <div class="input-group">
                 <label for="dob">Data di nascita</label>
                 <input type="date" id="dob" name="dob" formControlName="dob" required>
+                @if(f['dob'].invalid && (f['dob'].touched || submitted)) {
+                    <div class="error">Campo obbligatorio</div>
+                }
             </div>
             <button type="submit" class="signup-button" (click)="signup()">Registrati</button>
         </form>

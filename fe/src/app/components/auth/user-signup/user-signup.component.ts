@@ -17,6 +17,8 @@ export class UserSignupComponent {
   public hidePassword1 = true;
   public hidePassword2 = true;
 
+  public submitted = false;
+
   constructor(private router: Router, private authService: AuthService) {
     this.signupForm = new FormGroup({
       name: new FormControl(''),
@@ -37,10 +39,7 @@ export class UserSignupComponent {
   }
 
   signup() {
-    if (!this.signupForm.valid) {
-      return null;
-    }
-
+    this.submitted = true;
     const formData = this.signupForm.value;
     this.authService.signup(formData.name!, formData.surname!, formData.email!, formData.password1!, formData.phone!, formData.dob!).subscribe({
       next: () => {
@@ -62,5 +61,9 @@ export class UserSignupComponent {
       return { passwordMismatch: true };
     }
     return null;
+  }
+
+  get f() {
+    return this.signupForm.controls;
   }
 }

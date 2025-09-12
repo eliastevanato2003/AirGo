@@ -1,6 +1,6 @@
 <div class="flight-container">
   <h1>Risultati della ricerca voli</h1>
-  @if(flights?.length === 0) {
+  @if(flights.length === 0) {
     <div class="no-flights">
       Nessun volo trovato
     </div>
@@ -25,7 +25,7 @@
           <strong>Arrivo:</strong> {{ flight.arrival | date: 'dd/MM/yyyy HH:mm' }}
         </div>
       </div>
-      <button class="book-btn">Acquista</button>
+      <button class="book-btn" (click)="buyTicket(flight.id)">Acquista</button>
     </div>
   }
 </div>

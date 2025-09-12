@@ -3,7 +3,7 @@ export interface FlightDb {
     Aereo: number,
     Rotta: number,
     DataPartenzaPrev: string,
-    DateArrivoPrev: string,
+    DataArrivoPrev: string,
     DataPartenzaEff: null,
     DataArrivoEff: null,
     Stato: string,

@@ -2,46 +2,55 @@
 
 <div class="profile-container">
   <h2>Il mio Profilo</h2>
-  
+
   <div class="profile-card">
     <div class="card-header">
       <h3>Dati Personali</h3>
       @if(!isEditingPersonal) {
-        <button (click)="enableEditMode('personal')" class="edit-btn">Modifica</button>
+      <button (click)="enableEditMode('personal')" class="edit-btn">Modifica</button>
       } @else {
-        <div>
-          <button (click)="saveChanges('personal')" [disabled]="personalForm.invalid" class="save-btn">Salva</button>
-          <button (click)="cancelEdit('personal')" class="cancel-btn">Annulla</button>
-        </div>
+      <div>
+        <button (click)="saveChanges('personal')" [disabled]="personalForm.invalid" class="save-btn">Salva</button>
+        <button (click)="cancelEdit('personal')" class="cancel-btn">Annulla</button>
+      </div>
       }
     </div>
     <div class="card-body">
       @if(!isEditingPersonal) {
-        <div>
-          <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
-          <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
-          <p><strong>Password:</strong> ********</p>
-        </div>
+      <div>
+        <p><strong>Nome:</strong> {{ userProfile?.name }}</p>
+        <p><strong>Cognome:</strong> {{ userProfile?.surname }}</p>
+        <p><strong>Password:</strong> ********</p>
+      </div>
       } @else {
-        <form [formGroup]="personalForm">
-          <div class="form-field">
-            <label for="name-input">Nome:</label>
-            <input type="text" formControlName="name">
-          </div>
-          <div class="form-field">
-            <label for="surname-input">Cognome:</label>
-            <input type="text" formControlName="surname">
-          </div>
-          <div class="form-field password-container">
-            <label for="password-input">Password:</label>
-            <input type="password" formControlName="password">
-            <!-- Icona per mostra/nascondi -->
-                  <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
-                      (click)="hidePassword = !hidePassword">
-                      {{ hidePassword ? 'visibility' : 'visibility_off' }}
-                  </span>
-          </div>
-        </form>
+      <form [formGroup]="personalForm">
+        <div class="form-field">
+          <label for="name-input">Nome:</label>
+          <input type="text" formControlName="name">
+          @if(pf['name'].invalid && (pf['name'].touched || submittedPf)) {
+          <div class="error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-field">
+          <label for="surname-input">Cognome:</label>
+          <input type="text" formControlName="surname">
+          @if(pf['surname'].invalid && (pf['surname'].touched || submittedPf)) {
+            <div class="error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-field password-container">
+          <label for="password-input">Password:</label>
+          <input type="password" formControlName="password">
+          <!-- Icona per mostra/nascondi -->
+          <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+            (click)="hidePassword = !hidePassword">
+            {{ hidePassword ? 'visibility' : 'visibility_off' }}
+          </span>
+          @if(pf['password'].invalid && (pf['password'].touched || submittedPf)) {
+            <div class="error">Campo obbligatorio</div>
+          }
+        </div>
+      </form>
       }
     </div>
   </div>
@@ -50,31 +59,37 @@
     <div class="card-header">
       <h3>Contatti</h3>
       @if(!isEditingContact) {
-        <button (click)="enableEditMode('contact')" class="edit-btn">Modifica</button>
+      <button (click)="enableEditMode('contact')" class="edit-btn">Modifica</button>
       } @else {
-        <div>
-          <button (click)="saveChanges('contact')" [disabled]="contactForm.invalid" class="save-btn">Salva</button>
-          <button (click)="cancelEdit('contact')" class="cancel-btn">Annulla</button>
-        </div>
+      <div>
+        <button (click)="saveChanges('contact')" class="save-btn">Salva</button>
+        <button (click)="cancelEdit('contact')" class="cancel-btn">Annulla</button>
+      </div>
       }
     </div>
     <div class="card-body">
       @if(!isEditingContact) {
-        <div>
-          <p><strong>Email:</strong> {{ userProfile?.email }}</p>
-          <p><strong>Telefono:</strong> {{ userProfile?.phone }}</p>
-        </div>
+      <div>
+        <p><strong>Email:</strong> {{ userProfile?.email }}</p>
+        <p><strong>Telefono:</strong> {{ userProfile?.phone }}</p>
+      </div>
       } @else {
-        <form [formGroup]="contactForm">
-          <div class="form-field">
-            <label for="email-input">Email:</label>
-            <input type="email" formControlName="email">
-          </div>
-          <div class="form-field">
-            <label for="phone-input">Telefono:</label>
-            <input type="tel" formControlName="phone">
-          </div>
-        </form>
+      <form [formGroup]="contactForm">
+        <div class="form-field">
+          <label for="email-input">Email:</label>
+          <input type="email" formControlName="email">
+          @if(cf['email'].invalid && (cf['email'].touched || submittedCf)) {
+            <div class="error">Campo obbligatorio</div>
+          }
+        </div>
+        <div class="form-field">
+          <label for="phone-input">Telefono:</label>
+          <input type="tel" formControlName="phone">
+          @if(cf['phone'].invalid && (cf['phone'].touched || submittedCf)) {
+            <div class="error">Campo obbligatorio</div>
+          }
+        </div>
+      </form>
       }
     </div>
   </div>
