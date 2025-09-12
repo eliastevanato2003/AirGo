@@ -1,6 +1,7 @@
 import { HttpClient } from "@angular/common/http";
 import { Flight, FlightDb } from "../../models/user/flight.model";
 import { Injectable } from "@angular/core";
+import { tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class FlightService {
@@ -16,28 +17,6 @@ export class FlightService {
     const message = {};
 
     // Richiesta dei dati
-    this.http.get<{ flights: any[] }>(url).subscribe({
-      next: (response) => {
-        response.flights.forEach((res) => {
-          let flight = res as FlightDb;
-          // Inserimento dei dati in this.flights
-          this.flights.push({
-            id: flight.IdVolo,
-            from: flight.CittaPartenza + ' (' + flight.CodicePartenza + ')',
-            to: flight.CittaArrivo + ' (' + flight.CodiceArrivo + ')',
-            departure: flight.DataPartenzaPrev,
-            arrival: flight.DateArrivoPrev,
-            airline: '',
-            price: flight.CostoE
-          } as Flight);
-        });
-        return this.flights;
-      },
-      error: (error) => {
-        console.error('getFlights error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
-      }
-    });
-    return null;
+    return this.http.get<{flights: any[]}>(url, message).pipe(tap());
   }
 }

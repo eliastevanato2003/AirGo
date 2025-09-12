@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "../auth.service";
 import { User } from "../../models/user/user.model";
+import { tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -10,7 +11,7 @@ export class UserService {
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    getData(): User | null {
+    getData() {
         const url = 'http://localhost:3000/api/users/getUser';
 
         const token = this.authService.getToken();
@@ -22,17 +23,7 @@ export class UserService {
         });
 
         // Richiesta dei dati
-        this.http.get(url, { headers: headers }).subscribe({
-            next: (response) => {
-                const data = response as User;
-                return data;
-            },
-            error: (error) => {
-                console.error('GetUser error:', error);
-                // Gestisci l'errore, magari mostrando un messaggio all'utente
-            }
-        });
-        return null;
+        return this.http.get(url, { headers: headers }).pipe(tap());
     }
 
     editPersonal(name: string, surname: string, password: string) {
