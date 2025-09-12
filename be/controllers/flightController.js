@@ -38,11 +38,7 @@ exports.getFlightStatus = async (req, res, next) => {
         const { id } = req.query ?? {};
         if (id == undefined) res.status(400).json({ message: "Id required" });
         const flight = await flightService.getFlightStatus(id);
-        if (flight[0]) {
-            const rows = await extraLegService.getExtraLegs(undefined, flight[0].IdModello, undefined);
-            flight[0].RigheExtraLeg = rows;
-            res.json(flight);
-        } else res.status(404).json({ message: "Flight not found" });
+        res.json(flight);
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
         else next(err);
