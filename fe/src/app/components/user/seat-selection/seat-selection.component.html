@@ -1,0 +1,21 @@
+<div class="container">
+    <h2>Seleziona il tuo posto</h2>
+    <div class="seat-map">
+        <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected
+            }" (click)="selectSeat(getSeat(0, '0')!)">
+            First Class
+        </div>
+        @for(row of [1,2,3,4,5,6,7,8,9,10]; track row) {
+        <div class="seat-row">
+            @for(col of ['A','B','C','D','E','F']; track col) {
+            <div class="seat" [ngClass]="{
+             'business': getSeat(row, col)?.type === 'business',
+             'selected': getSeat(row, col)?.selected
+            }" (click)="selectSeat(getSeat(row, col)!)">
+                {{ row }}{{ col }}
+            </div>
+            }
+        </div>
+        }
+    </div>
+</div>

@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { Flight } from '../../../models/user/flight.model';
+import { Flight, FlightDb } from '../../../models/user/flight.model';
 import { FlightService } from '../../../services/user/flight.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-flightslist',
@@ -10,11 +12,35 @@ import { FlightService } from '../../../services/user/flight.service';
   imports: [CommonModule]
 })
 export class FlightsListComponent implements OnInit {
-  flights: Flight[] | null = [];
+  flights: Flight[] = [];
 
-  constructor(private flightService: FlightService) { }
+  constructor(private flightService: FlightService, private router: Router) { }
 
   ngOnInit(): void {
-    this.flights = this.flightService.getFlights();
+    this.flightService.getFlights().subscribe({
+      next: response => {
+        response.flights.forEach((res) => {
+          let flight = res as FlightDb;
+          // Inserimento dei dati in this.flights
+          this.flights.push({
+            id: flight.IdVolo,
+            from: flight.CittaPartenza + ' (' + flight.CodicePartenza + ')',
+            to: flight.CittaArrivo + ' (' + flight.CodiceArrivo + ')',
+            departure: flight.DataPartenzaPrev,
+            arrival: flight.DataArrivoPrev,
+            airline: '',
+            price: flight.CostoE
+          } as Flight);
+        })
+      },
+      error: (error) => {
+        console.error('getUser error:', error);
+        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      }
+    });
+  }
+
+  buyTicket(id: number) {
+    this.router.navigate(['seatselection'], { queryParams: { id: id } });
   }
 }

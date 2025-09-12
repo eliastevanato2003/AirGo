@@ -45,9 +45,7 @@ export class AirlineService {
             password: airline.password
         };
 
-        return this.http.post(url, message, { headers: headers }).pipe(
-            tap(() => console.log('Airline aggiunta correttamente'))
-        );
+        return this.http.post(url, message, { headers: headers }).pipe(tap());
     }
 
     deleteAirline(id: number) {
