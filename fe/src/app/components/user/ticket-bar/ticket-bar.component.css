@@ -1,0 +1,42 @@
+/* progress-bar.component.css */
+.stepper {
+  display: flex;
+  border-radius: 25px;
+  overflow: hidden;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  background-color: #f8f8f8;
+}
+
+.step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 12px 8px;
+  font-size: 14px;
+  color: #777;
+  background-color: #fff;
+  position: relative;
+}
+
+.step:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 25%;
+  width: 1px;
+  height: 50%;
+  background-color: #eee;
+}
+
+.step.active {
+  color: #2e0b93; /* purple text */
+  font-weight: bold;
+  background-color: #fefefe;
+  border-bottom: 3px solid #ffd700; /* yellow underline */
+}
+
+.step .icon {
+  font-size: 16px;
+}

@@ -7,7 +7,31 @@
     background-image: url('../../../assets/img/pistadecollo.png');
     background-size: cover;
     background-position: center;
-}/*DA VEDERE SE METTERE L'IMMAGINE DIETRO C'E IL DIV NELL'HTML*/
+}
+
+.option {
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: 0.3s;
+  background-color: white;
+}
+
+.option:hover {
+  border-color: #004080;
+}
+
+.selected {
+  border-color: #004080;
+  background-color: #e6f0ff;
+}
+
+.price {
+  color: #004080;
+  font-weight: bold;
+}
 
 .ticket-container {
     width: 100%;
@@ -30,7 +54,6 @@
     margin-bottom: 20px;
 }
 
-
 .passenger-card {
     background: #fff;
     border-radius: 8px;
@@ -45,8 +68,6 @@
     color: #444;
     margin-bottom: 20px;
 }
-
-
 
 .passenger-form {
     display: flex;
@@ -81,7 +102,6 @@
     box-shadow: 0 0 4px rgba(255, 127, 80, 0.3);
 }
 
-
 .submit-button {
     width: 100%;
     padding: 15px;
@@ -98,3 +118,4 @@
 .submit-button:hover {
     background: #e67345;
 }
+

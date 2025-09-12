@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Flight, FlightDb } from '../../../models/user/flight.model';
 import { FlightService } from '../../../services/user/flight.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-flightslist',
@@ -12,7 +14,7 @@ import { FlightService } from '../../../services/user/flight.service';
 export class FlightsListComponent implements OnInit {
   flights: Flight[] = [];
 
-  constructor(private flightService: FlightService) { }
+  constructor(private flightService: FlightService, private router: Router) { }
 
   ngOnInit(): void {
     this.flightService.getFlights().subscribe({
@@ -36,6 +38,9 @@ export class FlightsListComponent implements OnInit {
         // Gestisci l'errore, magari mostrando un messaggio all'utente
       }
     });
-    console.log(this.flights);
+  }
+
+  buyTicket(id: number) {
+    this.router.navigate(['seatselection'], { queryParams: { id: id } });
   }
 }
