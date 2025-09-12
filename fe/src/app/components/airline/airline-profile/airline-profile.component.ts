@@ -28,24 +28,32 @@ export class AirlineProfileComponent implements OnInit{
   }
 
    ngOnInit(): void {
-    const data = this.airlineService.getData();
-    if(data) {
-        this.airlineProfile = {
-          IdCompagniaAerea: data.IdCompagniaAerea,
-          Nome: data.Nome,
-          CodiceIdentificativo: data.CodiceIdentificativo,
-          Email: data.Email,
-          Password: data.Password
-        }
+    const data = this.airlineService.getData().subscribe({
+      next: response => {
+        console.log('Risposta dal server:', response);
+        const data = response as Airline;
+        if(data) {
+            this.airlineProfile = {
+              IdCompagniaAerea: data.IdCompagniaAerea,
+              Nome: data.Nome,
+              CodiceIdentificativo: data.CodiceIdentificativo,
+              Email: data.Email,
+              Password: data.Password
+            }
 
-        this.airlineForm.patchValue({
-          name: data.Nome,
-          code: data.CodiceIdentificativo,
-          mail: data.Email,
-          password: ''
-        });
-      
-    }
+            this.airlineForm.patchValue({
+              name: data.Nome,
+              code: data.CodiceIdentificativo,
+              mail: data.Email,
+              password: ''
+            });
+          
+        }
+      },
+      error: error => {
+        console.error('Errore caricamento profilo', error);
+      }
+    });
   }
 
   enableEditMode() {

@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AirlineService } from '../../../services/airline/airline.service';
 import { Router } from '@angular/router';
+import { Airline } from '../../../models/admin/airline.model';
 
 @Component({
   selector: 'app-airplanes',
@@ -20,6 +21,7 @@ export class AirplanesComponent implements OnInit {
   showModal = false;
   creatingNewModel = false;
   evenNumbers = [2, 4, 6, 8];
+  airlineid: number | undefined;
 
 
   newPlaneForm: FormGroup;
@@ -52,33 +54,41 @@ export class AirplanesComponent implements OnInit {
   });
 
   this.airlineService.getData().subscribe({
-      next: response => {
-        const data = response as Airline;
+    next: response => {
+      console.log('Risposta dal server:', response);
+      const data = response as Airline;
 
-  if (!airline) {
-    this.router.navigate(['/']);
-    console.log('Nessuna compagnia aerea trovata, reindirizzamento alla home');
-    return;
-  }
+      if(data) {
+        this.airlineid = data.IdCompagniaAerea;
 
-  const airlineId = airline.IdCompagniaAerea;
+        const planesUrl = `http://localhost:3000/api/planes/getPlanes?airline=${this.airlineid}`;
 
-  const planesUrl = `http://localhost:3000/api/planes/getPlanes?airline=${airlineId}`;
+            
+        this.http.get<any[]>(planesUrl, { headers }).subscribe({
+              next: (planes) => {
+                this.airplanes = planes;
+              },
+              error: (err) => console.error('Errore caricamento aerei', err)
+            });
 
+        const modelsUrl = `http://localhost:3000/api/models/getModels`;
+        this.http.get<any[]>(modelsUrl, { headers }).subscribe({
+          next: (models) => {
+            this.models = models;
+          },
+          error: (err) => console.error('Errore caricamento modelli',err)
+        });
       
-  this.http.get<any[]>(planesUrl, { headers }).subscribe({
-        next: (planes) => {
-          this.airplanes = planes;
-        },
-        error: (err) => console.error('Errore caricamento aerei', err)
-      });
-
-  const modelsUrl = `http://localhost:3000/api/models/getModels`;
-  this.http.get<any[]>(modelsUrl, { headers }).subscribe({
-    next: (models) => {
-      this.models = models;
+      }else{
+        this.router.navigate(['/']);
+        console.log('Nessuna compagnia aerea trovata, reindirizzamento alla home');
+        return;
+      }
     },
-    error: (err) => console.error('Errore caricamento modelli',err)
+    error: (error) => {
+      console.error('getUser error:', error);
+      // Gestisci l'errore, magari mostrando un messaggio all'utente
+    }
   });
 }
 

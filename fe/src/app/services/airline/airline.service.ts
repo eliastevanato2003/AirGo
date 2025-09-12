@@ -9,7 +9,7 @@ export class AirlineService {
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    getData():  {
+    getData()  {
         const url = 'http://localhost:3000/api/airlines/getAirline';
 
         const token = this.authService.getToken();

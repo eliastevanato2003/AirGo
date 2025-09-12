@@ -18,9 +18,9 @@
     <div class="card-body">
       @if(!isEditing) {
         <div>
-          <p><strong>Nome:</strong> </p>
-          <p><strong>Codice identificativo:</strong> </p>
-          <p><strong>Email:</strong> </p>
+          <p><strong>Nome:</strong> {{ airlineProfile?.Nome }} </p>
+          <p><strong>Codice identificativo:</strong>{{ airlineProfile?.CodiceIdentificativo }}</p>
+          <p><strong>Email:</strong>{{ airlineProfile?.Email }} </p>
           <p><strong>Password:</strong> ********</p>
         </div>
       } @else {
@@ -31,11 +31,11 @@
           </div>
           <div class="form-field">
             <label for="code-input">Codice identificativo:</label>
-            <input type="text" formControlName="surname">
+            <input type="text" formControlName="code">
           </div>
           <div class="form-field">
             <label for="email-input">Email:</label>
-            <input type="text" formControlName="surname">
+            <input type="text" formControlName="mail">
           </div>
           <div class="form-field password-container">
             <label for="password-input">Password:</label>
