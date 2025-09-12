@@ -25,6 +25,16 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  */
 router.get("/getFlights", flightController.getFlights);
 
+/**
+ * @route GET api/flights/getFlightStatus
+ * @description Restituisce le informazioni sullo stato dei posti del volo indicato
+ * @id L'id del volo
+ * @returns {200} {object} Le info del volo
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Parametro invalido
+ * @returns {404} {message: string} Volo non trovato
+ */
+router.get("/getFlightStatus", flightController.getFlightStatus);
 
 /**
  * @route POST /api/flights/newFlight
@@ -48,7 +58,5 @@ router.get("/getFlights", flightController.getFlights);
  * @returns {409} {message: string} Rotta non esistente
  */ 
 router.post("/newFlight", authenticateToken, authorizeRoles(1), flightController.newFlight);
-
-router.get("/getFlightStatus", authenticateToken, flightController.getFlightStatus);
 
 module.exports = router;

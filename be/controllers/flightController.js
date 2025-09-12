@@ -20,6 +20,11 @@ exports.getFlights = async (req, res, next) => {
             maxdatearrival.setTime(maxdatearrival.getTime() - 1);
         }
         const flights = await flightService.getFlights(id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane);
+        for (let i = 0; i < flights.length; i++) {
+            const status = await flightService.getFlightStatus(flights[i].IdVolo);
+            if (status[0].PostiPc - status[0].PostiOccPc == 0 && status[0].PostiB - status[0].PostiOccB == 0 && status[0].PostiE - status[0].PostiOccE == 0) flights[i].Pieno = true;
+            else flights[i].Pieno = false;
+        }
         res.json(flights);
     } catch (err) {
         if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
@@ -31,10 +36,13 @@ exports.getFlights = async (req, res, next) => {
 exports.getFlightStatus = async (req, res, next) => {
     try {
         const { id } = req.query ?? {};
-        const flights = await flightService.getFlightStatus(id);
-        const rows = await extraLegService.getExtraLegs(undefined, flights[0].IdModello, undefined);
-        flights[0].RigheExtraLeg = rows;
-        res.json(flights);
+        if (id == undefined) res.status(400).json({ message: "Id required" });
+        const flight = await flightService.getFlightStatus(id);
+        if (flight[0]) {
+            const rows = await extraLegService.getExtraLegs(undefined, flight[0].IdModello, undefined);
+            flight[0].RigheExtraLeg = rows;
+            res.json(flight);
+        } else res.status(404).json({ message: "Flight not found" });
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
         else next(err);
