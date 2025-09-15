@@ -36,7 +36,7 @@ router.post("/newPlane", authenticateToken, authorizeRoles(1), planeController.n
  * @access role: 1
  * @id L'id dell'aereo
  * @inservice Il nuovo stato di servizio
- * @returns {200} {nplane: number} Il numero di aerei creati
+ * @returns {200} {nplane: number} Il numero di aerei aggiornati
  * @returns {400} {message: string} Dati mancanti
  * @returns {400} {message: string} Aereo non trovato
  * @returns {400} {message: string} Dati non validi
@@ -44,5 +44,18 @@ router.post("/newPlane", authenticateToken, authorizeRoles(1), planeController.n
  * @returns {409} {message: string} Stato già aggiornato
  */ 
 router.post("/changeService", authenticateToken, authorizeRoles(1), planeController.changeService);
+
+/**
+ * @route DELETE /api/planes/deletePlane
+ * @description Elimina un aereo
+ * @access role: 1
+ * @id L'id dell'aereo
+ * @returns {200} {nplane: number} Il numero di aerei eliminati
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Aereo non trovato
+ * @returns {400} {message: string} Dati non validi
+ * @returns {409} {message: string} Voli attivi utilizzanti l'aereo indicato
+ */ 
+router.delete("/deletePlane", authenticateToken, authorizeRoles(1), planeController.deletePlane);
 
 module.exports = router;

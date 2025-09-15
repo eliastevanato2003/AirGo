@@ -61,9 +61,21 @@ exports.changeService = async (req, res, next) => {
 exports.deletePlane = async (req, res, next) => {
     try {
         const { id } = req.body ?? {};
-        const nplane = await planeService.deletePlane(id);
-        res.json({ nplane: nplane });
+        if (id == undefined) {
+            res.status(400).json({ message: "Required data missing" });
+            return;
+        }
+        const flights = await flightService.getFlights(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, id, undefined);
+        if (flights[0]) res.status(409).json({ message: "There are flights assigned to this plane" });
+        else {
+            const plane = await planeService.getPlanes(id, req.id, undefined, undefined, undefined);
+            if (plane[0]) {
+                const nplane = await planeService.deletePlane(id);
+                res.json({ nplane: nplane });
+            } else res.status(400).json({ message: "Plane not found" });
+        }
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }

@@ -18,7 +18,7 @@ router.get("/getAirports", airportController.getAirports);
 
 /**
  * @route POST /api/airports/newAirport
- * @access role: 0, 1
+ * @access role: 0
  * @description Crea un nuovo aeroporto
  * @city La città dell'aeroporto
  * @country La nazione dell'aeroporto
@@ -29,7 +29,7 @@ router.get("/getAirports", airportController.getAirports);
  * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Codice identificativo già in uso
  */
-router.post("/newAirport", authenticateToken, authorizeRoles(0, 1), airportController.newAirport);
+router.post("/newAirport", authenticateToken, authorizeRoles(0), airportController.newAirport);
 
 /**
  * @route POST /api/airports/updateAirport
