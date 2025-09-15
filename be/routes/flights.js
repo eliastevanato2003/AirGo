@@ -19,6 +19,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @maxdatearrival (Opzionale) La data massima di arrivo, in formato YYYY-MM-DD
  * @order (Opzionale) L'ordine: 1 per CostoEconomy ASC, 2 per CostoEconomy DESC, 3 per DataPartenzaPrev ASC, 4 per DataPartenzaPrev DESC
  * @plane (Opzionale) L'id dell'aereo
+ * @status (Opzionale) Lo stato dell'aereo (Programmato, Decollato, Atterrato, Cancellato)
  * @returns {200} {object} Le info dei voli
  * @returns {400} {message: string} Data invalida 
  * @returns {400} {message: string} Uno o più parametri invalidi

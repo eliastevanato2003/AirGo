@@ -5,7 +5,7 @@ const extraLegService = require("../services/extraLegService");
 
 exports.getFlights = async (req, res, next) => {
     try {
-        const { id, airline, departure, arrival, datedeparture, datearrival, order, plane } = req.query ?? {};
+        const { id, airline, departure, arrival, datedeparture, datearrival, order, plane, status } = req.query ?? {};
         let { mindatearrival, maxdatearrival, mindatedeparture, maxdatedeparture } = req.query ?? {};
         if (datedeparture && (maxdatedeparture == undefined && mindatedeparture == undefined)) {
             mindatedeparture = new Date(datedeparture);
@@ -19,7 +19,7 @@ exports.getFlights = async (req, res, next) => {
             maxdatearrival.setDate((new Date(datearrival)).getDate() + 1);
             maxdatearrival.setTime(maxdatearrival.getTime() - 1);
         }
-        const flights = await flightService.getFlights(id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane);
+        const flights = await flightService.getFlights(id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane, status);
         for (let i = 0; i < flights.length; i++) {
             const status = await flightService.getFlightStatus(flights[i].IdVolo);
             if (status[0].PostiPc - status[0].PostiOccPc == 0 && status[0].PostiB - status[0].PostiOccB == 0 && status[0].PostiE - status[0].PostiOccE == 0) flights[i].Pieno = true;
@@ -51,7 +51,7 @@ exports.newFlight = async (req, res, next) => {
         const { plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize } = req.body ?? {};
         if (plane == undefined || route == undefined || schdepdate == undefined || scharrdate == undefined || pcprize == undefined || bprize == undefined || eprize == undefined || bagprize == undefined || lrprize == undefined || scprize == undefined) res.status(400).json({ message: "Required data missing" });
         else {
-            const getplane = await planeService.getPlanes(plane, undefined, undefined, undefined);
+            const getplane = await planeService.getPlanes(plane, undefined, undefined, undefined, undefined);
             const getroute = await flightRouteService.getFlightRoutes(route, undefined, undefined);
             if (getplane[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Plane not found" });
             else if (getroute[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Flight route not found" });

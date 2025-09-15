@@ -1,7 +1,7 @@
 const flightModel = require("../models/flightModel");
 const extraLegService = require("../services/extraLegService");
 
-exports.getFlights = async (id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane) => await flightModel.getFlights(id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane);
+exports.getFlights = async (id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane, status) => await flightModel.getFlights(id, airline, departure, arrival, mindatedeparture, maxdatedeparture, mindatearrival, maxdatearrival, order, plane, status);
 
 exports.getFlightStatus = async (id) => {
     const flight = await flightModel.getFlightStatus(id);
