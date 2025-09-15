@@ -1,19 +1,26 @@
 <header class="header">
-    <div class="logo" (click)="home()">AirGo</div>
-    <nav>
-      <ul>
-      <li><a href="#" (click)="home()">Home</a></li>
+  <div class="logo">AirGo</div>
+  <nav>
+    <ul>
+      <li><button class="norm-btn" (click)="home()">Home</button></li>
+
       @if(isLoggedIn) {
-        <ng-container>
-          <li><a href="#">I miei voli</a></li>
-          <li><button id="button" class="log-in-btn" (click)="profile()">Profilo</button></li>
-          <li><a href="#" (click)="logout()">Esci</a></li>
-        </ng-container>
+        @if(userRole === 0) {
+          <li><button class="norm-btn" (click)="adminairlines()">Compagnie aeree</button></li>
+          <li><button class="log-in-btn" (click)="profile()">Profilo</button></li>
+        }
+        @if(userRole === 1) {
+          <li><button class="norm-btn" (click)="airplanes()">Aerei</button></li>
+          <li><button class="log-in-btn" (click)="airlineprofile()">Profilo</button></li>
+        }
+        @if(userRole === 2) {
+          <li><button class="norm-btn">I miei voli</button></li>
+          <li><button class="log-in-btn" (click)="profile()">Profilo</button></li>
+        }
+        <li><button class="norm-btn" (click)="logout()">Esci</button></li>
       } @else {
-        <ng-container>
-          <li><button id="button" class="log-in-btn" (click)="login()">Accedi</button></li>
-        </ng-container>
+        <li><button class="log-in-btn" (click)="login()">Accedi</button></li>
       }
     </ul>
-    </nav>
-  </header>
+  </nav>
+</header>

@@ -8,11 +8,15 @@ import { BehaviorSubject, tap } from 'rxjs';
 })
 export class AuthService {
   private loggedIn$ = new BehaviorSubject<boolean>(false);
+  private role$ = new BehaviorSubject<number | null>(null);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
     if (this.isBrowser()) {
       const token = localStorage.getItem('authToken');
       this.loggedIn$.next(!!token);
+
+      const role = Number(localStorage.getItem('userRole'));
+      this.role$.next(role);
     }
   }
 
@@ -28,9 +32,21 @@ export class AuthService {
     }
   }
 
+  saveRole(role: number) {
+    if (this.isBrowser()) {
+      localStorage.setItem('userRole', role.toString());
+      this.role$.next(role);
+    }
+  }
+
   // Ottieni il token da localStorage
   getToken(): string | null {
     return this.isBrowser() ? localStorage.getItem('authToken') : null;
+  }
+
+  
+  getRole(): number | null {
+    return this.role$.value || (this.isBrowser() ? Number(localStorage.getItem('userRole')) || null : null);
   }
 
   // Rimuovi il token da localStorage
@@ -54,6 +70,10 @@ export class AuthService {
     return this.loggedIn$.asObservable();
   }
 
+  whatRole() {
+    return this.role$.asObservable();
+  }
+
   login(email: string, password: string) {
     const url = 'http://localhost:3000/api/users/login';
 
@@ -63,10 +83,11 @@ export class AuthService {
     };
 
     // Invio dei dati al backend
-    return this.http.post<{ token: string }>(url, message).pipe(
+    return this.http.post<{ token: string, role: number }>(url, message).pipe(
       tap(response => {
         this.saveToken(response.token);
-        console.log('Logged in, token salvato:', response.token);
+        this.saveRole(response.role);
+        console.log("Login avvenuto con successo");
       })
     );
   }
