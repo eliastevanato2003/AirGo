@@ -5,4 +5,5 @@ export interface Seat {
   price: number;
   type: 'economy' | 'business' | 'firstclass';
   selected?: boolean;
+  unavailable?: boolean;
 }

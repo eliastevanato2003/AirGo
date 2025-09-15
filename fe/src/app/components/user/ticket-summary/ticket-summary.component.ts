@@ -1,12 +1,15 @@
 import { CurrencyPipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NavbarComponent } from "../../../navbar/navbar.component";
+import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
+import { FooterComponent } from "../../../footer/footer.component";
 
 @Component({
   selector: 'app-ticket-summary',
   templateUrl: './ticket-summary.component.html',
   styleUrls: ['./ticket-summary.component.css'],
-  imports: [CurrencyPipe, ReactiveFormsModule]
+  imports: [CurrencyPipe, ReactiveFormsModule, NavbarComponent, TicketBarComponent, FooterComponent]
 })
 export class TicketSummaryComponent implements OnInit {
   selectedSeat = '6C';

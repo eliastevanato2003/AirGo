@@ -1,0 +1,56 @@
+<app-navbar></app-navbar>
+
+<div class="profile-container">
+  <h2>Profilo compagnia aerea</h2>
+  
+  <div class="profile-card">
+    <div class="card-header">
+      <h3>Dati Compagnia</h3>
+      @if(!isEditing) {
+        <button (click)="enableEditMode()" class="edit-btn">Modifica</button>
+      } @else {
+        <div>
+          <button (click)="saveChanges()" [disabled]="airlineForm.invalid" class="save-btn">Salva</button>
+          <button (click)="cancelEdit()" class="cancel-btn">Annulla</button>
+        </div>
+      }
+    </div>
+    <div class="card-body">
+      @if(!isEditing) {
+        <div>
+          <p><strong>Nome:</strong> {{ airlineProfile?.Nome }} </p>
+          <p><strong>Codice identificativo:</strong>{{ airlineProfile?.CodiceIdentificativo }}</p>
+          <p><strong>Email:</strong>{{ airlineProfile?.Email }} </p>
+          <p><strong>Password:</strong> ********</p>
+        </div>
+      } @else {
+        <form [formGroup]="airlineForm">
+          <div class="form-field">
+            <label for="name-input">Nome:</label>
+            <input type="text" formControlName="name">
+          </div>
+          <div class="form-field">
+            <label for="code-input">Codice identificativo:</label>
+            <input type="text" formControlName="code">
+          </div>
+          <div class="form-field">
+            <label for="email-input">Email:</label>
+            <input type="text" formControlName="mail">
+          </div>
+          <div class="form-field password-container">
+            <label for="password-input">Password:</label>
+            <input type="password" formControlName="password">
+            <!-- Icona per mostra/nascondi -->
+                  <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
+                      (click)="hidePassword = !hidePassword">
+                      {{ hidePassword ? 'visibility' : 'visibility_off' }}
+                  </span>
+          </div>
+        </form>
+      }
+    </div>
+  </div>
+
+</div>
+
+<app-footer></app-footer>
