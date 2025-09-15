@@ -1,8 +1,3 @@
-* {
-    font-family: 'Roboto', sans-serif;
-    box-sizing: border-box;
-}
-
 .img-container{
     background-image: url('../../../assets/img/pistadecollo.png');
     background-size: cover;

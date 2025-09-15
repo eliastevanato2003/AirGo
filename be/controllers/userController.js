@@ -77,7 +77,7 @@ exports.login = async (req, res, next) => {
     if (!email || !password) res.status(400).json({ message: "Required data missing" });
     try {
         const token = await userService.login(email, password);
-        res.json({ "token": token });
+        res.json(token);
     } catch (err) {
         res.status(401).json({ message: "Invalid credentials" });
     }

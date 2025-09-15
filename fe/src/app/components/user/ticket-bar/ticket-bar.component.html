@@ -1,21 +1,13 @@
 <div class="stepper">
-  <div class="step active">
-    <span class="icon">✈️</span>
-    <span class="label">Voli</span>
-  </div>
-  <div class="step">
+  <div class="step" routerLink="/seatselection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="icon">🪑</span>
     <span class="label">Posti</span>
   </div>
-  <div class="step">
+  <div class="step" routerLink="/baggageselection" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="icon">🎒</span>
     <span class="label">Bagagli</span>
   </div>
-  <div class="step">
-    <span class="icon">🚌</span>
-    <span class="label">Extra</span>
-  </div>
-  <div class="step">
+  <div class="step" routerLink="/ticketsummary" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
     <span class="icon">💳</span>
     <span class="label">Revisione e pagamento</span>
   </div>

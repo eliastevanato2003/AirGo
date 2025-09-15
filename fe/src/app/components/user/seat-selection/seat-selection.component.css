@@ -1,6 +1,5 @@
 .container {
   padding: 2rem;
-  font-family: 'Roboto', sans-serif;
 }
 
 .seat-map {
@@ -33,18 +32,62 @@
 }
 
 .seat.business {
-  background-color: #004080; /* Blu scuro */
+  background-color: #004080;
+  /* Blu scuro */
   color: white;
 }
 
 .seat.firstclass {
-  display: flex;
-  justify-content: center;
-  background-color: #FFA500; /* Arancione */
+  background-color: #FFA500;
+  /* Arancione */
   color: black;
-  /*width: 350px;*/
+  width: 350px;
+  display: flex;
+  /* Per centrare il contenuto */
+  justify-content: center;
+  /* Centrare il testo */
+  align-items: center;
+  /* Centrare il testo verticalmente */
+  margin: 0 auto;
+  /* Garantire che il div venga centrato orizzontalmente */
 }
 
 .seat.selected {
   border: 3px solid #000;
+}
+
+/* Etichette accanto alle righe di posti */
+.labels {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left: 10px; /* Distanza tra i posti e le etichette */
+}
+
+.business-label, .economy-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #004080; /* Colore blu scuro */
+  margin-bottom: 10px;
+}
+
+.submit-button {
+  width: 350px;
+  padding: 15px;
+  background: #ff7f50;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  margin-top: 30px;
+}
+
+.submit-button:hover {
+  background: #e67345;
 }

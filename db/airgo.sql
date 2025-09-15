@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict ye8wiRf5VZ1hXsgtgBFYh2VvSZtNod7c8JDUvoopnj6Xfr3WvEp5ZNd0qg2hgI9
+\restrict 61FfTQOR4uunk4oLr0thwqRyua2n8yxQ3Had81sz8aRtySbid465Kg8gHzS18Dx
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -96,7 +96,10 @@ CREATE TABLE public."Biglietti" (
     "NBagagliExtra" integer NOT NULL,
     "IsActive" boolean DEFAULT true NOT NULL,
     "ColPosto" text,
-    "RigPosto" text
+    "NPosto" integer,
+    "SceltaPosto" boolean NOT NULL,
+    "Costo" real NOT NULL,
+    "RigPosto" integer
 );
 
 
@@ -355,10 +358,18 @@ SELECT
     NULL::real AS "CostoLegRoom",
     NULL::real AS "CostoSceltaPosto",
     NULL::boolean AS "IsActive",
+    NULL::integer AS "IdModello",
+    NULL::integer AS "RigheB",
+    NULL::integer AS "ColonneB",
+    NULL::integer AS "ColonneE",
+    NULL::integer AS "RigheE",
     NULL::bigint AS "PostiOccupati",
     NULL::bigint AS "PostiPc",
     NULL::bigint AS "PostiB",
-    NULL::bigint AS "PostiE";
+    NULL::bigint AS "PostiE",
+    NULL::bigint AS "PostiOccPc",
+    NULL::bigint AS "PostiOccB",
+    NULL::bigint AS "PostiOccE";
 
 
 ALTER VIEW public.aereiposti OWNER TO admin;
@@ -398,7 +409,227 @@ COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdent
 -- Data for Name: Biglietti; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Biglietti" ("IdBiglietto", "Utente", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "IsActive", "ColPosto", "RigPosto") FROM stdin;
+COPY public."Biglietti" ("IdBiglietto", "Utente", "Volo", "Nome", "Cognome", "DoB", "Classe", "NBagagliExtra", "IsActive", "ColPosto", "NPosto", "SceltaPosto", "Costo", "RigPosto") FROM stdin;
+81	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+82	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+5	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+6	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+7	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+8	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+9	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+10	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+11	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+12	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+13	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+14	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+15	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+16	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+17	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+18	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+19	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+20	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+21	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+22	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+23	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+24	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+25	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+26	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+27	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+28	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+29	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+30	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+31	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+32	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+33	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+34	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+35	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+36	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+37	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+38	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+39	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+40	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+41	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+42	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+43	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+44	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+45	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+46	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+47	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+48	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+49	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+50	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+51	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+52	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+53	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+54	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+55	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+56	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+57	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+58	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+59	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+60	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+61	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+62	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+63	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+64	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+65	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+66	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+67	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+68	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+69	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+70	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+71	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+72	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+73	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+74	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+75	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+76	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+77	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+78	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+79	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+80	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+83	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+84	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+85	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+86	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+87	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+88	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+89	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+90	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+91	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+92	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+93	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+94	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+95	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+96	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+97	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+98	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+99	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+100	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+101	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+102	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+103	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+104	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+105	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+106	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+107	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+108	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+109	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+110	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+111	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+112	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+113	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+114	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+115	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+116	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+117	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+118	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+119	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+120	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+121	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+122	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+123	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+124	45	14	Dario	Caberlotto	2003-09-24	Economy	1	t	\N	\N	f	40.5	\N
+125	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+126	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+127	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+128	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+129	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+130	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+131	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+132	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+133	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+134	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+135	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+136	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+137	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+138	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+139	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+140	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+141	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+142	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+143	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+144	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+145	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+146	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+147	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+148	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+149	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+150	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+151	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+152	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+153	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+154	45	14	Dario	Caberlotto	2003-09-24	Business	2	t	\N	\N	f	101	\N
+155	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+156	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+157	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+158	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+159	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+160	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+161	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+162	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+163	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+164	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+165	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+166	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+167	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+168	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+169	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+170	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+171	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+172	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+173	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+174	45	7	Dario	Caberlotto	2003-09-24	Prima	0	t	\N	\N	f	100	\N
+175	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+177	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+178	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+179	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+180	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+181	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+182	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+183	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+184	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+185	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+186	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+187	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+188	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+189	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+190	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+191	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+192	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+193	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+194	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+195	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+196	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+197	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+198	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+199	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+200	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+201	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+202	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+203	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+204	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+205	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+206	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+207	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+208	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+209	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+210	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+211	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+212	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+213	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+214	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	\N	\N	f	70	\N
+215	45	7	Dario	Caberlotto	2003-09-24	Economy	0	t	\N	\N	f	20	\N
+216	45	7	Dario	Caberlotto	2003-09-24	Economy	0	t	\N	\N	f	20	\N
+337	45	7	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	t	33	10
+338	45	7	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	t	73	10
+339	45	12	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	t	84	15
+340	45	12	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	t	84	1
+341	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	t	34	3
+342	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	t	39	1
+343	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	39	1
+344	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	34	30
+345	45	12	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	t	84	15
 \.
 
 
@@ -442,7 +673,7 @@ COPY public."Modelli" ("IdModello", "Nome", "PostiPc", "RigheB", "ColonneB", "Ri
 8	Boeing 737v4	20	10	4	20	6	t
 22	Boeing 737v9	0	15	4	30	4	t
 24	Boeing 737v5	0	15	2	30	4	t
-26	Boeing 737v6	0	15	2	30	4	t
+26	Boeing 737v6	0	0	0	0	0	t
 \.
 
 
@@ -509,6 +740,9 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoP
 5	1	11	2025-10-17 10:30:00	2025-10-17 11:45:00	\N	\N	Programmato	100	70	25.5	20.25	10	3	t
 8	2	4	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 11	2	5	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+12	6	6	2025-12-23 17:20:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+14	6	6	2025-12-23 17:20:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+15	8	17	2025-11-20 00:00:00	2025-11-20 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 \.
 
 
@@ -530,7 +764,7 @@ SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 29, true);
 -- Name: Biglietti_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 1, false);
+SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 345, true);
 
 
 --
@@ -579,7 +813,7 @@ SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 63, true);
 -- Name: Voli_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 11, true);
+SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 15, true);
 
 
 --
@@ -746,15 +980,35 @@ CREATE OR REPLACE VIEW public.aereiposti AS
     "V"."CostoLegRoom",
     "V"."CostoSceltaPosto",
     "V"."IsActive",
-    sum("B"."IdBiglietto") AS "PostiOccupati",
-    sum("M"."PostiPc") AS "PostiPc",
-    sum(("M"."RigheB" * "M"."ColonneB")) AS "PostiB",
-    sum(("M"."RigheE" * "M"."ColonneE")) AS "PostiE"
+    "M"."IdModello",
+    "M"."RigheB",
+    "M"."ColonneB",
+    "M"."ColonneE",
+    "M"."RigheE",
+    count("B"."IdBiglietto") AS "PostiOccupati",
+    (sum("M"."PostiPc") / count(*)) AS "PostiPc",
+    (sum(("M"."RigheB" * "M"."ColonneB")) / count(*)) AS "PostiB",
+    (sum(("M"."RigheE" * "M"."ColonneE")) / count(*)) AS "PostiE",
+    sum(
+        CASE
+            WHEN ("B"."Classe" = 'Prima'::text) THEN 1
+            ELSE 0
+        END) AS "PostiOccPc",
+    sum(
+        CASE
+            WHEN ("B"."Classe" = 'Business'::text) THEN 1
+            ELSE 0
+        END) AS "PostiOccB",
+    sum(
+        CASE
+            WHEN ("B"."Classe" = 'Economy'::text) THEN 1
+            ELSE 0
+        END) AS "PostiOccE"
    FROM (((public."Voli" "V"
      LEFT JOIN public."Biglietti" "B" ON (("V"."IdVolo" = "B"."Volo")))
      LEFT JOIN public."Aerei" "A" ON (("A"."IdAereo" = "V"."Aereo")))
      LEFT JOIN public."Modelli" "M" ON (("M"."IdModello" = "A"."Modello")))
-  GROUP BY "V"."IdVolo";
+  GROUP BY "V"."IdVolo", "M"."IdModello";
 
 
 --
@@ -857,5 +1111,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict ye8wiRf5VZ1hXsgtgBFYh2VvSZtNod7c8JDUvoopnj6Xfr3WvEp5ZNd0qg2hgI9
+\unrestrict 61FfTQOR4uunk4oLr0thwqRyua2n8yxQ3Had81sz8aRtySbid465Kg8gHzS18Dx
 
