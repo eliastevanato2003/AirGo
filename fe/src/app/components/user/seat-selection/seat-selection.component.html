@@ -12,24 +12,37 @@
     </div>
 
     <div class="seat-map">
-            <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected}"
-                (click)="selectSeat(getSeat(0, '0')!)">
-                First Class
+        <!-- Prima classe (First Class) -->
+        <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected}"
+            (click)="selectSeat(getSeat(0, '0')!)">
+            Prima classe
+        </div>
+
+        <!-- Business + Economy (dinamico in base ai posti) -->
+        <div *ngFor="let rowGroup of groupedSeats" class="seat-row">
+            @if(rowGroup.seats[0].id !== '00') {
+            <!-- Lato sinistro (A, B, C) -->
+            <div *ngFor="let seat of rowGroup.seats.slice(0, rowGroup.seats.length/2)" class="seat" [ngClass]="{
+                  'business': seat.type === 'business',
+                  'economy': seat.type === 'economy',
+                  'selected': seat.selected
+                }" (click)="selectSeat(seat)">
+                {{ seat.row }}{{ seat.column }}
             </div>
 
-            <!-- Usando @for invece di ngFor -->
-            @for(row of [1,2,3,4,5,6,7,8,9,10]; track row) {
-            <div class="seat-row">
-                @for(col of ['A','B','C','D','E','F']; track col) {
-                <div class="seat" [ngClass]="{
-                         'business': getSeat(row, col)?.type === 'business',
-                         'selected': getSeat(row, col)?.selected
-                    }" (click)="selectSeat(getSeat(row, col)!)">
-                    {{ row }}{{ col }}
-                </div>
-                }
+            <!-- Corridoio -->
+            <div class="aisle-space"></div>
+
+            <!-- Lato destro (D, E, F) -->
+            <div *ngFor="let seat of rowGroup.seats.slice(rowGroup.seats.length/2, rowGroup.seats.length)" class="seat" [ngClass]="{
+                  'business': seat.type === 'business',
+                  'economy': seat.type === 'economy',
+                  'selected': seat.selected
+                }" (click)="selectSeat(seat)">
+                {{ seat.row }}{{ seat.column }}
             </div>
             }
+        </div>
 
         <!-- Etichette per le classi -->
         <div class="labels">

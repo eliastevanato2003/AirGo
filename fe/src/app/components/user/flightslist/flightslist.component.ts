@@ -3,7 +3,6 @@ import { Component, OnInit } from '@angular/core';
 import { Flight, FlightDb } from '../../../models/user/flight.model';
 import { FlightService } from '../../../services/user/flight.service';
 import { Router } from '@angular/router';
-import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-flightslist',
@@ -19,7 +18,7 @@ export class FlightsListComponent implements OnInit {
   ngOnInit(): void {
     this.flightService.getFlights().subscribe({
       next: response => {
-        response.flights.forEach((res) => {
+        response.forEach((res) => {
           let flight = res as FlightDb;
           // Inserimento dei dati in this.flights
           this.flights.push({

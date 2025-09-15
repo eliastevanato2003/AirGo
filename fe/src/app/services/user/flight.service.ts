@@ -1,13 +1,10 @@
 import { HttpClient } from "@angular/common/http";
-import { Flight, FlightDb } from "../../models/user/flight.model";
 import { Injectable } from "@angular/core";
 import { tap } from "rxjs";
+import { FlightStatus } from "../../models/user/flight.model";
 
 @Injectable({ providedIn: 'root' })
 export class FlightService {
-
-  private flights: Flight[] = [];
-
   constructor(private http: HttpClient) { }
 
   getFlights() {
@@ -17,6 +14,18 @@ export class FlightService {
     const message = {};
 
     // Richiesta dei dati
-    return this.http.get<{flights: any[]}>(url, message).pipe(tap());
+    return this.http.get<[]>(url, message).pipe(tap());
+  }
+
+  getFlightStatus(id: number) {
+    const url = 'http://localhost:3000/api/flights/getFlightStatus';
+
+    // Filtri della get
+    const options = {
+        params: { id: id.toString() }
+    };
+
+    // Richiesta dei dati
+    return this.http.get<FlightStatus[]>(url, options).pipe(tap());
   }
 }
