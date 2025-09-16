@@ -45,19 +45,93 @@ router.get("/getFlightStatus", flightController.getFlightStatus);
  * @route L'id della rotta coperta
  * @schdepdate La data di partenza prevista, in formato YYYY-MM-DDThh:mm:ss.sss
  * @scharrdate La data di arrivo prevista, in formato YYYY-MM-DDThh:mm:ss.sss
- * @pcprize Costo posto in prima classe
- * @bprize Costo posto in classe business
- * @eprize Costo posto in economy
- * @bagprize Costo bagaglio extra
- * @lrprize Costo spazio aggiuntivo per le gambe
- * @scprize Costo scelta posto
+ * @pcprice Costo posto in prima classe
+ * @bprice Costo posto in classe business
+ * @eprice Costo posto in economy
+ * @bagprice Costo bagaglio extra
+ * @lrprice Costo spazio aggiuntivo per le gambe
+ * @scprice Costo scelta posto
  * @returns {200} {nusers: number} Il numero di voli creati
  * @returns {400} {message: string} Dati mancanti
  * @returns {400} {message: string} Dati non validi
  * @returns {400} {message: string} Data non valida
+ * @returns {400} {message: string} Prezzi inferiori a 0
  * @returns {409} {message: string} Aereo non esistente
  * @returns {409} {message: string} Rotta non esistente
+ * @returns {409} {message: string} Date nel passato
  */ 
 router.post("/newFlight", authenticateToken, authorizeRoles(1), flightController.newFlight);
+
+/**
+ * @route POST /api/flights/departure
+ * @access role: 1
+ * @description Imposta lo stato a decollato e segna l'orario
+ * @id L'id del volo decollato
+ * @returns {200} {nflight: number} Il numero di voli decollati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Volo non esistente
+ */
+router.post("/departure", authenticateToken, authorizeRoles(1), flightController.departure);
+
+/**
+ * @route POST /api/flights/arrival
+ * @access role: 1
+ * @description Imposta lo stato a atterrato e segna l'orario
+ * @id L'id del volo atterrato
+ * @returns {200} {nflight: number} Il numero di voli atterrati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Volo non esistente
+ */
+router.post("/arrival", authenticateToken, authorizeRoles(1), flightController.arrival);
+
+/**
+ * @route POST /api/flights/updateEffDate
+ * @access role: 1
+ * @description Modifica gli orari di decollo e atterraggio di un volo già atterrato
+ * @id L'id del volo da modificare
+ * @effdepdate La nuova data di partenza effettiva, in formato YYYY-MM-DDThh:mm:ss.sss
+ * @effarrdate La nuova data di arrivo effettiva, in formato YYYY-MM-DDThh:mm:ss.sss
+ * @returns {200} {nflight: number} Il numero di voli modificati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Data non valida
+ * @returns {400} {message: string} Volo non esistente
+ * @returns {409} {message: string} Volo programmato o decollato
+ * @returns {409} {message: string} Date nel futuro
+ * @returns {409} {message: string} Data di partenza successiva alla data di arrivo
+ */
+router.post("/updateEffDate", authenticateToken, authorizeRoles(1), flightController.updateEffDate);
+
+/**
+ * @route POST /api/flights/updatePrices
+ * @access role: 1
+ * @description Modifica i prezzi per un volo programmato
+ * @id L'id del volo da modificare
+ * @pcprice Il nuovo costo di un posto in prima classe
+ * @bprice Il nuovo costo di un posto in business
+ * @eprice Il nuovo costo di un posto in economy
+ * @returns {200} {nflight: number} Il numero di voli modificati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Volo non esistente
+ * @returns {409} {message: string} Prezzi inferiori a 0
+ */
+router.post("/updatePrices", authenticateToken, authorizeRoles(1), flightController.updatePrices);
+
+/**
+ * @route DELETE /api/flights/deleteFlight
+ * @access role: 1
+ * @description Elimina un volo senza biglietti acquistati
+ * @id L'id del volo da eliminare
+ * @returns {200} {nflight: number} Il numero di voli eliminati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Volo non esistente
+ * @returns {409} {message: string} Biglietti acquistati per questo volo
+ * 
+ */
+router.delete("/deleteFlight", authenticateToken, authorizeRoles(1), flightController.deleteFlight);
 
 module.exports = router;

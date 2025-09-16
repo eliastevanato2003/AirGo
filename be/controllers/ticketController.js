@@ -23,7 +23,7 @@ exports.newTicket = async (req, res, next) => {
         else if (chseat == true && (row == undefined || col == undefined)) res.status(400).json({ message: "Missing choosen seat" });
         else if (!["Prima", "Business", "Economy"].includes(clas)) res.status(400).json({ message: "Invalid class" });
         else {
-            const flights = await flightService.getFlights(flight, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+            const flights = await flightService.getFlights(flight, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Programmato");
             if (flights[0]) {
                 const flightstatus = await flightService.getFlightStatus(flight);
                 if (chseat == false) row = col = undefined;

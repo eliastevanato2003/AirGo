@@ -12,6 +12,8 @@ exports.getFlightStatus = async (id) => {
     return flight;
 }
 
-exports.newFlight = async (plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize) => await flightModel.newFlight(plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize);
+exports.newFlight = async (plane, route, schdepdate, scharrdate, pcprice, bprice, eprice, bagprice, lrprice, scprice) => await flightModel.newFlight(plane, route, schdepdate, scharrdate, pcprice, bprice, eprice, bagprice, lrprice, scprice);
+
+exports.updateFlight = async (id, effdepdate, effarrdate, status, pcprice, bprice, eprice) => await flightModel.updateFlight(id, effdepdate, effarrdate, status, pcprice, bprice, eprice);
 
 exports.deleteFlight = async (id) => await flightModel.deleteFlight(id);

@@ -1,7 +1,6 @@
 const flightService = require("../services/flightService");
 const planeService = require("../services/planeService");
 const flightRouteService = require("../services/flightRouteService");
-const extraLegService = require("../services/extraLegService");
 
 exports.getFlights = async (req, res, next) => {
     try {
@@ -48,21 +47,148 @@ exports.getFlightStatus = async (req, res, next) => {
 //se c'è tempo controllare utilizzo contemporaneo aerei
 exports.newFlight = async (req, res, next) => {
     try {
-        const { plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize } = req.body ?? {};
-        if (plane == undefined || route == undefined || schdepdate == undefined || scharrdate == undefined || pcprize == undefined || bprize == undefined || eprize == undefined || bagprize == undefined || lrprize == undefined || scprize == undefined) res.status(400).json({ message: "Required data missing" });
+        const { plane, route, pcprice, bprice, eprice, bagprice, lrprice, scprice } = req.body ?? {};
+        let { scharrdate, schdepdate } = req.body ?? {};
+        if (plane == undefined || route == undefined || schdepdate == undefined || scharrdate == undefined || pcprice == undefined || bprice == undefined || eprice == undefined || bagprice == undefined || lrprice == undefined || scprice == undefined) res.status(400).json({ message: "Required data missing" });
         else {
+            scharrdate = new Date(scharrdate);
+            schdepdate = new Date(schdepdate);
+            if (scharrdate <= schdepdate) {
+                res.status(409).json({ message: "Arrival date cannot be before departure date" });
+                return;
+            }
+            if (effdepdate < new Date() || effarrdate < new Date()) {
+                    res.status(409).json({ message: "Arrival or departure date cannot be in the past" });
+                    return;
+                }
+            if (pcprice < 0 || bprice < 0 || eprice < 0 || bagprice < 0 || lrprice < 0 || scprice < 0) {
+                res.status(400).json({ message: "Prices cannot be less than 0" });
+                return;
+            }
             const getplane = await planeService.getPlanes(plane, undefined, undefined, undefined, undefined);
             const getroute = await flightRouteService.getFlightRoutes(route, undefined, undefined);
             if (getplane[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Plane not found" });
             else if (getroute[0]?.IdCompagniaAerea != req.id) res.status(409).json({ message: "Flight route not found" });
             else {
-                const nflight = await flightService.newFlight(plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize);
+                const nflight = await flightService.newFlight(plane, route, schdepdate, scharrdate, pcprice, bprice, eprice, bagprice, lrprice, scprice);
                 res.json({ nflight: nflight });
             }
         }
     } catch (err) {
         if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
         else if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.departure = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else {
+            const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Programmato");
+            if (flight[0]) {
+                const nflight = await flightService.updateFlight(id, new Date(), undefined, "Decollato", flight[0].CostoPC, flight[0].CostoB, flight[0].CostoE);
+                res.json({ nflight: nflight });
+            } else res.status(400).json({ message: "Flight not found" });
+        }
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.arrival = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else {
+            const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Decollato");
+            if (flight[0]) {
+                const nflight = await flightService.updateFlight(id, flight[0].DataPartenzaEff, new Date(), "Atterrato", flight[0].CostoPC, flight[0].CostoB, flight[0].CostoE);
+                res.json({ nflight: nflight });
+            } else res.status(400).json({ message: "Flight not found" });
+        }
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.updateEffDate = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        let { effdepdate, effarrdate } = req.body ?? {};
+        if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else {
+            const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+            if (flight[0]) {
+                if (flight[0].Stato != 'Atterrato' && flight[0].Stato != 'Cancellato') {
+                    res.status(409).json({ message: "Scheduled or departed flight" });
+                    return;
+                }
+                effdepdate = effdepdate != undefined ? new Date(effdepdate) : flight[0].DataPartenzaEff;
+                effarrdate = effarrdate != undefined ? new Date(effarrdate) : flight[0].DataArrivoEff;
+                if (effdepdate >= effarrdate) {
+                    res.status(409).json({ message: "Arrival date cannot be before departure date" });
+                    return;
+                }
+                if (effdepdate > new Date() || effarrdate > new Date()) {
+                    res.status(409).json({ message: "Arrival or departure date cannot be in the future" });
+                    return;
+                }
+                const nflight = await flightService.updateFlight(id, effdepdate, effarrdate, flight[0].Stato, flight[0].CostoPC, flight[0].CostoB, flight[0].CostoE);
+                res.json({ nflight: nflight });
+            } else res.status(400).json({ message: "Flight not found" });
+        }
+    } catch (err) {
+        if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
+        else if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.updatePrices = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        let { pcprice, bprice, eprice } = req.body ?? {};
+        if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else {
+            const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Programmato");
+            if (flight[0]) {
+                if (pcprice < 0 || bprice < 0 || eprice < 0) {
+                    res.status(409).json({ message: "Prices cannot be less than 0" });
+                    return;
+                }
+                const nflight = await flightService.updateFlight(id, flight[0].DataPartenzaEff, flight[0].DataArrivvoEff, flight[0].Stato, pcprice || flight[0].CostoPC, bprice || flight[0].CostoB, eprice || flight[0].CostoE);
+                res.json({ nflight: nflight });
+            } else res.status(400).json({ message: "Flight not found" });
+        }
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.deleteFlight = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if (id == undefined) {
+            res.status(400).json({ message: "Id missing" });
+            return;
+        }
+        const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        const flightstatus = await flightService.getFlightStatus(id);
+        if (flightstatus[0] && flight[0] && flight[0]?.IdCompagniaAerea == req.id) {
+            if (flightstatus[0].PostiOccupati > 0) {
+                res.status(409).json({ message: "Tickets purchased for this flight" });
+                return;
+            }
+            const nflight = await flightService.deleteFlight(id);
+            res.json({ nflight: nflight });
+        } else res.status(400).json({ message: "Flight not found" }); 
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }

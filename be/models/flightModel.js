@@ -22,9 +22,15 @@ exports.getFlightStatus = async (id) => {
     return result.rows;
 }
 
-exports.newFlight = async (plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize) => {
+exports.newFlight = async (plane, route, schdepdate, scharrdate, pcprice, bprice, eprice, bagprice, lrprice, scprice) => {
     const sql = 'INSERT INTO "Voli" ("Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoPrev", "Stato", "CostoPC", "CostoB", "CostoE", "CostoBag", "CostoLegRoom", "CostoSceltaPosto") VALUES ($1, $2, $3, $4, \'Programmato\', $5, $6, $7, $8, $9, $10)';
-    const result = await pool.query(sql, [plane, route, schdepdate, scharrdate, pcprize, bprize, eprize, bagprize, lrprize, scprize]);
+    const result = await pool.query(sql, [plane, route, schdepdate, scharrdate, pcprice, bprice, eprice, bagprice, lrprice, scprice]);
+    return result.rowCount;
+}
+
+exports.updateFlight = async (id, effdepdate, effarrdate, status, pcprice, bprice, eprice) => {
+    const sql = 'UPDATE "Voli" SET "DataPartenzaEff" = $1, "DataArrivoEff" = $2, "Stato" = $3, "CostoPC" = $4, "CostoB" = $5, "CostoE" = $6 WHERE "IdVolo" = $7 AND "IsActive" = true';
+    const result = await pool.query(sql, [effdepdate, effarrdate, status, pcprice, bprice, eprice, id]);
     return result.rowCount;
 }
 
