@@ -2,6 +2,7 @@ const flightService = require("../services/flightService");
 const planeService = require("../services/planeService");
 const flightRouteService = require("../services/flightRouteService");
 
+//mancherebbe l'ordinamento per numero di scali
 exports.getFlights = async (req, res, next) => {
     try {
         const { id, airline, departure, arrival, datedeparture, datearrival, order, plane } = req.query ?? {};

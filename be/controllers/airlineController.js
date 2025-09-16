@@ -1,5 +1,6 @@
 const airlineService = require("../services/airlineService");
 const emailService = require("../services/emailService");
+const mailing = require("../middlewares/mail")
 
 exports.getAirlines = async (req, res, next) => {
     try {
@@ -29,6 +30,7 @@ exports.newAirline = async (req, res, next) => {
             const mail = await emailService.newEmail(email);
             if (mail[0]) {
                 const nairline = await airlineService.newAirline(name, identificationcode, mail[0].IdEmail, password);
+                mailing.prova();
                 res.json({ nairline: nairline });
             } else res.status(500).json({ message: "Error during email insertion" });
         }
