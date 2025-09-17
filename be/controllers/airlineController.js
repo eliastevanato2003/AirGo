@@ -24,13 +24,17 @@ exports.getAirline = async (req, res, next) => {
 
 exports.newAirline = async (req, res, next) => {
     try {
-        const { name, identificationcode, email, password } = req.body ?? {};
-        if (!name || !identificationcode || !email || !password) res.status(400).json({ message: "Required data missing" });
+        const { name, identificationcode, email } = req.body ?? {};
+        if (!name || !identificationcode || !email) res.status(400).json({ message: "Required data missing" });
         else {
             const mail = await emailService.newEmail(email);
             if (mail[0]) {
-                const nairline = await airlineService.newAirline(name, identificationcode, mail[0].IdEmail, password);
-                mailing.prova();
+                const num = Math.floor(Math.random() * 1000000);
+                const str = num.toString().padStart(6, "0");
+                const nairline = await airlineService.newAirline(name, identificationcode, mail[0].IdEmail, str);
+                const url = `/pagina.html?email=${encodeURIComponent(email)}&temp=${encodeURIComponent(str)}`;
+                mailing.sendMail(email, name, url);
+                console.log(url);
                 res.json({ nairline: nairline });
             } else res.status(500).json({ message: "Error during email insertion" });
         }
@@ -53,7 +57,7 @@ exports.updateAirline = async (req, res, next) => {
             if (email) await emailService.updateEmail(airline.Mail, email);
             const nairline = await airlineService.updateAirline(req.id, name || airline.Nome, identificationcode || airline.CodiceIdentificativo, password);
             res.json({ nairline: nairline });
-        } else res.status(500).json({message: "Airline not found"});
+        } else res.status(500).json({ message: "Airline not found" });
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
