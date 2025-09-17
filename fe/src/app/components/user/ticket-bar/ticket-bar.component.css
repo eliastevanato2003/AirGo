@@ -20,12 +20,6 @@
   position: relative;
 }
 
-.step:hover {
-  background-color: #aaa;
-  color: #fff;
-  cursor: pointer;
-}
-
 .step:not(:last-child)::after {
   content: '';
   position: absolute;

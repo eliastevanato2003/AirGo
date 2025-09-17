@@ -4,23 +4,37 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
+import { ActivatedRoute } from '@angular/router';
+import { Seat } from '../../../models/user/seat.model';
 
 @Component({
   selector: 'app-ticket-summary',
   templateUrl: './ticket-summary.component.html',
   styleUrls: ['./ticket-summary.component.css'],
-  imports: [CurrencyPipe, ReactiveFormsModule, NavbarComponent, TicketBarComponent, FooterComponent]
+  imports: [CurrencyPipe, ReactiveFormsModule, NavbarComponent, TicketBarComponent, FooterComponent],
+  standalone: true
 })
 export class TicketSummaryComponent implements OnInit {
-  selectedSeat = '6C';
-  baggageHand = 'Solo borsa piccola';
-  baggageChecked = 'Bagaglio da 10 kg';
-  totalPrice = 10.5 + 0 + 17.49;
+  public selectedSeats: Seat[] = [];
+  public baggageHand = 'Solo borsa piccola';
+  public baggageChecked = 'Bagaglio da 10 kg';
+  public totalPrice = 0;
+  public extraBags = 0;
 
   public paymentForm!: FormGroup;
-  confirmed = false;
+  public confirmed = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, private route: ActivatedRoute) {
+    this.route.queryParams.subscribe(params => {
+      this.totalPrice = parseInt(params['price']);
+      this.selectedSeats = params['seats'];
+      console.log(params['extraBag']);
+      params['extraBag'].forEach((res: boolean) => {
+        if(res) this.extraBags++;
+      });
+      this.baggageChecked = this.extraBags + ' Bagagli da 10 kg';
+    });
+  }
 
   ngOnInit() {
     this.paymentForm = this.fb.group({

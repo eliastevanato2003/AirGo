@@ -10,6 +10,7 @@ import { SeatSelectionComponent } from './components/user/seat-selection/seat-se
 import { BaggageSelectionComponent } from './components/user/baggage-selection/baggage-selection.component';
 import { TicketSummaryComponent } from './components/user/ticket-summary/ticket-summary.component';
 import { AirlineProfileComponent } from './components/airline/airline-profile/airline-profile.component';
+import { PasswordComponent } from './components/airline/password/password.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -22,5 +23,6 @@ export const routes: Routes = [
     { path: 'ticketsummary', component: TicketSummaryComponent },
     { path: 'airplanes', component: AirplanesComponent },
     { path: 'admin-airlines', component: AirlinesComponent },
-    { path: 'airline-profile', component: AirlineProfileComponent }
+    { path: 'airline-profile', component: AirlineProfileComponent },
+    { path: 'password', component: PasswordComponent }
 ];

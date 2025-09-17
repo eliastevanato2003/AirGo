@@ -5,7 +5,7 @@ import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
 import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
 
@@ -13,17 +13,19 @@ import { FlightStatus } from '../../../models/user/flight.model';
   selector: 'app-seat-selection',
   templateUrl: './seat-selection.component.html',
   styleUrls: ['./seat-selection.component.css'],
-  imports: [NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor]
+  imports: [NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive],
+  standalone: true
 })
 export class SeatSelectionComponent {
   seats: Seat[] = [];
 
   public ticketCount: number = 1;
+  public price: number = 0;
 
   private planeId: number = 0;
   private flight: FlightStatus | null = null;
 
-  constructor(private router: Router, private flightService: FlightService, private route: ActivatedRoute) {}
+  constructor(private flightService: FlightService, private route: ActivatedRoute) { }
 
   ngOnInit() {
     this.route.queryParams.subscribe(
@@ -33,7 +35,6 @@ export class SeatSelectionComponent {
     this.getPlaneSeats();
   }
 
-  // TODO: get per avere il numero di righe e colonne dell'aereo (id in queryParams)
   getPlaneSeats() {
     this.flightService.getFlightStatus(this.planeId).subscribe({
       next: (response) => {
@@ -47,7 +48,6 @@ export class SeatSelectionComponent {
     });
   }
 
-  // TODO: get dei posti già acquistati e inserirli in this.seats
   generateSeats() {
     // FIRST CLASS
     this.seats.push({
@@ -89,14 +89,33 @@ export class SeatSelectionComponent {
         });
       }
     }
+    console.log(this.flight);
   }
 
   selectSeat(seat: Seat) {
     // Verifica che non si superi il numero di biglietti
     if (this.getSelectedSeats().length < this.ticketCount) {
       seat.selected = !seat.selected;
+      if (!seat.selected) {
+        if (seat.type == 'firstclass') {
+          this.price -= seat.price;
+        } else {
+          this.price -= seat.price + this.flight!.CostoSceltaPosto;
+        }
+      } else {
+        if (seat.type == 'firstclass') {
+          this.price += seat.price;
+        } else {
+          this.price += seat.price + this.flight!.CostoSceltaPosto;
+        }
+      }
     } else if (seat.selected) {
       seat.selected = false; // Deseleziona se è già selezionato
+      if (seat.type == 'firstclass') {
+        this.price -= seat.price;
+      } else {
+        this.price -= seat.price + this.flight!.CostoSceltaPosto;
+      }
     }
   }
 
@@ -130,12 +149,11 @@ export class SeatSelectionComponent {
     // Se il numero di biglietti è inferiore ai posti selezionati, cancella i posti in eccesso
     if (selectedSeats.length > this.ticketCount) {
       let excessSeats = selectedSeats.slice(this.ticketCount);
-      excessSeats.forEach(seat => seat.selected = false); // Deseleziona i posti in eccesso
+      excessSeats.forEach(seat => {
+        seat.selected = false;
+        this.price -= seat.price + this.flight!.CostoSceltaPosto;
+      }); // Deseleziona i posti in eccesso
     }
-  }
-
-  submit() {
-    this.router.navigate(['/baggageselection'], { queryParams: { ticketCount: this.ticketCount } });
   }
 
   get groupedSeats() {

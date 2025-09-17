@@ -10,7 +10,8 @@ import { Airline } from '../../../models/admin/airline.model';
   selector: 'app-airline-profile',
   imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
   templateUrl: './airline-profile.component.html',
-  styleUrl: './airline-profile.component.css'
+  styleUrl: './airline-profile.component.css',
+  standalone: true
 })
 export class AirlineProfileComponent implements OnInit{
   isEditing = false;

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { User, userProfile } from '../../../models/user/user.model';
@@ -10,7 +9,8 @@ import { UserService } from '../../../services/user/user.service';
   selector: 'app-profile',
   templateUrl: './user-profile.component.html',
   styleUrls: ['./user-profile.component.css'],
-  imports: [ReactiveFormsModule, NavbarComponent, FooterComponent]
+  imports: [ReactiveFormsModule, NavbarComponent, FooterComponent],
+  standalone: true
 })
 export class UserProfileComponent implements OnInit {
   userProfile: userProfile | undefined;
@@ -26,7 +26,7 @@ export class UserProfileComponent implements OnInit {
   personalForm: FormGroup;
   contactForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService) {
     this.personalForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],

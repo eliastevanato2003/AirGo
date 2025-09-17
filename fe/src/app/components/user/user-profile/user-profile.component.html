@@ -40,7 +40,7 @@
         </div>
         <div class="form-field password-container">
           <label for="password-input">Password:</label>
-          <input type="password" formControlName="password">
+          <input [type]="hidePassword ? 'password' : 'text'" formControlName="password">
           <!-- Icona per mostra/nascondi -->
           <span class="material-symbols-outlined toggle-password" style="cursor: pointer;"
             (click)="hidePassword = !hidePassword">

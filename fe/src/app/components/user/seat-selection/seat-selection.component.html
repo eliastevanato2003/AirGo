@@ -1,6 +1,5 @@
 <app-navbar></app-navbar>
 <app-ticket-bar></app-ticket-bar>
-
 <div class="container">
     <h2>Seleziona il tuo posto</h2>
 
@@ -51,7 +50,7 @@
         </div>
     </div>
 
-    <button type="submit" class="submit-button" (click)="submit()">Continua</button>
+    <button type="submit" class="submit-button" routerLink="/baggageselection" [queryParams]="{ ticketCount: ticketCount, price: price, seats: this.getSelectedSeats() }" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Continua</button>
 </div>
 
 <app-footer></app-footer>
