@@ -22,7 +22,6 @@ export class NavbarComponent implements OnInit {
     });
     this.authService.whatRole().subscribe(role => {
       this.userRole = role;
-      console.log("User role in navbar:", this.userRole);
     });
   }
 
