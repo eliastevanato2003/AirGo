@@ -7,7 +7,8 @@ import { FooterComponent } from '../../../footer/footer.component';
   selector: 'app-flight-search',
   templateUrl: './flights.component.html',
   styleUrls: ['./flights.component.css'],
-  imports: [NavbarComponent, FooterComponent]
+  imports: [NavbarComponent, FooterComponent],
+  standalone: true
 })
 export class FlightsComponent {
   from: string = 'London Stansted';
@@ -18,7 +19,6 @@ export class FlightsComponent {
   constructor(private router: Router) {}
 
   searchFlights() {
-    
     this.router.navigate(['flightslist']);
   }
 }

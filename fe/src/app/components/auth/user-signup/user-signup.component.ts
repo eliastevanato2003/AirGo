@@ -9,7 +9,8 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-user-signup',
   imports: [ReactiveFormsModule, NavbarComponent, MatIconModule],
   templateUrl: './user-signup.component.html',
-  styleUrl: './user-signup.component.css'
+  styleUrl: './user-signup.component.css',
+  standalone: true
 })
 export class UserSignupComponent {
 

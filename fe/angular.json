@@ -24,6 +24,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "**/*",
+                "input": "node_modules/@fontsource/roboto/files",
+                "output": "assets/fonts"
               }
             ],
             "styles": [

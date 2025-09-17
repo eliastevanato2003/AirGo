@@ -12,7 +12,8 @@ import { Airline } from '../../../models/admin/airline.model';
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule]
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  standalone: true
 })
 export class AirplanesComponent implements OnInit {
 
