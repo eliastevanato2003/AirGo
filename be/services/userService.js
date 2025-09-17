@@ -35,5 +35,5 @@ exports.login = async (email, password) => {
     const role = !user[0] ? 1 : user[0].Admin ? 0 : 2;
     const id = !user[0] ? airline[0].IdCompagniaAerea : user[0].IdUtente;
     const token = jwt.sign({ email: email, role: role, id: id }, JWT_SECRET, { expiresIn: '1h' });
-    return {token: token, role: role};
+    return {token: token, role: role, id: id};
 }

@@ -1,6 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { get } from 'http';
 import { BehaviorSubject, tap } from 'rxjs';
 
 @Injectable({
@@ -9,6 +10,7 @@ import { BehaviorSubject, tap } from 'rxjs';
 export class AuthService {
   private loggedIn$ = new BehaviorSubject<boolean>(false);
   private role$ = new BehaviorSubject<number | null>(null);
+  private id$ = new BehaviorSubject<number | null>(null);
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private http: HttpClient) {
     if (this.isBrowser()) {
@@ -39,14 +41,24 @@ export class AuthService {
     }
   }
 
+  saveId(id: number) {
+    if (this.isBrowser()) {
+      localStorage.setItem('userId', id.toString());
+      this.id$.next(id);
+    }
+  }
+
   // Ottieni il token da localStorage
   getToken(): string | null {
     return this.isBrowser() ? localStorage.getItem('authToken') : null;
   }
 
-  
   getRole(): number | null {
     return this.role$.value || (this.isBrowser() ? Number(localStorage.getItem('userRole')) || null : null);
+  }
+
+  getId(): number | null {
+    return this.id$.value || (this.isBrowser() ? Number(localStorage.getItem('userId')) || null : null);
   }
 
   // Rimuovi il token da localStorage
@@ -74,6 +86,10 @@ export class AuthService {
     return this.role$.asObservable();
   }
 
+  whatId(){
+    return this.id$.asObservable();   
+  }
+
   login(email: string, password: string) {
     const url = 'http://localhost:3000/api/users/login';
 
@@ -83,10 +99,11 @@ export class AuthService {
     };
 
     // Invio dei dati al backend
-    return this.http.post<{ token: string, role: number }>(url, message).pipe(
+    return this.http.post<{ token: string, role: number , id: number}>(url, message).pipe(
       tap(response => {
         this.saveToken(response.token);
         this.saveRole(response.role);
+        this.saveId(response.id);
         console.log("Login avvenuto con successo");
       })
     );
