@@ -4,7 +4,7 @@
   <h2>Riepilogo della prenotazione</h2>
 
   <ul>
-    <li><strong>Posto:</strong> {{ selectedSeat }}</li>
+    <li><strong>Posto/i:</strong>@for(seat of selectedSeats; track seat.id) { {{ seat }} }</li>
     <li><strong>Bagaglio a mano:</strong> {{ baggageHand }}</li>
     <li><strong>Bagaglio da stiva:</strong> {{ baggageChecked }}</li>
     <li><strong>Totale:</strong> {{ totalPrice | currency:'EUR':'symbol' }}</li>
@@ -13,49 +13,31 @@
   <h3>Pagamento</h3>
 
   <form [formGroup]="paymentForm">
-    <input
-      type="text"
-      placeholder="Nome sulla carta"
-      formControlName="name"
-    />
+    <input type="text" placeholder="Nome sulla carta" formControlName="name" />
     @if(f['name'].invalid && f['name'].touched) {
-      <div class="error">Campo obbligatorio</div>
+    <div class="error">Campo obbligatorio</div>
     }
 
-    <input
-      type="text"
-      placeholder="Numero carta (16 cifre)"
-      maxlength="16"
-      formControlName="cardNumber"
-    />
+    <input type="text" placeholder="Numero carta (16 cifre)" maxlength="16" formControlName="cardNumber" />
     @if(f['cardNumber'].invalid && f['cardNumber'].touched) {
-      <div class="error">Inserisci un numero di carta valido</div>
+    <div class="error">Inserisci un numero di carta valido</div>
     }
 
-    <input
-      type="text"
-      placeholder="Data di scadenza (MM/AA)"
-      formControlName="expiry"
-    />
+    <input type="text" placeholder="Data di scadenza (MM/AA)" formControlName="expiry" />
     @if(f['expiry'].invalid && f['expiry'].touched) {
-      <div class="error">Formato MM/AA richiesto</div>
+    <div class="error">Formato MM/AA richiesto</div>
     }
 
-    <input
-      type="text"
-      placeholder="CVV (3 cifre)"
-      maxlength="3"
-      formControlName="cvv"
-    />
+    <input type="text" placeholder="CVV (3 cifre)" maxlength="3" formControlName="cvv" />
     @if(f['cvv'].invalid && f['cvv'].touched) {
-      <div class="error">Inserisci un CVV valido (3 cifre)</div>
+    <div class="error">Inserisci un CVV valido (3 cifre)</div>
     }
 
     <button class="btn" type="submit" (click)="confirmPayment()">Conferma e Paga</button>
   </form>
 
   @if(confirmed) {
-    <div class="confirmation">✅ Pagamento confermato! Riceverai un'email con la conferma della prenotazione.</div>
+  <div class="confirmation">✅ Pagamento confermato! Riceverai un'email con la conferma della prenotazione.</div>
   }
 </div>
 <app-footer></app-footer>

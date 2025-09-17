@@ -1,116 +1,149 @@
-.img-container{
-    background-image: url('../../../assets/img/pistadecollo.png');
-    background-size: cover;
-    background-position: center;
-}
-
-.option {
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  padding: 1rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  transition: 0.3s;
-  background-color: white;
-}
-
-.option:hover {
-  border-color: #004080;
-}
-
-.selected {
-  border-color: #004080;
-  background-color: #e6f0ff;
-}
-
-.price {
-  color: #004080;
-  font-weight: bold;
-}
+/* ---------- Layout Generale ---------- */
 
 .ticket-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 20px;
-    margin-top: 30px;
-    margin-bottom: 50px;
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', sans-serif;
 }
 
 .ticket-container h2 {
-    font-size: 26px;
-    color: #3b5998;
-    margin-bottom: 8px;
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #333;
 }
 
 .ticket-container p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 1rem;
+  color: #666;
 }
 
+/* ---------- Card Passeggero ---------- */
+
 .passenger-card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    padding: 20px;
-    margin-bottom: 20px;
+  padding: 20px;
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  background-color: #fafafa;
 }
 
 .passenger-card h3 {
-    font-size: 18px;
-    font-weight: bold;
-    color: #444;
-    margin-bottom: 20px;
+  margin-bottom: 20px;
+  color: #444;
 }
 
-.passenger-form {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-}
+/* ---------- Gruppi di Input ---------- */
 
 .form-group-inline {
-    flex: 1;
-    min-width: 200px;
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
 .form-group-inline label {
-    font-size: 14px;
-    color: #3b5998;
-    font-weight: 500;
-    margin-bottom: 6px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
 }
 
-.form-group-inline input {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 15px;
+.form-group-inline input[type="text"],
+.form-group-inline input[type="date"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
 }
 
 .form-group-inline input:focus {
-    border-color: #ff7f50;
-    outline: none;
-    box-shadow: 0 0 4px rgba(255, 127, 80, 0.3);
+  border-color: #007bff;
+  outline: none;
 }
 
+/* ---------- Errori ---------- */
+
+.error {
+  margin-top: 6px;
+  font-size: 0.875rem;
+  color: #e53935;
+}
+
+/* ---------- Sezione Bagagli ---------- */
+
+.container {
+  padding: 20px;
+  background-color: #f1f6ff;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.container h2 {
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+  color: #333;
+}
+
+/* Ogni opzione bagaglio */
+.container > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  margin-bottom: 10px;
+  background-color: #ffffff;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.container > div:hover {
+  border-color: #007bff;
+  background-color: #f0f8ff;
+}
+
+.container > div.selected {
+  border-color: #007bff;
+  background-color: #e6f0ff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.4);
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.price {
+  font-size: 1rem;
+  color: #555;
+}
+
+/* ---------- Pulsante Continua ---------- */
+
 .submit-button {
-    width: 100%;
-    padding: 15px;
-    background: #ff7f50;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    font-size: 18px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
+  display: block;
+  margin: 30px auto 0;
+  padding: 12px 30px;
+  background-color: #ff7f50;
+  color: #fff;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease-in-out;
 }
 
 .submit-button:hover {
-    background: #e67345;
+  background-color: #e67345;
 }
 
+.submit-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
