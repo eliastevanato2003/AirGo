@@ -1,0 +1,36 @@
+<app-navbar></app-navbar>
+
+<div class="flights-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione dei Voli</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare voli della tua compagnia aerea</p>
+    </div>
+    <button class="add-flight-btn" (click)="showCreate=true">Aggiungi volo</button>
+  </div>
+
+  @if(flights) {
+  <div class="flight-list">
+    @for(flight of flights; track flight.IdVolo) {
+    <div class="flight-bar">
+      <div class="flight-info">
+      <p><strong>Volo #@flight.IdVolo</strong></p>
+      <p>
+        @flight.CittaPartenza (@flight.CodicePartenza) 
+        <span class="time">(@flight.DataPartenzaPrev | date:'HH:mm')</span>
+        ➔ 
+        @flight.CittaArrivo (@flight.CodiceArrivo) 
+        <span class="time">(@flight.DataArrivoPrev | date:'HH:mm')</span>
+      </p>
+      <p><em>Stato: @flight.Stato</em></p>
+    </div>
+    </div>
+    <button class="add-flight-btn">Gestisci</button>
+    }
+  </div>
+  }
+
+ 
+</div>
+
+<app-footer></app-footer>

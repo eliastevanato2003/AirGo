@@ -11,6 +11,7 @@ import { BaggageSelectionComponent } from './components/user/baggage-selection/b
 import { TicketSummaryComponent } from './components/user/ticket-summary/ticket-summary.component';
 import { AirlineProfileComponent } from './components/airline/airline-profile/airline-profile.component';
 import { PasswordComponent } from './components/airline/password/password.component';
+import { AirlineFlightsComponent } from './components/airline/airlineflights/airlineflights.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -24,5 +25,6 @@ export const routes: Routes = [
     { path: 'airplanes', component: AirplanesComponent },
     { path: 'admin-airlines', component: AirlinesComponent },
     { path: 'airline-profile', component: AirlineProfileComponent },
-    { path: 'password', component: PasswordComponent }
+    { path: 'password', component: PasswordComponent },
+    { path: 'airline-flights', component: AirlineFlightsComponent }
 ];
