@@ -33,41 +33,44 @@
 
 .seat.business {
   background-color: #004080;
-  /* Blu scuro */
+  color: white;
+}
+
+.seat.economy {
+  background-color: #4caf50;
   color: white;
 }
 
 .seat.firstclass {
   background-color: #FFA500;
-  /* Arancione */
   color: black;
   width: 350px;
   display: flex;
-  /* Per centrare il contenuto */
   justify-content: center;
-  /* Centrare il testo */
   align-items: center;
-  /* Centrare il testo verticalmente */
   margin: 0 auto;
-  /* Garantire che il div venga centrato orizzontalmente */
 }
 
 .seat.selected {
   border: 3px solid #000;
 }
 
-/* Etichette accanto alle righe di posti */
+.aisle-space {
+  width: 30px; /* spazio tra le due sezioni */
+}
+
 .labels {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  margin-left: 10px; /* Distanza tra i posti e le etichette */
+  margin-left: 10px;
 }
 
-.business-label, .economy-label {
+.business-label,
+.economy-label {
   font-size: 18px;
   font-weight: bold;
-  color: #004080; /* Colore blu scuro */
+  color: #004080;
   margin-bottom: 10px;
 }
 

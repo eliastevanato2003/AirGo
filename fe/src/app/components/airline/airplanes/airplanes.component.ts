@@ -10,7 +10,8 @@ import { ModelService } from '../../../services/airline/model.service';
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule]
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  standalone: true
 })
 export class AirplanesComponent implements OnInit {
 

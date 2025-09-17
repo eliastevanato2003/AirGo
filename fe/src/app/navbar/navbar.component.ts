@@ -7,7 +7,8 @@ import { profile } from 'console';
   selector: 'app-navbar',
   imports: [],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css'] 
+  styleUrl: './navbar.component.css',
+  standalone: true
 })
 export class NavbarComponent implements OnInit {
 

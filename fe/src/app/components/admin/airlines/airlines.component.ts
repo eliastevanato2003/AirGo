@@ -10,7 +10,8 @@ import { FooterComponent } from '../../../footer/footer.component';
   selector: 'app-admin-airlines',
   templateUrl: './airlines.component.html',
   styleUrls: ['./airlines.component.css'],
-  imports: [CommonModule, ɵInternalFormsSharedModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  standalone: true
 })
 export class AirlinesComponent implements OnInit {
   airlines: Airline[] | null = [];

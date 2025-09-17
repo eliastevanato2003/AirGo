@@ -10,7 +10,8 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
   styleUrl: './user-login.component.css',
-  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule]
+  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule],
+  standalone: true
 })
 export class UserLoginComponent {
 
