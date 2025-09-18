@@ -5,6 +5,10 @@ import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PlaneService } from '../../../services/airline/plane.service';
 import { ModelService } from '../../../services/airline/model.service';
+import { Plane } from '../../../models/airline/plane.model';
+import { filter } from 'rxjs/operators';
+import { Model } from '../../../models/airline/model.model';
+
 
 @Component({
   selector: 'app-airplanes',
@@ -15,8 +19,8 @@ import { ModelService } from '../../../services/airline/model.service';
 })
 export class AirplanesComponent implements OnInit {
 
-  airplanes: any[] = [];
-  models: any[] = [];
+  airplanes: Plane[] = [];
+  models: Model[] = [];
   showModal = false;
   creatingNewModel = false;
   evenNumbers = [2, 4, 6, 8];
@@ -47,17 +51,20 @@ export class AirplanesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.authService.whatId().subscribe(id => {
-      this.airlineId = id;
+    this.airlineId = this.authService.getId();
 
-      if (!this.airlineId) {
-        console.error('ID compagnia aerea non disponibile');
-        return;
-      }
-
+    if (this.airlineId) {
       this.loadPlanes();
       this.loadModels();
-    });
+    } else {
+      this.authService.whatId()
+        .pipe(filter(id => id !== null))
+        .subscribe(id => {
+          this.airlineId = id!;
+          this.loadPlanes();
+          this.loadModels();
+        });
+    }
   }
 
   private loadPlanes(): void {

@@ -55,4 +55,8 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/admin-airlines']);
   }
 
+  flights() {
+    this.router.navigate(['/airline-flights']);
+  }
+
 }

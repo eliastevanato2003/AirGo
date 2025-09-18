@@ -19,18 +19,26 @@ export class FlightService {
   }
 
   getFlights(): Observable<FlightDb[]> {
-    const url = `${this.baseUrl}/getFlights?status=all`;
+    const url = `${this.baseUrl}/getFlights?status=All`;
     return this.http.get<FlightDb[]>(url, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }
 
   getFlightsByAirline(airlineId: number): Observable<FlightDb[]> {
-    const url = `${this.baseUrl}/getFlights?airline=${airlineId}`;
+    const url = `${this.baseUrl}/getFlights?airline=${airlineId}&status=All`;
     return this.http.get<FlightDb[]>(url, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }
+
+  getFlightById(flightId: number): Observable<FlightDb>{
+    const url=`${this.baseUrl}/getFlights?id=${flightId}&status=All` ;
+    return this.http.get<FlightDb>(url, { headers: this.getHeaders() }).pipe(
+      tap()
+    );
+  }
+
 
   getFlightStatus(flightId: number): Observable<any> {
     return this.http.get<any>(`${this.baseUrl}/getFlightStatus?id=${flightId}`, { headers: this.getHeaders() }).pipe(tap());

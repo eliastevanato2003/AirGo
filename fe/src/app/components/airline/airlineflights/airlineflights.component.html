@@ -9,27 +9,35 @@
     <button class="add-flight-btn" (click)="showCreate=true">Aggiungi volo</button>
   </div>
 
-  @if(flights) {
+ @if(flights) {
   <div class="flight-list">
     @for(flight of flights; track flight.IdVolo) {
-    <div class="flight-bar">
-      <div class="flight-info">
-      <p><strong>Volo #{{flight.IdVolo}}</strong></p>
-      <p>
-        {{flight.CittaPartenza}} ({{flight.CodicePartenza}}) 
-        <span class="time">({{flight.DataPartenzaPrev}})</span>
-        ➔ 
-        {{flight.CittaArrivo}} ({{flight.CodiceArrivo}}) 
-        <span class="time">({{flight.DataArrivoPrev}})</span>
-      </p>
-      <p><em>Stato: {{flight.Stato}}</em></p>
-    </div>
-    <button class="add-flight-btn" (click)="gestisci(flight)">Gestisci</button>
-    </div>
-    
+      <div class="flight-bar">
+        <div class="flight-status">
+          <h4>Volo #{{ flight.IdVolo }}</h4>
+          <span>{{ flight.Stato }}</span>
+        </div>
+
+        <div class="flight-route">
+          <div class="codes">
+            <p class="code">{{ flight.CodicePartenza }}</p>
+            <p class="time">{{ flight.DataPartenzaPrev | date:'HH:mm' }}</p>
+          </div>
+
+          <div class="arrow">➔</div>
+
+          <div class="codes">
+            <p class="code">{{ flight.CodiceArrivo }}</p>
+            <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}</p>
+          </div>
+        </div>
+
+        <button class="add-flight-btn" (click)="gestisci(flight)">Gestisci</button>
+      </div>
     }
   </div>
-  }
+}
+
 
   @if(showCreate) {
   <div class="modal-overlay">
@@ -92,25 +100,32 @@
     <div class="modal-content manage-modal">
       <h3>Gestisci volo #{{selectedFlight.IdVolo}}</h3>
 
-      <div class="manage-body">
+      <div class="manage-body containerb">
         <div class="flight-details">
-          <h4>Info Volo</h4>
-          <p><strong>Partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}}) - {{selectedFlight.DataPartenzaPrev}}</p>
-          <p><strong>Arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}}) - {{selectedFlight.DataArrivoPrev}}</p>
-          <p><strong>Stato:</strong> {{selectedFlight.Stato}}</p>
+          <div class="info-box">
+            <h4>Info Volo</h4>
+            <p><strong>Partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}}) - {{selectedFlight.DataPartenzaPrev}}</p>
+            <p><strong>Arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}}) - {{selectedFlight.DataArrivoPrev}}</p>
+            <p><strong>Stato:</strong> {{selectedFlight.Stato}}</p>
+          </div>
 
-          <h4>Classi</h4>
-          <p><strong>Prima Classe:</strong> {{selectedFlight.CostoPC}}€</p>
-          <p><strong>Business:</strong> {{selectedFlight.CostoB}}€</p>
-          <p><strong>Economy:</strong> {{selectedFlight.CostoE}}€</p>
+          <div class="info-box">
+            <h4>Classi</h4>
+            <p><strong>Prima Classe:</strong> {{selectedFlight.CostoPC}}€</p>
+            <p><strong>Business:</strong> {{selectedFlight.CostoB}}€</p>
+            <p><strong>Economy:</strong> {{selectedFlight.CostoE}}€</p>
+          </div>
 
-          <h4>Extra</h4>
-          <p><strong>Bagaglio Extra:</strong> {{selectedFlight.CostoBag}}€</p>
-          <p><strong>Spazio Gambe:</strong> {{selectedFlight.CostoLegRoom}}€</p>
-          <p><strong>Scelta Posto:</strong> {{selectedFlight.CostoSceltaPosto}}€</p>
+          <div class="info-box">
+            <h4>Extra</h4>
+            <p><strong>Bagaglio Extra:</strong> {{selectedFlight.CostoBag}}€</p>
+            <p><strong>Spazio Gambe:</strong> {{selectedFlight.CostoLegRoom}}€</p>
+            <p><strong>Scelta Posto:</strong> {{selectedFlight.CostoSceltaPosto}}€</p>
+          </div>
         </div>
 
-        <div class="flight-actions">
+        <!-- PULSANTI DESTRA -->
+        <div class="flight-actions" style="margin-left:auto;">
           @if(selectedFlightStatus === 'Programmato') {
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
           }
@@ -120,12 +135,14 @@
         </div>
       </div>
 
+      <!-- CHIUDI IN FONDO -->
       <div class="close-area">
         <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
       </div>
     </div>
   </div>
 }
+
 
  
 </div>

@@ -13,10 +13,11 @@ import { FlightDb, NewFlight } from '../../../models/airline/flight.model';
 import { Route } from '../../../models/airline/route.model';
 import { Plane } from '../../../models/airline/plane.model';
 import { filter } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-airlineflights',
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './airlineflights.component.html',
   styleUrl: './airlineflights.component.css',
   standalone: true
@@ -93,6 +94,16 @@ export class AirlineFlightsComponent implements OnInit {
     console.log(this.routes);
   }
 
+  private loadFlightById(flightId: number): void {
+    this.flightService.getFlightById(flightId).subscribe({
+      next: (flight) => {
+        this.selectedFlight = flight;
+        this.selectedFlightStatus = flight.Stato;
+      },
+      error: (err) => console.error('Errore caricamento volo', err)
+    });
+  }
+
   addFlight(): void {
     if (this.newFlightForm.invalid) {
       console.error('Form non valido');
@@ -149,6 +160,7 @@ export class AirlineFlightsComponent implements OnInit {
       next: (res) => {
         alert('Volo segnato come decollato');
         this.loadFlights();
+        this.loadFlightById(idvolo);
       },
       error: (err) => {
         console.error('Errore durante la partenza del volo:', err);
@@ -161,6 +173,7 @@ export class AirlineFlightsComponent implements OnInit {
       next: (res) => {
         alert('Volo segnato come atterrato');
         this.loadFlights();
+        this.loadFlightById(idvolo);
       },
       error: (err) => {
         console.error('Errore durante l\'atterraggio del volo:', err);

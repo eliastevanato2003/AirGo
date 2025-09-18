@@ -188,6 +188,20 @@
   background: #aaa;
 }
 
+.action-btn {
+    background: #3b82f6;
+    color: #fff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.action-btn:hover {
+    background: #2563eb;
+}
+
 .containerb{
   display: flex;
   flex-direction: row;
