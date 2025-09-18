@@ -47,4 +47,10 @@ router.get("/getTickets", authenticateToken, ticketController.getTickets);
  */ 
 router.post("/newTicket", authenticateToken, authorizeRoles(2), ticketController.newTicket);
 
+router.post("/updateTicket", authenticateToken, authorizeRoles(2), ticketController.updateTicket);
+
+router.post("/addExtraBag", authenticateToken, authorizeRoles(2), ticketController.addExtraBag);
+
+router.delete("/deleteTicket", authenticateToken, authorizeRoles(1), ticketController.deleteTicket);
+
 module.exports = router;

@@ -1,0 +1,81 @@
+Date : 2025-09-18 12:31:58
+Directory : c:\Users\Elia Stevanato\Documents\Unive\TAW\be
+Total : 48 files,  2858 codes, 462 comments, 233 blanks, all 3553 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |         44 |      1,462 |        462 |        224 |      2,148 |
+| JSON       |          2 |      1,388 |          0 |          2 |      1,390 |
+| Docker     |          1 |          7 |          0 |          7 |         14 |
+| Ignore     |          1 |          1 |          0 |          0 |          1 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                | files      | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                   |         48 |      2,858 |        462 |        233 |      3,553 |
+| . (Files)                                                                           |          8 |      1,431 |          0 |         24 |      1,455 |
+| controllers                                                                         |          8 |        849 |          6 |         51 |        906 |
+| middlewares                                                                         |          3 |         42 |          0 |          4 |         46 |
+| models                                                                              |         10 |        285 |          0 |         53 |        338 |
+| routes                                                                              |          9 |        106 |        456 |         54 |        616 |
+| services                                                                            |         10 |        145 |          0 |         47 |        192 |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                            | language   | code       | comment    | blank      | total      |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\.dockerignore                        | Ignore     |          1 |          0 |          0 |          1 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\app.js                               | JavaScript |         12 |          0 |          5 |         17 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\configure.js                         | JavaScript |          2 |          0 |          2 |          4 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\airlineController.js     | JavaScript |         81 |          2 |          7 |         90 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\airportController.js     | JavaScript |         62 |          0 |          4 |         66 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\flightController.js      | JavaScript |        264 |          2 |         16 |        282 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\fligthRouteController.js | JavaScript |         73 |          0 |          4 |         77 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\modelController.js       | JavaScript |         81 |          0 |          4 |         85 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\planeController.js       | JavaScript |         77 |          0 |          4 |         81 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\ticketController.js      | JavaScript |        135 |          0 |          6 |        141 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\controllers\userController.js        | JavaScript |         76 |          2 |          6 |         84 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\db.js                                | JavaScript |         16 |          0 |          6 |         22 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\dockerfile                           | Docker     |          7 |          0 |          7 |         14 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\middlewares\authMiddleware.js        | JavaScript |         14 |          0 |          2 |         16 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\middlewares\mail.js                  | JavaScript |         17 |          0 |          2 |         19 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\middlewares\roleMiddleware.js        | JavaScript |         11 |          0 |          0 |         11 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\airlineModel.js               | JavaScript |         40 |          0 |          7 |         47 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\airportModel.js               | JavaScript |         21 |          0 |          6 |         27 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\emailModel.js                 | JavaScript |         26 |          0 |          5 |         31 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\extraLegModel.js              | JavaScript |         16 |          0 |          3 |         19 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\flightModel.js                | JavaScript |         57 |          0 |          8 |         65 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\flightRouteModel.js           | JavaScript |         27 |          0 |          4 |         31 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\modelModel.js                 | JavaScript |         21 |          0 |          4 |         25 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\planeModel.js                 | JavaScript |         24 |          0 |          4 |         28 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\ticketModel.js                | JavaScript |         25 |          0 |          4 |         29 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\models\userModel.js                  | JavaScript |         28 |          0 |          8 |         36 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\package-lock.json                    | JSON       |      1,364 |          0 |          1 |      1,365 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\package.json                         | JSON       |         24 |          0 |          1 |         25 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\airlines.js                   | JavaScript |         12 |         47 |          7 |         66 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\airports.js                   | JavaScript |         10 |         48 |          5 |         63 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\flightRoutes.js               | JavaScript |         10 |         48 |          7 |         65 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\flights.js                    | JavaScript |         15 |        114 |         11 |        140 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\index.js                      | JavaScript |         19 |          0 |          3 |         22 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\models.js                     | JavaScript |         10 |         54 |          5 |         69 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\planes.js                     | JavaScript |         10 |         46 |          5 |         61 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\tickets.js                    | JavaScript |          8 |         39 |          3 |         50 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\routes\users.js                      | JavaScript |         12 |         60 |          8 |         80 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\server.js                            | JavaScript |          5 |          0 |          2 |          7 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\airlineService.js           | JavaScript |         30 |          0 |          6 |         36 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\airportService.js           | JavaScript |          5 |          0 |          4 |          9 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\emailService.js             | JavaScript |          6 |          0 |          5 |         11 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\extraLegService.js          | JavaScript |          4 |          0 |          3 |          7 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\flightRouteService.js       | JavaScript |          5 |          0 |          4 |          9 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\flightService.js            | JavaScript |         38 |          0 |          7 |         45 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\modelService.js             | JavaScript |         14 |          0 |          4 |         18 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\planeService.js             | JavaScript |          5 |          0 |          4 |          9 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\ticketService.js            | JavaScript |          5 |          0 |          4 |          9 |
+| c:\Users\Elia Stevanato\Documents\Unive\TAW\be\services\userService.js              | JavaScript |         33 |          0 |          6 |         39 |
+| Total                                                                               |            |      2,858 |        462 |        233 |      3,553 |
++-------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
