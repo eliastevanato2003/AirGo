@@ -66,6 +66,10 @@ export class AuthService {
     if (this.isBrowser()) {
       localStorage.removeItem('authToken');
       this.loggedIn$.next(false);
+      localStorage.removeItem('userRole');
+      this.role$.next(null);
+      localStorage.removeItem('userId');
+      this.id$.next(null);
     }
   }
 
@@ -98,7 +102,7 @@ export class AuthService {
       password: password
     };
 
-    // Invio dei dati al backend
+  
     return this.http.post<{ token: string, role: number , id: number}>(url, message).pipe(
       tap(response => {
         this.saveToken(response.token);

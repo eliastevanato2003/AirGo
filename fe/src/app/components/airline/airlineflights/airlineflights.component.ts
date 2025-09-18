@@ -7,7 +7,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AuthService } from '../../../services/auth.service';
 import { FlightService } from '../../../services/airline/flight.service';
+import { PlaneService } from '../../../services/airline/plane.service';
 import { FlightDb } from '../../../models/airline/flight.model';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-airlineflights',
@@ -18,11 +20,12 @@ import { FlightDb } from '../../../models/airline/flight.model';
 export class AirlineFlightsComponent implements OnInit {
   showCreate = false;
   flights: FlightDb[] = [];
+  planes: any[] = [];
   routes: any[] = [];
   newFlightForm: FormGroup;
   airlineId: number | null = null;
 
-  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService) {
+  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService) {
     this.newFlightForm = this.fb.group({
       plane: ['', Validators.required],
       route: ['', Validators.required],
@@ -38,17 +41,21 @@ export class AirlineFlightsComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-    this.authService.whatId().subscribe(id => {
-      this.airlineId = id;
+   ngOnInit(): void {
+    this.airlineId = this.authService.getId();
 
-      if (!this.airlineId) {
-        console.error('ID compagnia aerea non disponibile');
-        return;
-      }
-
+    if (this.airlineId) {
       this.loadFlights();
-    });     
+      this.loadPlanes();
+    } else {
+      this.authService.whatId()
+        .pipe(filter(id => id !== null))
+        .subscribe(id => {
+          this.airlineId = id!;
+          this.loadFlights();
+          this.loadPlanes();
+        });
+    }
   }
 
   private loadFlights(): void {
@@ -59,6 +66,14 @@ export class AirlineFlightsComponent implements OnInit {
     });
     console.log(this.flights);
   } 
+
+  private loadPlanes(): void {
+    if (!this.airlineId) return;
+    this.planeService.getPlanesByAirline(this.airlineId).subscribe({
+      next: (planes) => this.planes = planes,
+      error: (err) => console.error('Errore caricamento aerei', err)
+    });
+  }
 
   addFlight(): void {
     if (this.newFlightForm.invalid) {
@@ -89,6 +104,11 @@ export class AirlineFlightsComponent implements OnInit {
         console.error('Errore creazione volo:', err);
       }
     });
+  }
+
+  closeModal(): void{
+    this.showCreate=false;
+    this.newFlightForm.reset();
   }
 
 
