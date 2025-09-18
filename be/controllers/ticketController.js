@@ -32,7 +32,7 @@ exports.newTicket = async (req, res, next) => {
                         res.status(400).json({ message: "Invalid seat" });
                         return;
                     }
-                    const seat = await ticketService.getTickets(undefined, undefined, flight, row, col, clas);
+                    const seat = await ticketService.getTickets(undefined, undefined, undefined, flight, row, col, clas);
                     if (seat[0]) {
                         res.status(409).json({ message: "Seat not available" });
                         return;

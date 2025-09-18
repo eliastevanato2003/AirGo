@@ -134,4 +134,6 @@ router.post("/updatePrices", authenticateToken, authorizeRoles(1), flightControl
  */
 router.delete("/deleteFlight", authenticateToken, authorizeRoles(1), flightController.deleteFlight);
 
+router.post("/assignSeats", authenticateToken, authorizeRoles(1), flightController.assignSeats);
+
 module.exports = router;

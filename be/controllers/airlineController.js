@@ -32,9 +32,8 @@ exports.newAirline = async (req, res, next) => {
                 const num = Math.floor(Math.random() * 1000000);
                 const str = num.toString().padStart(6, "0");
                 const nairline = await airlineService.newAirline(name, identificationcode, mail[0].IdEmail, str);
-                const url = `/pagina.html?email=${encodeURIComponent(email)}&temp=${encodeURIComponent(str)}`;
+                const url = `http://localhost:4200/password?email=${encodeURIComponent(email)}&temp=${encodeURIComponent(str)}`;
                 mailing.sendMail(email, name, url);
-                console.log(url);
                 res.json({ nairline: nairline });
             } else res.status(500).json({ message: "Error during email insertion" });
         }
@@ -45,6 +44,19 @@ exports.newAirline = async (req, res, next) => {
             if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
             else next(err);
         }
+    }
+}
+
+exports.activateAirline = async (req, res, next) => {
+    try {
+        const { email, pw1, pw2, temp } = req.body ?? {};
+        if (pw1 != pw2) res.status(400).json({ message: "Passwords not equals" });
+        else {
+            const nairline = await airlineService.activateAirline(email, pw1, temp);
+            res.json({ nairline: nairline });
+        }
+    } catch (err) {
+        next(err);
     }
 }
 
