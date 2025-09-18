@@ -78,3 +78,44 @@ exports.newTicket = async (req, res, next) => {
         else next(err);
     }
 }
+
+exports.updateTicket = async (req, res, next) => {
+    try {
+        const { id, name, surname, dob } = req.body ?? {};
+
+    } catch {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+
+}
+
+exports.addExtraBag = async (req, res, next) => {
+    try {
+
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.deleteTicket = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else {
+            const ticket = await ticketService.getTickets(req.id, id, undefined, undefined, undefined, undefined, undefined);
+            if (ticket[0]) {
+                const flight = await flightService.getFlights(ticket[0].Volo, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+                if (flight[0]?.Stato != "Programmato") res.status(409).json({ message: "Flight already departed" });
+                else {
+                    const nticket = await ticketService.deleteTicket(id);
+                    res.json({ nticket: nticket });
+                }
+            } else res.status(400).json({ message: "Ticket not found" });
+        }
+    } catch {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
