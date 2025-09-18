@@ -54,4 +54,24 @@ export class AirlineService {
         });
     }
 
+    activateAirline(email: string, temp: string, pw1: string, pw2: string) {
+        const url = 'http://localhost:3000/api/airlines/activateAirline';
+        const message = {
+            email: email,
+            temp: temp,
+            pw1: pw1,
+            pw2: pw2
+        }
+
+        this.http.post(this.url, message).subscribe({
+            next: () => {
+                alert('Airline attivata');
+            },
+            error: (error) => {
+                console.error('activateAirline error:', error);
+                // Gestisci l'errore, magari mostrando un messaggio all'utente
+            }
+        });
+    }
+
 }
