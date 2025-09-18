@@ -18,14 +18,14 @@ exports.newFlightRoute = async (departure, arrival, airline) => {
     return result.rowCount;
 }
 
-exports.updateFlightRoute = async (id, departure, arrival, airline) => {
-    const sql = 'UPDATE "Rotte" SET "Partenza" = $1, "Destinazione" = $2, "CompagniaAerea" = $3 WHERE "IdRotta" = $4 AND "IsActive" = true;';
-    const result = await pool.query(sql, [departure, arrival, airline, id]);
+exports.updateFlightRoute = async (id, departure, arrival) => {
+    const sql = 'UPDATE "Rotte" SET "Partenza" = $1, "Destinazione" = $2 WHERE "IdRotta" = $3 AND "IsActive" = true;';
+    const result = await pool.query(sql, [departure, arrival, id]);
     return result.rowCount;
 }
 
-exports.deleteFlightRoute = async (id) => {
-    const sql = 'UPDATE "Rotte" SET "IsActive" = false WHERE "IdRotta" = $1 AND "IsActive" = true';
-    const result = await pool.query(sql, [id]);
+exports.deleteFlightRoute = async (id, airline) => {
+    const sql = 'UPDATE "Rotte" SET "IsActive" = false WHERE "IdRotta" = $1 AND "CompagniaAerea" = $2 AND "IsActive" = true';
+    const result = await pool.query(sql, [id, airline]);
     return result.rowCount;
 }
