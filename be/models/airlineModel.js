@@ -8,9 +8,23 @@ exports.getAirlines = async (id, name, identificationcode, email) => {
     return result.rows;
 };
 
+exports.getAirlineForActivation = async (email) => {
+    const sel = 'SELECT * FROM "CompagnieAeree" JOIN "IndirizziEmail" ON "CompagnieAeree"."Mail" = "IndirizziEmail"."IdEmail" AND "IndirizziEmail"."IsActive" = true ';
+    const whe = 'WHERE ("Email" = $1 OR $1 IS NULL) AND "CompagnieAeree"."IsActive" = false';
+    const sql = sel + whe;
+    const result = await pool.query(sql, [email]);
+    return result.rows;
+};
+
 exports.newAirline = async (name, identificationcode, email, password) => {
     const sql = 'INSERT INTO "CompagnieAeree" ("Nome", "CodiceIdentificativo", "Mail", "Password") VALUES ($1, $2, $3, $4)';
     const result = await pool.query(sql, [name, identificationcode, email, password]);
+    return result.rowCount;
+}
+
+exports.activateAirline = async (id) => {
+    const sql = 'UPDATE "CompagnieAeree" SET "IsActive" = true WHERE "IdCompagniaAerea" = $1 AND "IsActive" = false';
+    const result = await pool.query(sql, [id]);
     return result.rowCount;
 }
 

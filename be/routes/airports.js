@@ -55,6 +55,7 @@ router.post("/updateAirport", authenticateToken, authorizeRoles(0, 1), airportCo
  * @id L'id dell'aeroporto da cancellare
  * @returns {200} {nairport: number} Il numero di aeroporti cancellati
  * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Aeroporto in uso in rotte attive
  */
 router.post("/deleteAirport", authenticateToken, authorizeRoles(0, 1), airportController.deleteAirport);

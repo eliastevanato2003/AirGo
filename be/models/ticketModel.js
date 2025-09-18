@@ -16,6 +16,12 @@ exports.newTicket = async (user, flight, name, surname, dob, clas, nextrabag, ro
     return result.rowCount;
 }
 
+exports.updateTicket = async (id, name, surname, dob, nextrabag, row, col, nseat, price ) => {
+    const sql = 'UPDATE "Biglietti" SET "Nome" = $1, "Cognome" = $2, "DoB" = $3, "NBagagliExtra" = $4, "RigPosto" = $5, "ColPosto" = $6, "NPosto" = $7, "Costo" = $8 WHERE "IsActive" = true AND "IdBiglietto" = $9';
+    const result = await pool.query(sql, [name, surname, dob, nextrabag, row, col, nseat, price, id]);
+    return result.rowCount; 
+}
+
 exports.deleteTicket = async (id) => {
     const sql = 'UPDATE "Biglietti" SET "IsActive" = false WHERE "IdVolo" = $1 AND "IsActive" = true';
     const result = await pool.query(sql, [id]);

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict 61FfTQOR4uunk4oLr0thwqRyua2n8yxQ3Had81sz8aRtySbid465Kg8gHzS18Dx
+\restrict WTUz8V74FvGli4p32tyGFlTVwETiz4eobPukUn38YRVeJMH6UkQ3orArq65pVFR
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -31,7 +31,8 @@ CREATE TABLE public."Aerei" (
     "CompagniaAerea" integer NOT NULL,
     "Modello" integer NOT NULL,
     "AnnoCostruzione" integer NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL
+    "IsActive" boolean DEFAULT true NOT NULL,
+    "InServizio" boolean DEFAULT true NOT NULL
 );
 
 
@@ -378,14 +379,16 @@ ALTER VIEW public.aereiposti OWNER TO admin;
 -- Data for Name: Aerei; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
-COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", "IsActive") FROM stdin;
-1	12	1	2020	t
-2	8	1	2020	t
-3	8	1	2024	t
-4	11	3	2019	t
-5	11	3	2019	t
-6	10	24	2019	t
-8	10	26	2021	t
+COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", "IsActive", "InServizio") FROM stdin;
+1	12	1	2020	t	t
+2	8	1	2020	t	t
+3	8	1	2024	t	t
+4	11	3	2019	t	t
+6	10	24	2019	t	t
+8	10	26	2021	t	f
+5	11	3	2019	f	f
+9	11	1	2021	t	t
+10	11	3	2021	t	t
 \.
 
 
@@ -630,6 +633,11 @@ COPY public."Biglietti" ("IdBiglietto", "Utente", "Volo", "Nome", "Cognome", "Do
 343	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	39	1
 344	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	34	30
 345	45	12	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	t	84	15
+346	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	\N	\N	f	30	\N
+347	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	34	29
+348	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	t	39	2
+349	45	12	Dario	Caberlotto	2003-09-24	Economy	2	t	C	\N	t	60	2
+350	39	12	Dario	Caberlotto	2003-09-24	Economy	2	t	D	\N	t	60	2
 \.
 
 
@@ -713,6 +721,8 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 15	8	10	10	t
 16	28	2	10	t
 17	2	28	10	t
+18	2	10	11	t
+19	10	28	11	t
 \.
 
 
@@ -735,13 +745,15 @@ COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "Do
 --
 
 COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoPrev", "DataPartenzaEff", "DataArrivoEff", "Stato", "CostoPC", "CostoB", "CostoE", "CostoBag", "CostoLegRoom", "CostoSceltaPosto", "IsActive") FROM stdin;
-4	3	1	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	100	70	35	20.25	10	3	t
-7	4	12	2025-10-14 22:30:00	2025-10-15 00:15:00	\N	\N	Programmato	100	70	20	20.25	10	3	t
-5	1	11	2025-10-17 10:30:00	2025-10-17 11:45:00	\N	\N	Programmato	100	70	25.5	20.25	10	3	t
 8	2	4	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 11	2	5	2025-12-23 12:00:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 12	6	6	2025-12-23 17:20:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 14	6	6	2025-12-23 17:20:00	2025-12-23 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+7	4	12	2025-10-14 22:30:00	2025-10-15 00:15:00	2025-09-15 16:10:38.903	2025-09-16 16:10:38.903	Atterrato	100	70	20	20.25	10	3	t
+4	3	1	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	80	20	1	20.25	10	3	f
+5	1	11	2025-10-17 10:30:00	2025-10-17 11:45:00	\N	\N	Programmato	100	70	25.5	20.25	10	3	f
+16	9	18	2025-11-20 10:00:00	2025-11-20 12:00:00	\N	\N	Programmato	30	20	10	3	3	3	t
+17	9	19	2025-11-20 13:00:00	2025-11-20 15:00:00	\N	\N	Programmato	30	20	10	3	3	3	t
 15	8	17	2025-11-20 00:00:00	2025-11-20 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
 \.
 
@@ -750,7 +762,7 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoP
 -- Name: Aerei_IdAereo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 8, true);
+SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 10, true);
 
 
 --
@@ -764,21 +776,21 @@ SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 29, true);
 -- Name: Biglietti_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 345, true);
+SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 350, true);
 
 
 --
 -- Name: CompagnieAeree_IdCompagniaAerea_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 13, true);
+SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 19, true);
 
 
 --
 -- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 68, true);
+SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 75, true);
 
 
 --
@@ -799,7 +811,7 @@ SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 20, true);
 -- Name: Rotte_IdRotta_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 17, true);
+SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 19, true);
 
 
 --
@@ -813,7 +825,7 @@ SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 63, true);
 -- Name: Voli_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 15, true);
+SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 17, true);
 
 
 --
@@ -1111,5 +1123,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict 61FfTQOR4uunk4oLr0thwqRyua2n8yxQ3Had81sz8aRtySbid465Kg8gHzS18Dx
+\unrestrict WTUz8V74FvGli4p32tyGFlTVwETiz4eobPukUn38YRVeJMH6UkQ3orArq65pVFR
 
