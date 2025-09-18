@@ -5,12 +5,13 @@ import { FormControl, FormGroup, ReactiveFormsModule } from "@angular/forms";
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { AuthService } from '../../../services/auth.service';
 import { MatIconModule } from '@angular/material/icon';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-login',
   templateUrl: './user-login.component.html',
-  styleUrl: './user-login.component.css',
-  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule],
+  styleUrls: ['./user-login.component.css'],
+  imports: [ReactiveFormsModule, NavbarComponent, MatIconModule, CommonModule],
   standalone: true
 })
 export class UserLoginComponent {

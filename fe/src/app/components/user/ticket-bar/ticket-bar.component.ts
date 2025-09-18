@@ -4,7 +4,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-ticket-bar',
   templateUrl: './ticket-bar.component.html',
-  styleUrl: './ticket-bar.component.css',
+  styleUrls: ['./ticket-bar.component.css'],
+  imports: [],
   standalone: true
 })
 export class TicketBarComponent {

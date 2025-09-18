@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Airline, NewAirline } from '../../../models/admin/airline.model';
 import { AirlineService } from '../../../services/admin/airline.service';
-import { NgModel, ɵInternalFormsSharedModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-admin-airlines',
   templateUrl: './airlines.component.html',
   styleUrls: ['./airlines.component.css'],
-  imports: [CommonModule, ɵInternalFormsSharedModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   standalone: true
 })
 export class AirlinesComponent implements OnInit {
