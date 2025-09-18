@@ -7,12 +7,13 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AirlineService } from '../../../services/airline/airline.service';
 import { Router } from '@angular/router';
 import { Airline } from '../../../models/admin/airline.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
   standalone: true
 })
 export class AirplanesComponent implements OnInit {

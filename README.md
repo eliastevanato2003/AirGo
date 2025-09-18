@@ -2,6 +2,24 @@
 docker network create mynet
 (Only needed the first time)
 
+# FRONTEND:
+
+#### DOWNLOAD & RUN
+docker run -p 4000:4000 --network mynet --name airgofe dariocabe/airgofe
+
+#### RUN
+docker run -p 4000:4000 --network mynet --name airgofe airgofe
+
+#### RUN WITH AUTO UPDATE
+docker run -it --name airgofelive --network mynet -v $(pwd):/app -w /app -p 4200:4000 dariocabe/airgofe npm run start (not working yet)
+
+#### START
+docker start airgofe
+
+#### CREATE & PUSH IMAGE
+docker build -t airgofe .
+docker tag airgofe dariocabe/airgofe
+docker push dariocabe/airgofe
 
 # BACKEND:
 #### DOWNLOAD & RUN

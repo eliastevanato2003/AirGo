@@ -19,7 +19,7 @@ export class BaggageSelectionComponent {
   public price: number = 0;
   public extraBag: boolean[] = [];
   public seats: Seat[] = [];
-  passengerForm?: FormGroup;
+  passengerForm: FormGroup | undefined;
   submitted = false;
 
   options = [
@@ -30,16 +30,14 @@ export class BaggageSelectionComponent {
   selectedOption: number[] = [];
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder) {
-    // Creazione dinamica del form
     this.route.queryParams.subscribe(params => {
-      this.ticketCount = params['ticketCount'];
-      this.price = parseInt(params['price']);
-      this.seats = params['seats'];
+      this.ticketCount = +params['ticketCount'] || 1;
+      this.price = parseInt(params['price'], 10) || 0;
+      this.seats = JSON.parse(params['seats'] || '[]');
       this.selectedOption = new Array(this.ticketCount).fill(0);
 
-      const passengersArray: FormArray = this.fb.array([]);  // Crea un nuovo FormArray
+      const passengersArray: FormArray = this.fb.array([]);
 
-      // Aggiungi dinamicamente i FormGroup per ciascun passeggero
       for (let i = 0; i < this.ticketCount; i++) {
         passengersArray.push(
           this.fb.group({
@@ -50,13 +48,12 @@ export class BaggageSelectionComponent {
         );
       }
 
-      // Inizializza il FormGroup principale
       this.passengerForm = this.fb.group({
         passengers: passengersArray,
       });
-    });
 
-    this.extraBag = new Array(this.ticketCount).fill(false);
+      this.extraBag = new Array(this.ticketCount).fill(false);
+    });
   }
 
   // Selezione dell'opzione per il bagaglio

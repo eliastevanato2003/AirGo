@@ -41,15 +41,7 @@ export class UserService {
         });
 
         // Richiesta dei dati
-        this.http.post(this.url, message, { headers: headers }).subscribe({
-            next: () => {
-                alert('Dati aggiornati');
-            },
-            error: (error) => {
-                console.error('UpdateUser error:', error);
-                // Gestisci l'errore, magari mostrando un messaggio all'utente
-            }
-        });
+        return this.http.post(this.url, message, { headers: headers });
     }
 
     editContact(email: string, number: string) {
@@ -67,14 +59,6 @@ export class UserService {
         });
 
         // Richiesta dei dati
-        this.http.post(this.url, message, { headers: headers }).subscribe({
-            next: () => {
-                alert('Dati aggiornati');
-            },
-            error: (error) => {
-                console.error('UpdateUser error:', error);
-                // Gestisci l'errore, magari mostrando un messaggio all'utente
-            }
-        });
+        return this.http.post(this.url, message, { headers: headers });
     }
 }
