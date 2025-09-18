@@ -61,4 +61,6 @@ router.post("/updateAirline", authenticateToken, authorizeRoles(1), airlineContr
  */
 router.post("/deleteAirline", authenticateToken, authorizeRoles(1), airlineController.deleteAirline);
 
+router.post("/activateAirline", airlineController.activateAirline);
+
 module.exports = router;

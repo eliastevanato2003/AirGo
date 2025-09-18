@@ -1,6 +1,7 @@
 const flightService = require("../services/flightService");
 const planeService = require("../services/planeService");
 const flightRouteService = require("../services/flightRouteService");
+const ticketService = require("../services/ticketService");
 
 //mancherebbe l'ordinamento per numero di scali
 exports.getFlights = async (req, res, next) => {
@@ -204,6 +205,75 @@ exports.deleteFlight = async (req, res, next) => {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
+}
+
+exports.assignSeats = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        const flightstatus = await flightService.getFlightStatus(id);
+        const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        const ticketse = await ticketService.getTickets(req.id, undefined, undefined, id, undefined, undefined, "Economy");
+        const seate = ticketse
+            .filter(obj => obj.RigPosto != undefined && obj.ColPosto != undefined)
+            .map(obj => `${obj.RigPosto}${obj.ColPosto}`);
+        const ticketsb = await ticketService.getTickets(req.id, undefined, undefined, id, undefined, undefined, "Business");
+        const seatb = ticketsb
+            .filter(obj => obj.RigPosto != undefined && obj.ColPosto != undefined)
+            .map(obj => `${obj.RigPosto}${obj.ColPosto}`);
+        const ticketspc = await ticketService.getTickets(req.id, undefined, undefined, id, undefined, undefined, "Prima");
+        const seatpc = ticketspc
+            .filter(obj => obj.NPosto != undefined)
+            .map(obj => obj.NPosto);
+        if (flightstatus[0] && flight[0] && flight[0]?.IdVolo == flightstatus[0]?.IdVolo) {
+            let frseatsb = seats(flightstatus[0].RigheB, flightstatus[0].ColonneB);
+            let frseatse = seats(flightstatus[0].RigheE, flightstatus[0].ColonneE);
+            let frseatspc = Array.from({ length: flightstatus[0].PostiPc }, (_, i) => i + 1);
+
+            frseatspc = frseatspc.filter(x => !seatpc.includes(x));
+            frseatsb = frseatsb.filter(x => !seatb.includes(x));
+            frseatse = frseatse.filter(x => !seate.includes(x));
+
+            let s = 0;
+            for (let ticket of ticketse) {
+                if (ticket.ColPosto == undefined && ticket.RigPosto == undefined) {
+                    const seat = frseatse.pop();
+                    const col = seat.at(-1);
+                    const row = seat.slice(0, -1);
+                    s += await ticketService.updateTicket(ticket.IdBiglietto, ticket.Nome, ticket.Cognome, ticket.DoB, ticket.NBagagliExtra, row, col, undefined, ticket.Costo);
+                }
+            }
+            for (let ticket of ticketsb) {
+                if (ticket.ColPosto == undefined && ticket.RigPosto == undefined) {
+                    const seat = frseatsb.pop();
+                    const col = seat.at(-1);
+                    const row = seat.slice(0, -1);
+                    s += await ticketService.updateTicket(ticket.IdBiglietto, ticket.Nome, ticket.Cognome, ticket.DoB, ticket.NBagagliExtra, row, col, undefined, ticket.Costo);
+                }
+            }
+            for (let ticket of ticketspc) {
+                if (ticket.NPosto == undefined) {
+                    const seat = frseatspc.pop();
+                    s += await ticketService.updateTicket(ticket.IdBiglietto, ticket.Nome, ticket.Cognome, ticket.DoB, ticket.NBagagliExtra, undefined, undefined, seat, ticket.Costo);
+                }
+            }
+            res.json(s);
+        }
+        else {
+            res.status(400).json({ message: "No" });
+        }
+    } catch (err) {
+        next(err);
+    }
+}
+
+function seats(row, col) {
+    let arr = [];
+    for (let i = 1; i <= row; i++) {
+        for (let j = 0; j < col; j++) {
+            arr.push(String(i) + String.fromCharCode(65 + j));
+        }
+    }
+    return arr;
 }
 
 

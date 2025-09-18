@@ -8,13 +8,25 @@ exports.getAirline = async (id) => {
     return airlines?.[0] ?? {};
 }
 
+exports.activateAirline = async (email, password, temp) => {
+    const airline = await airlineModel.getAirlineForActivation(email);
+    if (!airline || !(await bcrypt.compare(temp, airline[0]?.Password))) {
+        throw new Error('Invalid credentials');
+    }
+    else {
+        await airlineModel.activateAirline(airline[0].IdCompagniaAerea);
+        const hashedpassword = await bcrypt.hash(password, 10);
+        return await airlineModel.updatePassword(airline[0].IdCompagniaAerea, hashedpassword);
+    }
+}
+
 exports.newAirline = async (name, identificationcode, email, password) => {
     const hashedpassword = await bcrypt.hash(password, 10);
     return await airlineModel.newAirline(name, identificationcode, email, hashedpassword);
 }
 
 exports.updateAirline = async (id, name, identificationcode, password) => {
-    if(password) {
+    if (password) {
         const hashedpassword = await bcrypt.hash(password, 10);
         await airlineModel.updatePassword(id, hashedpassword);
     }
