@@ -19,5 +19,21 @@ export interface FlightDb {
     CodicePartenza: string,
     NomeArrivo: string,
     CittaArrivo: string,
-    CodiceArrivo: string
+    CodiceArrivo: string,
+    IdCompagniaAerea: number,
+    NomeCompagnia: string,
+    Pieno: boolean
+}
+
+export interface NewFlight {
+    plane: number;
+    route: number;
+    schdepdate: string;
+    scharrdate: string;
+    pcprice: number;
+    bprice: number;
+    eprice: number;
+    bagprice: number;
+    lrprice: number;
+    scprice: number;
 }

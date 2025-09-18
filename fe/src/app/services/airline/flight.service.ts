@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
-import { FlightDb } from '../../models/airline/flight.model';
+import { FlightDb, NewFlight } from '../../models/airline/flight.model';
 
 @Injectable({ providedIn: 'root' })
 export class FlightService {
@@ -19,7 +19,7 @@ export class FlightService {
   }
 
   getFlights(): Observable<FlightDb[]> {
-    const url = `${this.baseUrl}/getFlights`;
+    const url = `${this.baseUrl}/getFlights?status=all`;
     return this.http.get<FlightDb[]>(url, { headers: this.getHeaders() }).pipe(
       tap()
     );
@@ -37,18 +37,7 @@ export class FlightService {
   }
 
  
-  addFlight(data: {
-    plane: number;
-    route: number;
-    schdepdate: string;
-    scharrdate: string;
-    pcprice: number;
-    bprice: number;
-    eprice: number;
-    bagprice?: number;
-    lrprice?: number;
-    scprice?: number;
-  }): Observable<any> {
+  addFlight(data: NewFlight): Observable<any> {
     return this.http.post<any>(`${this.baseUrl}/newFlight`, data, { headers: this.getHeaders() }).pipe(tap());
   }
 
@@ -70,7 +59,6 @@ export class FlightService {
     ).pipe(tap());
   }
 
-  // POST /updatePrices
   updatePrices(flightId: number, pcprice: number, bprice: number, eprice: number): Observable<any> {
     return this.http.post<any>(
       `${this.baseUrl}/updatePrices`,
@@ -79,7 +67,6 @@ export class FlightService {
     ).pipe(tap());
   }
 
-  // DELETE /deleteFlight
   deleteFlight(flightId: number): Observable<any> {
     return this.http.delete<any>(`${this.baseUrl}/deleteFlight?id=${flightId}`, { headers: this.getHeaders() }).pipe(tap());
   }

@@ -8,36 +8,43 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { AuthService } from '../../../services/auth.service';
 import { FlightService } from '../../../services/airline/flight.service';
 import { PlaneService } from '../../../services/airline/plane.service';
-import { FlightDb } from '../../../models/airline/flight.model';
+import { RouteService } from '../../../services/airline/route.service';
+import { FlightDb, NewFlight } from '../../../models/airline/flight.model';
+import { Route } from '../../../models/airline/route.model';
+import { Plane } from '../../../models/airline/plane.model';
 import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'app-airlineflights',
   imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
   templateUrl: './airlineflights.component.html',
-  styleUrl: './airlineflights.component.css'
+  styleUrl: './airlineflights.component.css',
+  standalone: true
 })
 export class AirlineFlightsComponent implements OnInit {
   showCreate = false;
   flights: FlightDb[] = [];
-  planes: any[] = [];
-  routes: any[] = [];
+  planes: Plane[] = [];
+  routes: Route[] = [];
   newFlightForm: FormGroup;
   airlineId: number | null = null;
+  newflight: NewFlight | null = null;
+  selectedFlight: FlightDb | null = null;
+  showManage = false;
+  selectedFlightStatus: string | null = null;
 
-  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService) {
+  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService) {
     this.newFlightForm = this.fb.group({
       plane: ['', Validators.required],
       route: ['', Validators.required],
       schdepdate: ['', Validators.required],
       scharrdate: ['', Validators.required],
-      pcprize: ['', [Validators.required, Validators.min(0)]],
-      bprize: ['', [Validators.required, Validators.min(0)]],
-      eprize: ['', [Validators.required, Validators.min(0)]],
-      ecprize: ['', [Validators.required, Validators.min(0)]],
-      bagprize: ['', [Validators.required, Validators.min(0)]],
-      lrprize: ['', [Validators.required, Validators.min(0)]],
-      scprize: ['', [Validators.required, Validators.min(0)]],
+      pcprice: ['', [Validators.required, Validators.min(0)]],
+      bprice: ['', [Validators.required, Validators.min(0)]],
+      eprice: ['', [Validators.required, Validators.min(0)]],
+      bagprice: ['', [Validators.required, Validators.min(0)]],
+      lrprice: ['', [Validators.required, Validators.min(0)]],
+      scprice: ['', [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -47,6 +54,7 @@ export class AirlineFlightsComponent implements OnInit {
     if (this.airlineId) {
       this.loadFlights();
       this.loadPlanes();
+      this.loadRoutes();
     } else {
       this.authService.whatId()
         .pipe(filter(id => id !== null))
@@ -54,6 +62,7 @@ export class AirlineFlightsComponent implements OnInit {
           this.airlineId = id!;
           this.loadFlights();
           this.loadPlanes();
+          this.loadRoutes();
         });
     }
   }
@@ -75,6 +84,15 @@ export class AirlineFlightsComponent implements OnInit {
     });
   }
 
+  private loadRoutes(): void {
+    if (!this.airlineId) return;
+    this.routeService.getRoutesByAirline(this.airlineId).subscribe({
+      next: (routes) => this.routes = routes,
+      error: (err) => console.error('Errore caricamento rotte', err)
+    });
+    console.log(this.routes);
+  }
+
   addFlight(): void {
     if (this.newFlightForm.invalid) {
       console.error('Form non valido');
@@ -83,7 +101,7 @@ export class AirlineFlightsComponent implements OnInit {
 
     const formValue = this.newFlightForm.value;
 
-    this.flightService.addFlight({
+    this.newflight = {
       plane: formValue.plane,
       route: formValue.route,
       schdepdate: formValue.schdepdate,
@@ -94,11 +112,14 @@ export class AirlineFlightsComponent implements OnInit {
       bagprice: formValue.bagprice || 0,
       lrprice: formValue.lrprice || 0,
       scprice: formValue.scprice || 0
-    }).subscribe({
+    };
+
+    this.flightService.addFlight(this.newflight).subscribe({
       next: (res) => {
         alert('Volo creato con successo');
         this.newFlightForm.reset();
         this.loadFlights();
+        this.showCreate = false;
       },
       error: (err) => {
         console.error('Errore creazione volo:', err);
@@ -110,6 +131,44 @@ export class AirlineFlightsComponent implements OnInit {
     this.showCreate=false;
     this.newFlightForm.reset();
   }
+
+  gestisci(flight: FlightDb): void {
+    this.selectedFlight = flight;
+    this.showManage = true;
+    this.selectedFlightStatus = flight.Stato;
+  }
+
+  closeManage(): void {
+    this.showManage = false;
+    this.selectedFlight = null;
+    this.selectedFlightStatus = null;
+  }
+
+  decolloVolo(idvolo: number): void {
+    this.flightService.markDeparture(idvolo).subscribe({
+      next: (res) => {
+        alert('Volo segnato come decollato');
+        this.loadFlights();
+      },
+      error: (err) => {
+        console.error('Errore durante la partenza del volo:', err);
+      }
+    });
+  }
+
+  atterraggioVolo(idvolo: number): void {
+    this.flightService.markArrival(idvolo).subscribe({
+      next: (res) => {
+        alert('Volo segnato come atterrato');
+        this.loadFlights();
+      },
+      error: (err) => {
+        console.error('Errore durante l\'atterraggio del volo:', err);
+      }
+    });
+  }
+
+
 
 
 }
