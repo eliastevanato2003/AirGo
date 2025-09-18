@@ -8,13 +8,14 @@ import { ModelService } from '../../../services/airline/model.service';
 import { Plane } from '../../../models/airline/plane.model';
 import { filter } from 'rxjs/operators';
 import { Model } from '../../../models/airline/model.model';
+import { CommonModule } from '@angular/common';
 
 
 @Component({
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
   standalone: true
 })
 export class AirplanesComponent implements OnInit {

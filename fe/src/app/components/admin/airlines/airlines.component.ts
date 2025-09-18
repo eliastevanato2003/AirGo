@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Airline, NewAirline } from '../../../models/admin/airline.model';
 import { AirlineService } from '../../../services/admin/airline.service';
-import { NgModel, ɵInternalFormsSharedModule, ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
@@ -10,7 +10,7 @@ import { FooterComponent } from '../../../footer/footer.component';
   selector: 'app-admin-airlines',
   templateUrl: './airlines.component.html',
   styleUrls: ['./airlines.component.css'],
-  imports: [CommonModule, ɵInternalFormsSharedModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
   standalone: true
 })
 export class AirlinesComponent implements OnInit {
