@@ -1,4 +1,3 @@
--Metterlo in culo a Steva
 -Su component airplanes: delete, avviso data aereo troppo bassa
 -Alert più carine
 -Controllo 24h partenze

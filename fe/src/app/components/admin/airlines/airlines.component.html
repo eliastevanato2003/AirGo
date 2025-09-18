@@ -1,46 +1,51 @@
-<div class="container mt-4">
-  <h2>Gestione Compagnie Aeree</h2>
+<app-navbar></app-navbar>
 
-  <!-- Form per aggiungere una nuova compagnia -->
-  <form method="post" [formGroup]="airlineForm">
-    <div class="input-group">
-      <label for="name">Nome</label>
-      <input type="text" id="name" name="name" formControlName="name" required>
+<div class="airlines-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione Compagnie Aeree</h2>
+      <p>Qui puoi aggiungere o eliminare compagnie aeree</p>
     </div>
-    <div class="input-group">
-      <label for="code">Codice identificativo</label>
-      <input type="text" id="code" name="code" formControlName="code" required>
-    </div>
-    <div class="input-group">
-      <label for="email">Email</label>
-      <input type="email" id="email" name="email" formControlName="email" required>
-    </div>
-    <button type="submit" class="login-button" (click)="addAirline()">Aggiungi</button>
-  </form>
+    <button class="add-airline-btn" (click)="showModal=true">Aggiungi compagnia</button>
+  </div>
 
-  <!-- Tabella delle compagnie -->
   @if(airlines) {
-  <table class="table table-striped">
-    <thead>
-      <tr>
-        <th>Nome</th>
-        <th>Codice</th>
-        <th>Email</th>
-        <th>Azioni</th>
-      </tr>
-    </thead>
-    <tbody>
-      @for(airline of airlines; track airline.IdCompagniaAerea) {
-        <tr>
-          <td>{{ airline.Nome }}</td>
-          <td>{{ airline.CodiceIdentificativo }}</td>
-          <td>{{ airline.Email }}</td>
-          <td>
-            <button class="btn btn-sm btn-danger" (click)="deleteAirline(airline.IdCompagniaAerea)">Elimina</button>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+  <div class="airline-list">
+    @for(airline of airlines; track airline.IdCompagniaAerea) {
+    <div class="airline-bar">
+      <div class="airline-info">
+        <p><strong>Nome:</strong> {{ airline.Nome }}</p>
+        <p><strong>Codice:</strong> {{ airline.CodiceIdentificativo }}</p>
+        <p><strong>Email:</strong> {{ airline.Email }}</p>
+      </div>
+      <button class="delete-btn" (click)="deleteAirline(airline.IdCompagniaAerea)">Elimina</button>
+    </div>
+    }
+  </div>
+  }
+
+  @if(showModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Aggiungi compagnia</h3>
+      <form [formGroup]="airlineForm" (ngSubmit)="addAirline()">
+        <label for="name">Nome</label>
+        <input type="text" id="name" formControlName="name" required>
+
+        <label for="code">Codice identificativo</label>
+        <input type="text" id="code" formControlName="code" required>
+
+        <label for="email">Email</label>
+        <input type="email" id="email" formControlName="email" required>
+
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="airlineForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
+        </div>
+      </form>
+    </div>
+  </div>
   }
 </div>
+
+<app-footer></app-footer>

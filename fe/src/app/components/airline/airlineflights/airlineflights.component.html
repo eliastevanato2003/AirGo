@@ -1,0 +1,150 @@
+<app-navbar></app-navbar>
+
+<div class="flights-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione dei Voli</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare voli della tua compagnia aerea</p>
+    </div>
+    <button class="add-flight-btn" (click)="showCreate=true">Aggiungi volo</button>
+  </div>
+
+ @if(flights) {
+  <div class="flight-list">
+    @for(flight of flights; track flight.IdVolo) {
+      <div class="flight-bar">
+        <div class="flight-status">
+          <h4>Volo #{{ flight.IdVolo }}</h4>
+          <span>{{ flight.Stato }}</span>
+        </div>
+
+        <div class="flight-route">
+          <div class="codes">
+            <p class="code">{{ flight.CodicePartenza }}</p>
+            <p class="time">{{ flight.DataPartenzaPrev | date:'HH:mm' }}</p>
+          </div>
+
+          <div class="arrow">➔</div>
+
+          <div class="codes">
+            <p class="code">{{ flight.CodiceArrivo }}</p>
+            <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}</p>
+          </div>
+        </div>
+
+        <button class="add-flight-btn" (click)="gestisci(flight)">Gestisci</button>
+      </div>
+    }
+  </div>
+}
+
+
+  @if(showCreate) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Aggiungi volo</h3>
+      <form [formGroup]="newFlightForm" (ngSubmit)="addFlight()">
+
+        <label for="plane">Aereo</label>
+        <select formControlName="plane" required>
+          <option value="" disabled>Seleziona un Aereo</option>
+          @for(plane of planes; track plane.IdAereo) {
+            <option [value]="plane.IdAereo">{{ plane.NomeModello }}-{{ plane.IdAereo}}</option>
+          }
+        </select>
+
+        <label for="route">Rotta</label>
+        <select formControlName="route" required>
+          <option value="" disabled>Seleziona una Rotta</option>
+          @for(route of routes; track route.IdRotta) {
+            <option [value]="route.IdRotta">{{ route.CodicePartenza }}➔{{ route.CodiceDestinazione }}</option>
+          }
+        </select>
+
+        <label for="schdepdate">Data partenza</label>
+        <input type="datetime-local" id="schdepdate" formControlName="schdepdate" required>
+
+        <label for="scharrdate">Data arrivo</label>
+        <input type="datetime-local" id="scharrdate" formControlName="scharrdate" required>
+
+        <label for="pcprize">Prezzo prima classe</label>
+        <input type="number" id="pcprize" formControlName="pcprice" required min="0">
+
+        <label for="bprize">Prezzo business</label>
+        <input type="number" id="bprize" formControlName="bprice" required min="0">
+
+        <label for="eprize">Prezzo economy</label>
+        <input type="number" id="eprize" formControlName="eprice" required min="0">
+
+        <label for="bagprize">Prezzo bagaglio extra</label>
+        <input type="number" id="bagprize" formControlName="bagprice" required min="0">
+
+        <label for="lrprize">Prezzo spazio gambe</label>
+        <input type="number" id="lrprize" formControlName="lrprice" required min="0">
+
+        <label for="scprize">Prezzo scelta posto</label>
+        <input type="number" id="scprize" formControlName="scprice" required min="0">
+
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="newFlightForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+}
+
+@if(showManage && selectedFlight) {
+  <div class="modal-overlay">
+    <div class="modal-content manage-modal">
+      <h3>Gestisci volo #{{selectedFlight.IdVolo}}</h3>
+
+      <div class="manage-body containerb">
+        <div class="flight-details">
+          <div class="info-box">
+            <h4>Info Volo</h4>
+            <p><strong>Partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}}) - {{selectedFlight.DataPartenzaPrev}}</p>
+            <p><strong>Arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}}) - {{selectedFlight.DataArrivoPrev}}</p>
+            <p><strong>Stato:</strong> {{selectedFlight.Stato}}</p>
+          </div>
+
+          <div class="info-box">
+            <h4>Classi</h4>
+            <p><strong>Prima Classe:</strong> {{selectedFlight.CostoPC}}€</p>
+            <p><strong>Business:</strong> {{selectedFlight.CostoB}}€</p>
+            <p><strong>Economy:</strong> {{selectedFlight.CostoE}}€</p>
+          </div>
+
+          <div class="info-box">
+            <h4>Extra</h4>
+            <p><strong>Bagaglio Extra:</strong> {{selectedFlight.CostoBag}}€</p>
+            <p><strong>Spazio Gambe:</strong> {{selectedFlight.CostoLegRoom}}€</p>
+            <p><strong>Scelta Posto:</strong> {{selectedFlight.CostoSceltaPosto}}€</p>
+          </div>
+        </div>
+
+        <!-- PULSANTI DESTRA -->
+        <div class="flight-actions" style="margin-left:auto;">
+          @if(selectedFlightStatus === 'Programmato') {
+            <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
+          }
+          @if(selectedFlightStatus === 'Decollato') {
+            <button class="action-btn" (click)="atterraggioVolo(selectedFlight.IdVolo)">Atterraggio</button>
+          }
+        </div>
+      </div>
+
+      <!-- CHIUDI IN FONDO -->
+      <div class="close-area">
+        <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+}
+
+
+ 
+</div>
+
+<app-footer></app-footer>

@@ -3,17 +3,20 @@ import { Airline, NewAirline } from '../../../models/admin/airline.model';
 import { AirlineService } from '../../../services/admin/airline.service';
 import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NavbarComponent} from '../../../navbar/navbar.component';
+import { FooterComponent } from '../../../footer/footer.component';
 
 @Component({
   selector: 'app-admin-airlines',
   templateUrl: './airlines.component.html',
   styleUrls: ['./airlines.component.css'],
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent, FooterComponent],
   standalone: true
 })
 export class AirlinesComponent implements OnInit {
   airlines: Airline[] | null = [];
   newAirline: NewAirline = { name: '', code: '', email: '', password: 'password' };
+  showModal = false;
 
   public airlineForm: FormGroup | any;
 
@@ -41,6 +44,7 @@ export class AirlinesComponent implements OnInit {
     this.airlineService.addAirline(this.newAirline).subscribe(() => {
       this.loadAirlines();
       this.resetForm();
+      this.closeModal();
     });
     this.newAirline = { name: '', code: '', email: '', password: 'password' };
   }
@@ -58,5 +62,10 @@ export class AirlinesComponent implements OnInit {
       code: new FormControl(''),
       email: new FormControl('')
     });
+  }
+
+  closeModal(): void {
+    this.showModal = false;
+    this.resetForm();
   }
 }

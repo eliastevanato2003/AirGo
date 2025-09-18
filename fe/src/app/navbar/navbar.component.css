@@ -46,6 +46,7 @@ nav a:hover {
   border: 1px solid #3b5998;
   transition: all 0.3s ease; 
   border-radius: 8px;
+  font-size: 16px;
 }
 
 .log-in-btn:hover {
@@ -55,3 +56,15 @@ nav a:hover {
 
 
 
+.norm-btn {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  background-color: transparent;
+  color: white;
+  font-size: 16px;
+}
+
+.norm-btn:hover {
+  color: #dfe3ee;
+}
