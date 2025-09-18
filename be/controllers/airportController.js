@@ -60,6 +60,7 @@ exports.deleteAirport = async (req, res, next) => {
             res.json({ nairport: nairport });
         } else res.status(409).json({ message: "Airport is being used in one or more routes" });
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }

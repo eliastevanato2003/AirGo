@@ -9,6 +9,7 @@ exports.getFlights = async (req, res, next) => {
         const { id, airline, departure, arrival, datedeparture, datearrival, order, plane } = req.query ?? {};
         let { status } = req.query ?? {};
         if (status == undefined) status = "Programmato";
+        else if(status == "All") status = undefined;
         let { mindatearrival, maxdatearrival, mindatedeparture, maxdatedeparture } = req.query ?? {};
         if (datedeparture && (maxdatedeparture == undefined && mindatedeparture == undefined)) {
             mindatedeparture = new Date(datedeparture);
