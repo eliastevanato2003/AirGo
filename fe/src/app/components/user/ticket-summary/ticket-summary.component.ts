@@ -1,4 +1,4 @@
-import { CurrencyPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NavbarComponent } from "../../../navbar/navbar.component";
@@ -11,7 +11,7 @@ import { Seat } from '../../../models/user/seat.model';
   selector: 'app-ticket-summary',
   templateUrl: './ticket-summary.component.html',
   styleUrls: ['./ticket-summary.component.css'],
-  imports: [CurrencyPipe, ReactiveFormsModule, NavbarComponent, TicketBarComponent, FooterComponent],
+  imports: [CommonModule, ReactiveFormsModule, NavbarComponent, TicketBarComponent, FooterComponent],
   standalone: true
 })
 export class TicketSummaryComponent implements OnInit {

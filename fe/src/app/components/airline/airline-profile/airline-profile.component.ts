@@ -5,12 +5,13 @@ import { FooterComponent } from '../../../footer/footer.component';
 import { AirlineService } from '../../../services/airline/airline.service';
 import { HttpClient } from '@angular/common/http';
 import { Airline } from '../../../models/admin/airline.model';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-airline-profile',
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
   templateUrl: './airline-profile.component.html',
-  styleUrl: './airline-profile.component.css',
+  styleUrls: ['./airline-profile.component.css'],
   standalone: true
 })
 export class AirlineProfileComponent implements OnInit{

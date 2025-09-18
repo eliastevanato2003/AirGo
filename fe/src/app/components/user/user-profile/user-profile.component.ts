@@ -14,7 +14,7 @@ import { UserService } from '../../../services/user/user.service';
 })
 export class UserProfileComponent implements OnInit {
   userProfile: userProfile | undefined;
-  
+
   isEditingPersonal = false;
   isEditingContact = false;
 
@@ -44,26 +44,26 @@ export class UserProfileComponent implements OnInit {
       next: response => {
         const data = response as User;
 
-        if(data) {
-        this.userProfile = {
-          name: data.Nome,
-          surname: data.Cognome,
-          password: '',
-          email: data.Email,
-          phone: data.Telefono
-        }
+        if (data) {
+          this.userProfile = {
+            name: data.Nome,
+            surname: data.Cognome,
+            password: '',
+            email: data.Email,
+            phone: data.Telefono
+          }
 
-        // Inizializza entrambi i form con i dati dell'utente al caricamento
-        this.personalForm.patchValue({
-          name: data.Nome,
-          surname: data.Cognome,
-          password: ''
-        });
-        this.contactForm.patchValue({
-          email: data.Email,
-          phone: data.Telefono
-        });
-    }
+          // Inizializza entrambi i form con i dati dell'utente al caricamento
+          this.personalForm.patchValue({
+            name: data.Nome,
+            surname: data.Cognome,
+            password: ''
+          });
+          this.contactForm.patchValue({
+            email: data.Email,
+            phone: data.Telefono
+          });
+        }
       },
       error: (error) => {
         console.error('getUser error:', error);
@@ -86,16 +86,33 @@ export class UserProfileComponent implements OnInit {
       this.userProfile!.name = this.personalForm.value.name;
       this.userProfile!.surname = this.personalForm.value.surname;
       this.userProfile!.password = this.personalForm.value.password;
-      this.userService.editPersonal(this.userProfile!.name, this.userProfile!.surname, this.userProfile!.password);
-      this.isEditingPersonal = false;
-      this.submittedPf = false;
+      this.userService.editPersonal(this.userProfile!.name, this.userProfile!.surname, this.userProfile!.password)
+        .subscribe({
+          next: () => {
+            // eventuale feedback di successo
+            this.isEditingPersonal = false;
+            this.submittedPf = false;
+          },
+          error: err => {
+            console.error('Errore modifica dati personali', err);
+            // eventualmente mostra messaggio errore
+          }
+        });
     } else if (section === 'contact') {
       this.submittedCf = true;
       this.userProfile!.email = this.contactForm.value.email;
       this.userProfile!.phone = this.contactForm.value.phone;
-      this.userService.editContact(this.userProfile!.email, this.userProfile!.phone);      
-      this.isEditingContact = false;
-      this.submittedCf = false;
+      this.userService.editContact(this.userProfile!.email, this.userProfile!.phone).subscribe({
+        next: () => {
+          // eventuale feedback di successo
+          this.isEditingContact = false;
+          this.submittedCf = false;
+        },
+        error: err => {
+          console.error('Errore modifica dati di contatto', err);
+          // eventualmente mostra messaggio errore
+        }
+      });
     }
   }
 

@@ -19,6 +19,6 @@ export class FlightsComponent {
   constructor(private router: Router) {}
 
   searchFlights() {
-    this.router.navigate(['flightslist']);
+    this.router.navigate(['/flightslist']);
   }
 }

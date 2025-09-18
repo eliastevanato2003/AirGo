@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors } from '@angular/forms';
+import { AbstractControl, FormControl, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { MatIconModule } from '@angular/material/icon';
 import { AuthService } from '../../../services/auth.service';
@@ -9,12 +9,12 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-user-signup',
   imports: [ReactiveFormsModule, NavbarComponent, MatIconModule],
   templateUrl: './user-signup.component.html',
-  styleUrl: './user-signup.component.css',
+  styleUrls: ['./user-signup.component.css'],
   standalone: true
 })
 export class UserSignupComponent {
 
-  public signupForm;
+  public signupForm: FormGroup;
   public hidePassword1 = true;
   public hidePassword2 = true;
 
@@ -22,11 +22,11 @@ export class UserSignupComponent {
 
   constructor(private router: Router, private authService: AuthService) {
     this.signupForm = new FormGroup({
-      name: new FormControl(''),
-      surname: new FormControl(''),
-      email: new FormControl(''),
-      password1: new FormControl(''),
-      password2: new FormControl(''),
+      name: new FormControl('', Validators.required),
+      surname: new FormControl('', Validators.required),
+      email: new FormControl('', [Validators.required, Validators.email]),
+      password1: new FormControl('', Validators.required),
+      password2: new FormControl('', Validators.required),
       phone: new FormControl(''),
       dob: new FormControl('')
     }, { validators: this.passwordMatchValidator });

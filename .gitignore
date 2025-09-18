@@ -10,6 +10,7 @@ fe/bazel-out
 fe/node_modules
 fe/npm-debug.log
 fe/yarn-error.log
+fe/package-lock.json
 
 # IDEs and editors
 fe/.idea/

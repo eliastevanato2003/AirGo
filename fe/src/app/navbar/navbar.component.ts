@@ -6,7 +6,7 @@ import { AuthService } from '../services/auth.service';
   selector: 'app-navbar',
   imports: [],
   templateUrl: './navbar.component.html',
-  styleUrl: './navbar.component.css',
+  styleUrls: ['./navbar.component.css'],
   standalone: true
 })
 export class NavbarComponent implements OnInit {
