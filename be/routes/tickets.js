@@ -47,10 +47,50 @@ router.get("/getTickets", authenticateToken, ticketController.getTickets);
  */ 
 router.post("/newTicket", authenticateToken, authorizeRoles(2), ticketController.newTicket);
 
+/**
+ * @route POST /api/tickets/updateTicket
+ * @access role: 2
+ * @description Permette di aggiornare l'intestatario di un biglietto di un volo non ancora partito
+ * @id L'id del biglietto da aggiornare
+ * @name Il nuovo nome dell'intestatario
+ * @surname Il nuovo cognome dell'intestatario
+ * @dob La nuova data di nascita dell'intestatario
+ * @returns {200} {nticket: number} Il numero di biglietti aggiornati
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Dati non validi
+ * @returns {409} {message: string} Biglietto non trovato
+ * @returns {409} {message: string} Aereo già partito
+ */
 router.post("/updateTicket", authenticateToken, authorizeRoles(2), ticketController.updateTicket);
 
+/**
+ * @route POST /api/tickets/addExtraBag
+ * @access role: 2
+ * @description Permette di aggiungere bagagli extra
+ * @id L'id del biglietto a cui aggiungere bagagli extra
+ * @nextrabag Il numero di bagagli da aggiungere
+ * @price Il nuovo prezzo del biglietto, che deve coincidere con quello calcolato
+ * @returns {200} {nticket: number} Il numero di biglietti aggiornati
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {409} {message: string} Prezzo non corretto
+ * @returns {400} {message: string} Dati non validi
+ * @returns {409} {message: string} Biglietto non trovato
+ * @returns {409} {message: string} Aereo già partito
+ * 
+ */
 router.post("/addExtraBag", authenticateToken, authorizeRoles(2), ticketController.addExtraBag);
 
+/**
+ * @route DELETE /api/tickets/deleteTicket
+ * @access role: 1
+ * @description Permette di cancellare un biglietto
+ * @id L'id del biglietto da cancellare
+ * @returns {200} {nticket: number} Il numero di biglietti cancellati
+ * @returns {400} {message: string} Id mancante
+ * @returns {400} {message: string} Dati non validi
+ * @returns {409} {message: string} Biglietto non trovato
+ * @returns {409} {message: string} Aereo già partito
+ */
 router.delete("/deleteTicket", authenticateToken, authorizeRoles(1), ticketController.deleteTicket);
 
 module.exports = router;

@@ -89,7 +89,7 @@ exports.updateTicket = async (req, res, next) => {
                 const flight = await flightService.getFlights(ticket[0].Volo, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
                 if (flight[0]?.Stato != "Programmato") res.status(409).json({ message: "Flight already started" });
                 else res.json({ nticket: await ticketService.updateTicket(id, name, surname, dob, ticket[0].NBagagliExtra, ticket[0].RigPosto, ticket[0].ColPosto, ticket[0].NPosto, ticket[0].Costo) });
-            }
+            } else res.status(409).json({ message: "Ticket not found" });
         }
     } catch {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
@@ -101,17 +101,17 @@ exports.updateTicket = async (req, res, next) => {
 exports.addExtraBag = async (req, res, next) => {
     try {
         const { id, nextrabag, price } = req.body ?? {};
-        if (id == undefined || nextrabag == undefined || price) res.status(400).json({ message: "Required data missing" });
+        if (id == undefined || nextrabag == undefined || price == undefined) res.status(400).json({ message: "Required data missing" });
         else {
             const ticket = await ticketService.getTickets(undefined, id, req.id, undefined, undefined, undefined, undefined);
             if (ticket[0]) {
                 const flight = await flightService.getFlights(ticket[0].Volo, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
                 if (flight[0]?.Stato != "Programmato") res.status(409).json({ message: "Flight already started" });
                 else {
-                    if (price != ticket[0].Costo + (flight[0].CostoBag * nextrabag)) res.status(400).json({ message: "Price incorrect" });
+                    if (price != ticket[0].Costo + (flight[0].CostoBag * nextrabag)) res.status(409).json({ message: "Price incorrect" });
                     else res.json({ nticket: await ticketService.updateTicket(id, ticket[0].Nome, ticket[0].Cognome, ticket[0].DoB, ticket[0].NBagagliExtra + nextrabag, ticket[0].RigPosto, ticket[0].ColPosto, ticket[0].NPosto, price) });
                 }
-            }
+            } else res.status(409).json({ message: "Ticket not found" });
         }
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
