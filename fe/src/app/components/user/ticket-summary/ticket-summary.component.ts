@@ -17,7 +17,7 @@ import { Seat } from '../../../models/user/seat.model';
 export class TicketSummaryComponent implements OnInit {
   public selectedSeats: Seat[] = [];
   public baggageHand = 'Solo borsa piccola';
-  public baggageChecked = 'Bagaglio da 10 kg';
+  public baggageChecked = 'Nessuno';
   public totalPrice = 0;
   public extraBags = 0;
 
@@ -27,12 +27,11 @@ export class TicketSummaryComponent implements OnInit {
   constructor(private fb: FormBuilder, private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       this.totalPrice = parseInt(params['price']);
-      this.selectedSeats = params['seats'];
-      console.log(params['extraBag']);
-      params['extraBag'].forEach((res: boolean) => {
+      this.selectedSeats = JSON.parse(params['seats'] || '[]');
+      JSON.parse(params['extraBag'] || '[]').forEach((res: boolean) => {
         if(res) this.extraBags++;
       });
-      this.baggageChecked = this.extraBags + ' Bagagli da 10 kg';
+      this.baggageChecked = this.extraBags === 1 ? '1 Bagaglio da 10 kg' : this.extraBags === 0 ? 'Nessuno' : this.extraBags + ' Bagagli da 10 kg';
     });
   }
 
@@ -48,6 +47,9 @@ export class TicketSummaryComponent implements OnInit {
   confirmPayment() {
     if (this.paymentForm.valid) {
       this.confirmed = true;
+      const formData = this.paymentForm.value;
+      console.log('Payment Confirmed', formData);
+      // TODO: Ticket activation
     } else {
       this.paymentForm.markAllAsTouched();
     }
@@ -55,5 +57,12 @@ export class TicketSummaryComponent implements OnInit {
 
   get f() {
     return this.paymentForm.controls;
+  }
+
+  get seats() {
+    return this.selectedSeats.map(seat => {
+      if(seat.row === 0) return 'Prima Classe';
+      else return seat.row + seat.column;
+    });
   }
 }

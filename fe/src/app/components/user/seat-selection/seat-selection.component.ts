@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Seat } from '../../../models/user/seat.model';
-import { NgClass, NgFor } from '@angular/common';
+import { NgClass, NgFor, JsonPipe } from '@angular/common';
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
@@ -13,7 +13,7 @@ import { FlightStatus } from '../../../models/user/flight.model';
   selector: 'app-seat-selection',
   templateUrl: './seat-selection.component.html',
   styleUrls: ['./seat-selection.component.css'],
-  imports: [NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive],
+  imports: [NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive, JsonPipe],
   standalone: true
 })
 export class SeatSelectionComponent {
