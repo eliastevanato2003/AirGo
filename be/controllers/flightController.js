@@ -3,13 +3,12 @@ const planeService = require("../services/planeService");
 const flightRouteService = require("../services/flightRouteService");
 const ticketService = require("../services/ticketService");
 
-//mancherebbe l'ordinamento per numero di scali
 exports.getFlights = async (req, res, next) => {
     try {
         const { id, airline, departure, arrival, datedeparture, datearrival, order, plane } = req.query ?? {};
         let { status } = req.query ?? {};
         if (status == undefined) status = "Programmato";
-        else if(status == "All") status = undefined;
+        else if (status == "All") status = undefined;
         let { mindatearrival, maxdatearrival, mindatedeparture, maxdatedeparture } = req.query ?? {};
         if (datedeparture && (maxdatedeparture == undefined && mindatedeparture == undefined)) {
             mindatedeparture = new Date(datedeparture);
@@ -59,7 +58,6 @@ exports.getFlightStatus = async (req, res, next) => {
     }
 }
 
-//se c'è tempo controllare utilizzo contemporaneo aerei
 exports.newFlight = async (req, res, next) => {
     try {
         const { plane, route, pcprice, bprice, eprice, bagprice, lrprice, scprice } = req.body ?? {};
@@ -185,29 +183,6 @@ exports.updatePrices = async (req, res, next) => {
     }
 }
 
-exports.deleteFlight = async (req, res, next) => {
-    try {
-        const { id } = req.body ?? {};
-        if (id == undefined) {
-            res.status(400).json({ message: "Id missing" });
-            return;
-        }
-        const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
-        const flightstatus = await flightService.getFlightStatus(id);
-        if (flightstatus[0] && flight[0] && flight[0]?.IdCompagniaAerea == req.id) {
-            if (flightstatus[0].PostiOccupati > 0) {
-                res.status(409).json({ message: "Tickets purchased for this flight" });
-                return;
-            }
-            const nflight = await flightService.deleteFlight(id);
-            res.json({ nflight: nflight });
-        } else res.status(400).json({ message: "Flight not found" });
-    } catch (err) {
-        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
-        else next(err);
-    }
-}
-
 exports.assignSeats = async (req, res, next) => {
     try {
         const { id } = req.body ?? {};
@@ -258,12 +233,33 @@ exports.assignSeats = async (req, res, next) => {
                 }
             }
             res.json(s);
-        }
-        else {
-            res.status(400).json({ message: "No" });
-        }
+        } else res.status(400).json({ message: "Flight not found" });
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
+exports.deleteFlight = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if (id == undefined) {
+            res.status(400).json({ message: "Id missing" });
+            return;
+        }
+        const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        const flightstatus = await flightService.getFlightStatus(id);
+        if (flightstatus[0] && flight[0] && flight[0]?.IdCompagniaAerea == req.id) {
+            if (flightstatus[0].PostiOccupati > 0) {
+                res.status(409).json({ message: "Tickets purchased for this flight" });
+                return;
+            }
+            const nflight = await flightService.deleteFlight(id);
+            res.json({ nflight: nflight });
+        } else res.status(400).json({ message: "Flight not found" });
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }
 

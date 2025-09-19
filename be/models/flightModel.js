@@ -23,7 +23,7 @@ exports.getFlightsJoin = async (airline, departure, arrival, mindatedeparture, m
     const jo2 = 'JOIN "Aeroporti" AS "A1" ON "A1"."IdAeroporto" = "R1"."Partenza" AND "A1"."IsActive" = true ';
     const jo3 = 'JOIN "Aeroporti" AS "A2" ON "A2"."IdAeroporto" = "R1"."Destinazione" AND "A2"."IsActive" = true ';
     const jo4 = 'JOIN "CompagnieAeree" AS "C1" ON "C1"."IdCompagniaAerea" = "R1"."CompagniaAerea" AND "C1"."IsActive" = true ';
-    const jo5 = 'JOIN "Voli" AS "V2" ON ("V2"."DataArrivoPrev" - "V1"."DataPartenzaPrev" > \'2 hours\') AND ("V2"."DataArrivoPrev" - "V1"."DataPartenzaPrev" < \'24 hours\') AND "V2"."IsActive" = true ';
+    const jo5 = 'JOIN "Voli" AS "V2" ON ("V2"."DataPartenzaPrev" - "V1"."DataArrivoPrev" >= \'2 hours\') AND ("V2"."DataPartenzaPrev" - "V1"."DataArrivoPrev" <= \'12 hours\') AND "V2"."IsActive" = true ';
     const jo6 = 'JOIN "Rotte" AS "R2" ON "V2"."Rotta" = "R2"."IdRotta" AND "R2"."IsActive" = true ';
     const jo7 = 'JOIN "Aeroporti" AS "A3" ON "A3"."IdAeroporto" = "R2"."Partenza" AND "A3"."IsActive" = true '; 
     const jo8 = 'JOIN "Aeroporti" AS "A4" ON "A4"."IdAeroporto" = "R2"."Destinazione" AND "A4"."IsActive" = true ';

@@ -130,10 +130,17 @@ router.post("/updatePrices", authenticateToken, authorizeRoles(1), flightControl
  * @returns {400} {message: string} Dati non validi
  * @returns {400} {message: string} Volo non esistente
  * @returns {409} {message: string} Biglietti acquistati per questo volo
- * 
  */
 router.delete("/deleteFlight", authenticateToken, authorizeRoles(1), flightController.deleteFlight);
 
+/**
+ * @route POST /api/flights/assignSeats
+ * @access role: 1
+ * @description Assegna i posti casualmente agli utenti ancora senza
+ * @id L'id dell'aereo a cui assegnare i posti
+ * @returns {200} {nticket: number} Il numero di posti assegnati
+ * @
+ */
 router.post("/assignSeats", authenticateToken, authorizeRoles(1), flightController.assignSeats);
 
 module.exports = router;
