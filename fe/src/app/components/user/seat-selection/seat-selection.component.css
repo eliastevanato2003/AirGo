@@ -55,6 +55,12 @@
   border: 3px solid #000;
 }
 
+.seat.unavailable {
+  background-color: #888;
+  cursor: not-allowed;
+  color: #fff;
+}
+
 .aisle-space {
   width: 30px; /* spazio tra le due sezioni */
 }

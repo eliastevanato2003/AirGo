@@ -5,7 +5,7 @@ import { Seat } from '../../../models/user/seat.model';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { TicketBarComponent } from '../ticket-bar/ticket-bar.component';
-import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { JsonPipe, NgClass, NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-hand-baggage',
@@ -19,6 +19,10 @@ export class BaggageSelectionComponent {
   public price: number = 0;
   public extraBag: boolean[] = [];
   public seats: Seat[] = [];
+  public seatclass: string[] = [];
+  public chseat: Seat[] = [];
+  public flightId: number = 0;
+
   passengerForm: FormGroup | undefined;
   submitted = false;
 
@@ -33,9 +37,11 @@ export class BaggageSelectionComponent {
     this.route.queryParams.subscribe(params => {
       this.ticketCount = +params['ticketCount'] || 1;
       this.price = parseInt(params['price'], 10) || 0;
-      console.log(params['seats']);
       this.seats = JSON.parse(params['seats'] || '[]');
       this.selectedOption = new Array(this.ticketCount).fill(0);
+      this.chseat = JSON.parse(params['chseat'] || '[]');
+      this.seatclass = JSON.parse(params['seatclass'] || '[]');
+      this.flightId = params['flightId'];
 
       const passengersArray: FormArray = this.fb.array([]);
 
@@ -69,6 +75,18 @@ export class BaggageSelectionComponent {
         this.extraBag[i] = false;
       }
     }
+  }
+
+  getNameArray(): string[] {
+    return this.passengers.controls.map(control => control.get('name')?.value || '');
+  }
+
+  getSurnameArray(): string[] {
+    return this.passengers.controls.map(control => control.get('surname')?.value || '');
+  }
+
+  getDobArray(): string[] {
+    return this.passengers.controls.map(control => control.get('dob')?.value || '');
   }
 
   // Getter per il FormArray 'passengers'
