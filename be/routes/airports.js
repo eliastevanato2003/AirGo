@@ -33,7 +33,7 @@ router.post("/newAirport", authenticateToken, authorizeRoles(0), airportControll
 
 /**
  * @route POST /api/airports/updateAirport
- * @access role: 0, 1
+ * @access role: 0
  * @description Aggiorna le informazioni di un aeroporto esistente
  * @id L'id dell'aeroporto da modificare
  * @city (Opzionale) La nuova città dell'aeroporto
@@ -46,7 +46,7 @@ router.post("/newAirport", authenticateToken, authorizeRoles(0), airportControll
  * @returns {500} {message: string} Aeroporto da aggiornare non trovato
  * @returns {500} {message: string} Trovati aeroporti multipli con l'id indicato
  */
-router.post("/updateAirport", authenticateToken, authorizeRoles(0, 1), airportController.updateAirport);
+router.post("/updateAirport", authenticateToken, authorizeRoles(0), airportController.updateAirport);
 
 /**
  * @route POST /api/airports/deleteAirport
@@ -58,6 +58,6 @@ router.post("/updateAirport", authenticateToken, authorizeRoles(0, 1), airportCo
  * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Aeroporto in uso in rotte attive
  */
-router.post("/deleteAirport", authenticateToken, authorizeRoles(0, 1), airportController.deleteAirport);
+router.delete("/deleteAirport", authenticateToken, authorizeRoles(0, 1), airportController.deleteAirport);
 
 module.exports = router;

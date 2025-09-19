@@ -6,15 +6,15 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
 /**
  * @route GET api/flightRoutes/getFlightRoutes
- * @description Restituisce le informazioni delle rotte che rispettano i filtri indicati
+ * @access role: 1
+ * @description Restituisce le informazioni delle proprie rotte che rispettano i filtri indicati
  * @id (Opzionale) L'id della rotta
  * @departure (Opzionale) L'id dell'aeroporto di partenza
  * @arrival (Opzionale) L'id dell'aeroporto di arrivo
- * @airline (Opzionale) L'id della compagnia aerea della rotta
  * @returns {200} {object} Le info delle rotte 
  * @returns {400} {message: string} Uno o più parametri invalidi
  */
-router.get("/getFlightRoutes", flightRoutesController.getFlightRoutes);
+router.get("/getFlightRoutes", authenticateToken, authorizeRoles(1), flightRoutesController.getFlightRoutes);
 
 /**
  * @route POST /api/flightRoutes/newFlightRoute
