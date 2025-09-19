@@ -12,6 +12,7 @@ export class PlaneService {
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
+    console.log(token);
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
@@ -44,4 +45,13 @@ export class PlaneService {
       tap()
     );
   }
+
+  deletePlane(idPlane: number): Observable<any> {
+  const url = `${this.baseUrl}/deletePlane`;
+
+  return this.http.request<any>('delete', url, {
+    body: { id: idPlane },
+    headers: this.getHeaders()
+  });
+}
 }

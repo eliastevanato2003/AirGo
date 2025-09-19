@@ -25,13 +25,6 @@ export class RouteService {
     );
   }
 
-  getRoutesByAirline(airlineid: number): Observable<Route[]> {
-    const url = `${this.baseUrl}/getFlightRoutes?airline=${airlineid}`;
-    return this.http.get<Route[]>(url, { headers: this.getHeaders() }).pipe(
-      tap()
-    );
-  }
-
   addRoute(data: NewRoute): Observable<any> {
     const url = `${this.baseUrl}/newFlightRoute`;
     return this.http.post<any>(url, data, { headers: this.getHeaders() }).pipe(

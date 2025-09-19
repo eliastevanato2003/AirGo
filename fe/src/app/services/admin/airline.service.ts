@@ -16,7 +16,6 @@ export class AirlineService {
 
         const token = this.authService.getToken();
 
-        // Crea l'intestazione di autorizzazione
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -32,7 +31,6 @@ export class AirlineService {
 
         const token = this.authService.getToken();
 
-        // Crea l'intestazione di autorizzazione
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
@@ -53,11 +51,12 @@ export class AirlineService {
 
         const token = this.authService.getToken();
 
-        // Crea l'intestazione di autorizzazione
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
+        
+        console.log(token);
 
         const message = {
             id: id

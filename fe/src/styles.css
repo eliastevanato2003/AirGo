@@ -53,7 +53,7 @@ html, body {
 }
 
 .delete-btn {
-    padding: 8px 16px;
+    padding: 12px 20px;
     background-color: #ff4d4d;
     color: #fff;
     border: none;
@@ -216,4 +216,12 @@ html, body {
   display: flex;
   justify-content: center;
   margin-top: 1rem;
+}
+
+
+.info-actions{
+  margin-left:auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }

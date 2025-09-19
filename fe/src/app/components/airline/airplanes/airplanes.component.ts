@@ -88,6 +88,16 @@ export class AirplanesComponent implements OnInit {
     });
   }
 
+
+  deletePlane(id:number): void{
+    this.planeService.deletePlane(id).subscribe({
+      next: () => {
+        alert('Aereo rimosso');
+        this.loadPlanes();
+      },
+      error: (err) => console.error('Errore rimozione aereo', err)
+    })
+  }
   
 
   closeModal(): void {

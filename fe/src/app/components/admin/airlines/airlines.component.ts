@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Airline, NewAirline } from '../../../models/admin/airline.model';
 import { AirlineService } from '../../../services/admin/airline.service';
-import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
@@ -15,13 +15,18 @@ import { FooterComponent } from '../../../footer/footer.component';
 })
 export class AirlinesComponent implements OnInit {
   airlines: Airline[] | null = [];
-  newAirline: NewAirline = { name: '', code: '', email: '', password: 'password' };
+  newAirline: NewAirline | null= null;
   showModal = false;
 
   public airlineForm: FormGroup | any;
 
-  constructor(private airlineService: AirlineService) {
-    this.resetForm();
+  constructor(private airlineService: AirlineService, private fb: FormBuilder) {
+    this.airlineForm = this.fb.group({
+      name:  ['', Validators.required],
+      email: ['', Validators.required],
+      code: ['', Validators.required],
+      password: ['', Validators.required]
+    });
   }
 
   ngOnInit(): void {
@@ -38,15 +43,19 @@ export class AirlinesComponent implements OnInit {
 
   addAirline() {
     const formData = this.airlineForm.value;
-    this.newAirline.name = formData.name!;
-    this.newAirline.code = formData.code!;
-    this.newAirline.email = formData.email!;
+    
+    this.newAirline={
+      name: formData.name,
+      code: formData.code,
+      email: formData.email,
+      password: formData.password
+    };
+
     this.airlineService.addAirline(this.newAirline).subscribe(() => {
+      this.airlineForm.reset();
       this.loadAirlines();
-      this.resetForm();
       this.closeModal();
     });
-    this.newAirline = { name: '', code: '', email: '', password: 'password' };
   }
 
   // TODO: finire delete
@@ -56,16 +65,10 @@ export class AirlinesComponent implements OnInit {
     }
   }
 
-  resetForm() {
-    this.airlineForm = new FormGroup({
-      name: new FormControl(''),
-      code: new FormControl(''),
-      email: new FormControl('')
-    });
-  }
+  
 
   closeModal(): void {
     this.showModal = false;
-    this.resetForm();
+    this.airlineForm.reset();
   }
 }

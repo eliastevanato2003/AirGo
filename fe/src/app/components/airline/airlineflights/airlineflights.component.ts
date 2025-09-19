@@ -80,7 +80,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   private loadRoutes(): void {
     if (!this.airlineId) return;
-    this.routeService.getRoutesByAirline(this.airlineId).subscribe({
+    this.routeService.getRoutes().subscribe({
       next: (routes) => this.routes = routes,
       error: (err) => console.error('Errore caricamento rotte', err)
     });

@@ -10,16 +10,27 @@
   </div>
 
   <div class="route-list">
+  <div class="routes-grid">
     @for(route of routes; track route.IdRotta) {
-      <div class="route-bar">
-        <div class="route-info">
-          <p><strong>Rotta:</strong> {{ route.IdRotta }}</p>
-          <p><strong>Anno di costruzione:</strong> {{ route.AnnoCostruzione }}</p>
+      <div class="route-card">
+        <h4>Rotta {{route.IdRotta}}</h4>
+        <div class="route-codes">
+          <div class="route-left">
+            <p class="code">{{ route.CodicePartenza }}</p>
+            <p class="city">{{ route.CittaPartenza }}</p>
+          </div>
+          <div class="route-arrow">➔</div>
+          <div class="route-right">
+            <p class="code">{{ route.CodiceDestinazione }}</p>
+            <p class="city">{{ route.CittaDestinazione }}</p>
+          </div>
         </div>
-        <button class="delete-btn">Elimina</button>
+        <button class="action-btn" (click)="gestisci(route)">Gestisci</button>
       </div>
     }
   </div>
+</div>
+
 
   @if(showModal) {
   <div class="modal-overlay">
@@ -35,6 +46,14 @@
         }
         </select>
 
+        <label>Aeroporto di arrivo</label>
+        <select formControlName="from">
+        <option value="" disabled>Seleziona un aeroporto</option>
+        @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+        }
+        </select>
+
         <div class="modal-buttons">
           <button type="submit" class="add-btn" [disabled]="newRouteForm.invalid">Aggiungi</button>
           <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
@@ -43,6 +62,37 @@
     </div>
   </div>
   }
+
+  @if(showManage && selectedRoute) {
+  <div class="modal-overlay">
+    <div class="modal-content manage-modal">
+      <h3>Gestisci rotta #{{selectedRoute.IdRotta}}</h3>
+
+      <div class="manage-body containerb">
+        <div class="info-details">
+          <div class="info-box">
+            <h4>Info Rotta</h4>
+            <p><strong>ID:</strong> {{ selectedRoute.IdRotta }}</p>
+            <p><strong>Da:</strong> {{ selectedRoute.CodicePartenza }} - {{ selectedRoute.CittaPartenza }} ({{ selectedRoute.NazionePartenza }})</p>
+            <p><strong>A:</strong> {{ selectedRoute.CodiceDestinazione }} - {{ selectedRoute.CittaDestinazione }} ({{ selectedRoute.NazioneDestinazione }})</p>
+            <p><strong>Compagnia:</strong> {{ selectedRoute.NomeCompagnia }} ({{ selectedRoute.CodiceCompagnia }})</p>
+        </div>
+
+        </div>
+
+       
+        <div class="info-actions">
+            <button class="action-btn">Modifica</button>
+            <button class="delete-btn" (click)="deleteRoute(selectedRoute.IdRotta)">Elimina</button>
+        </div>
+      </div>
+
+      <div class="close-area">
+        <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+}
 </div>
 
 <app-footer></app-footer>

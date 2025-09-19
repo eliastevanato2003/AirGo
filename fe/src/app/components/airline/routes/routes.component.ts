@@ -21,7 +21,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class RoutesComponent implements OnInit{
 
   showModal = false;
-  Routes: Route[] = [];
+  routes: Route[] = [];
   selectedRoute: Route | null = null;
   showManage = false;
   airlineid: number | null = null;
@@ -41,6 +41,7 @@ export class RoutesComponent implements OnInit{
     this.airlineid=this.authService.getId();
     if (this.airlineid) {
       this.loadRoutes();
+      console.log(this.routes)
       this.loadAirports();
     } else {
       console.error('ID compagnia aerea non trovato');
@@ -49,8 +50,8 @@ export class RoutesComponent implements OnInit{
 
   private loadRoutes(): void {
     if (!this.airlineid) return;
-    this.routeService.getRoutesByAirline(this.airlineid).subscribe({
-      next: (routes) => this.Routes = routes,
+    this.routeService.getRoutes().subscribe({
+      next: (routes) => this.routes = routes,
       error: (err) => console.error('Errore caricamento rotte', err)
     });
   }
@@ -83,8 +84,29 @@ export class RoutesComponent implements OnInit{
     });
   }
 
+  deleteRoute(id:number): void{
+    this.routeService.deleteRoute(id).subscribe({
+      next: () =>{
+        alert('Rotta rimossa');
+        this.closeManage();
+        this.loadRoutes();
+      },
+      error: (err) => console.error('Errore rimozione rotta')
+    });
+  }
+
+  gestisci(selected: Route): void{
+    this.selectedRoute=selected;
+    this.showManage=true;
+  }
+
   closeModal(): void {
     this.showModal = false;
     this.newRouteForm.reset();
+  }
+
+  closeManage():void{
+    this.showManage=false;
+    this.selectedRoute=null;
   }
 }

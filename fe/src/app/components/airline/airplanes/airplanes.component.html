@@ -16,7 +16,7 @@
           <p><strong>Aereo:</strong> {{ airplane.NomeModello }} - {{ airplane.IdAereo }}</p>
           <p><strong>Anno di costruzione:</strong> {{ airplane.AnnoCostruzione }}</p>
         </div>
-        <button class="delete-btn">Elimina</button>
+        <button class="delete-btn" (click)="deletePlane(airplane.IdAereo)">Elimina</button>
       </div>
     }
   </div>
