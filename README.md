@@ -11,7 +11,7 @@ docker run -p 4000:4000 --network mynet --name airgofe dariocabe/airgofe
 docker run -p 4000:4000 --network mynet --name airgofe airgofe
 
 #### RUN WITH AUTO UPDATE
-docker run -it --name airgofelive --network mynet -v $(pwd):/app -w /app -p 4200:4000 dariocabe/airgofe npm run start (not working yet)
+docker run -it --rm --name airgofelive --network mynet -v $(pwd):/app -w /app -p 4200:4200 dariocabe/airgofe npm run start
 
 #### START
 docker start airgofe

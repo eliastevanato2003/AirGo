@@ -50,7 +50,7 @@
     }
 
     <button type="submit" class="submit-button" [disabled]="!passengerForm.valid" (click)="submitted = true"
-      routerLink="/ticketsummary" [queryParams]="{ price: price, seats: seats, extraBag: extraBag }"
+      routerLink="/ticketsummary" [queryParams]="{ price: price, seats: seats | json, extraBag: extraBag | json }"
       routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       Continua
     </button>
