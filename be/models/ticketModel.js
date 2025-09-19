@@ -23,7 +23,7 @@ exports.updateTicket = async (id, name, surname, dob, nextrabag, row, col, nseat
 }
 
 exports.deleteTicket = async (id) => {
-    const sql = 'UPDATE "Biglietti" SET "IsActive" = false WHERE "IdVolo" = $1 AND "IsActive" = true';
+    const sql = 'UPDATE "Biglietti" SET "IsActive" = false WHERE "IdBiglietto" = $1 AND "IsActive" = true';
     const result = await pool.query(sql, [id]);
     return result.rowCount;
 }

@@ -75,8 +75,7 @@ router.post("/updateTicket", authenticateToken, authorizeRoles(2), ticketControl
  * @returns {409} {message: string} Prezzo non corretto
  * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Biglietto non trovato
- * @returns {409} {message: string} Aereo già partito
- * 
+ * @returns {409} {message: string} Aereo già partito 
  */
 router.post("/addExtraBag", authenticateToken, authorizeRoles(2), ticketController.addExtraBag);
 

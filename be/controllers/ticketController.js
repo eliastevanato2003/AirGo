@@ -134,7 +134,7 @@ exports.deleteTicket = async (req, res, next) => {
                 }
             } else res.status(400).json({ message: "Ticket not found" });
         }
-    } catch {
+    } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }

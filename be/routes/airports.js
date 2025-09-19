@@ -50,7 +50,7 @@ router.post("/updateAirport", authenticateToken, authorizeRoles(0), airportContr
 
 /**
  * @route POST /api/airports/deleteAirport
- * @access role: 0, 1
+ * @access role: 0
  * @description Cancella un aeroporto
  * @id L'id dell'aeroporto da cancellare
  * @returns {200} {nairport: number} Il numero di aeroporti cancellati
@@ -58,6 +58,6 @@ router.post("/updateAirport", authenticateToken, authorizeRoles(0), airportContr
  * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Aeroporto in uso in rotte attive
  */
-router.delete("/deleteAirport", authenticateToken, authorizeRoles(0, 1), airportController.deleteAirport);
+router.delete("/deleteAirport", authenticateToken, authorizeRoles(0), airportController.deleteAirport);
 
 module.exports = router;
