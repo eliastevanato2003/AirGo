@@ -4,7 +4,7 @@
   <h2>Riepilogo della prenotazione</h2>
 
   <ul>
-    <li><strong>Posto/i:</strong>@for(seat of selectedSeats; track seat.id) { {{ seat }} }</li>
+    <li><strong>Posto/i:</strong>@for(seat of seats; track seat) { {{ seat }} }</li>
     <li><strong>Bagaglio a mano:</strong> {{ baggageHand }}</li>
     <li><strong>Bagaglio da stiva:</strong> {{ baggageChecked }}</li>
     <li><strong>Totale:</strong> {{ totalPrice | currency:'EUR':'symbol' }}</li>

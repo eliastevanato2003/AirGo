@@ -5,13 +5,13 @@ import { Seat } from '../../../models/user/seat.model';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { TicketBarComponent } from '../ticket-bar/ticket-bar.component';
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-hand-baggage',
   templateUrl: './baggage-selection.component.html',
   styleUrls: ['./baggage-selection.component.css'],
-  imports: [NavbarComponent, FooterComponent, TicketBarComponent, NgClass, NgFor, ReactiveFormsModule, RouterLink, RouterLinkActive],
+  imports: [NavbarComponent, FooterComponent, TicketBarComponent, NgClass, NgFor, ReactiveFormsModule, RouterLink, RouterLinkActive, JsonPipe],
   standalone: true
 })
 export class BaggageSelectionComponent {
@@ -33,6 +33,7 @@ export class BaggageSelectionComponent {
     this.route.queryParams.subscribe(params => {
       this.ticketCount = +params['ticketCount'] || 1;
       this.price = parseInt(params['price'], 10) || 0;
+      console.log(params['seats']);
       this.seats = JSON.parse(params['seats'] || '[]');
       this.selectedOption = new Array(this.ticketCount).fill(0);
 
