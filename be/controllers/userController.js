@@ -45,7 +45,6 @@ exports.newUser = async (req, res, next) => {
     }
 }
 
-//check biglietti attivi
 exports.updateUser = async (req, res, next) => {
     try {
         const { name, surname, email, password, number, dob } = req.body ?? {};
@@ -59,11 +58,11 @@ exports.updateUser = async (req, res, next) => {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
         else if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }
 
-//check biglietti attivi
 exports.deleteUser = async (req, res, next) => {
     try {
         const { id } = req.body ?? {};
@@ -72,7 +71,8 @@ exports.deleteUser = async (req, res, next) => {
         if (nuser >= 1) await emailService.deactivateEmail(user.Mail);
         res.json({ nuser: nuser });
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }
 
@@ -81,7 +81,7 @@ exports.login = async (req, res, next) => {
     if (!email || !password) res.status(400).json({ message: "Required data missing" });
     try {
         const token = await userService.login(email, password);
-        if(token.message) res.status(401).json({ message: "Invalid credentials" });
+        if(token.message != undefined) res.status(401).json({ message: "Invalid credentials" });
         else res.json(token);
     } catch (err) {
         console.log(err);

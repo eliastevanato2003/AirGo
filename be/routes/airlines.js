@@ -13,6 +13,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @identificationcode (Opzionale) Il codice identificativo della compagnia aerea
  * @email (Opzionale) L'email della compagnia aerea
  * @returns {200} {object} Le info delle compagnie aeree
+ * @returns {400} {message: string} Dati non validi
  */
 router.get("/getAirlines", authenticateToken, authorizeRoles(0), airlineController.getAirlines);
 
@@ -34,6 +35,7 @@ router.get("/getAirline", authenticateToken, authorizeRoles(1), airlineControlle
  * @password La password della compagnia aerea
  * @returns {200} {nairline: number} Il numero di compagnie aeree create
  * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Dati già in uso
  * @returns {500} {message: string} Errore durante l'inserimento dell'email
  */ 
@@ -48,19 +50,36 @@ router.post("/newAirline", authenticateToken, authorizeRoles(0), airlineControll
  * @email (Opzionale) La nuova email della compagnia aerea, che deve essere univoca
  * @password (Opzionale) La nuova password della compagnia aerea
  * @returns {200} {nairline: number} Il numero di compagnie aeree modificate
+ * @returns {400} {message: string} Dati non validi
  * @returns {409} {message: string} Dati già in uso
  * @returns {500} {message: string} Compagnia aerea da modificare non trovata
  */
 router.post("/updateAirline", authenticateToken, authorizeRoles(1), airlineController.updateAirline);
 
 /**
- * @route POST /api/airlines/deleteAirline
- * @acces role: 1
- * @description Cancella la compagnia aerea con cui si è fatto il login
+ * @route DELETE /api/airlines/deleteAirline
+ * @acces role: 0
+ * @description Impedisce il login alla compagnia aerea selezionata
+ * @id L'id della compagnia aerea da cancellare
  * @returns {200} {nairline: number} Il numero di compagnie aeree cancellate
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Compagnia non trovata
+ * @returns {409} {message: string} Voli attivi
  */
-router.post("/deleteAirline", authenticateToken, authorizeRoles(1), airlineController.deleteAirline);
+router.delete("/deleteAirline", authenticateToken, authorizeRoles(0), airlineController.deleteAirline);
 
+/**
+ * @route POST /api/airlines/activateAirline
+ * @description Permette di attivare una compagnia aerea attivata
+ * @email L'email della compagnia aerea da attivare
+ * @pw1 La nuova password
+ * @pw2 La nuova password, conferma
+ * @temp Il codice temporaneo
+ * @returns {200} {nairline: number} Il numero di compagnie aeree attivate
+ * @returns {400} {message: string} Dati non validi
+ * @returns {400} {message: string} Dati mancanti
+ * @returns {400} {message: string} Password non coincidenti
+ */
 router.post("/activateAirline", airlineController.activateAirline);
 
 module.exports = router;

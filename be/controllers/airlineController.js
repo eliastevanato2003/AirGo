@@ -1,6 +1,7 @@
 const airlineService = require("../services/airlineService");
 const emailService = require("../services/emailService");
 const mailing = require("../middlewares/mail")
+const flightService = require("../services/flightService");
 
 exports.getAirlines = async (req, res, next) => {
     try {
@@ -8,7 +9,8 @@ exports.getAirlines = async (req, res, next) => {
         const airlines = await airlineService.getAirlines(id, name, identificationcode, email);
         res.json(airlines);
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
     }
 };
 
@@ -38,7 +40,8 @@ exports.newAirline = async (req, res, next) => {
             } else res.status(500).json({ message: "Error during email insertion" });
         }
     } catch (err) {
-        if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" });
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" });
         else {
             await emailService.deleteEmail(req.body.email);
             if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
@@ -50,17 +53,18 @@ exports.newAirline = async (req, res, next) => {
 exports.activateAirline = async (req, res, next) => {
     try {
         const { email, pw1, pw2, temp } = req.body ?? {};
-        if (pw1 != pw2) res.status(400).json({ message: "Passwords not equals" });
+        if (email == undefined || pw1 == undefined || pw2 == undefined || temp == undefined) res.status(400).json({ message: "Required data missing" });
+        else if (pw1 != pw2) res.status(400).json({ message: "Passwords not equals" });
         else {
             const nairline = await airlineService.activateAirline(email, pw1, temp);
             res.json({ nairline: nairline });
         }
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }
 
-//check voli attivi
 exports.updateAirline = async (req, res, next) => {
     try {
         const { name, identificationcode, email, password } = req.body ?? {};
@@ -71,19 +75,28 @@ exports.updateAirline = async (req, res, next) => {
             res.json({ nairline: nairline });
         } else res.status(500).json({ message: "Airline not found" });
     } catch (err) {
-        if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else if (err.code == '23505' && err.constraint == 'CompagnieAeree_CodiceIdentificativo_key') res.status(409).json({ message: "Identification code already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
         else next(err);
     }
 }
 
-//check voli attivi
 exports.deleteAirline = async (req, res, next) => {
     try {
-        const nairline = await airlineService.deleteAirline(req.id);
-        if (nairline >= 1) await emailService.deactivateEmail(req.email);
-        res.json({ nairline: nairline });
+        const { id } = req.body ?? {};
+        const airline = await airlineService.getAirline(id);
+        const flights1 = await flightService.getFlights(undefined, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Programmato");
+        const flights2 = await flightService.getFlights(undefined, id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Decollato");
+        if (airline) {
+            if (flights1[0] || flights2[0]) res.status(409).json({ message: "Flights active" });
+            else {
+                const nairline = await emailService.deactivateEmail(airline.IdEmail);
+                res.json({ nairline: nairline });
+            }
+        } else res.status(400).json({message: "Airline not found"});
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }

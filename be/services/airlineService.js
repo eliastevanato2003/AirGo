@@ -10,9 +10,7 @@ exports.getAirline = async (id) => {
 
 exports.activateAirline = async (email, password, temp) => {
     const airline = await airlineModel.getAirlineForActivation(email);
-    if (!airline || !(await bcrypt.compare(temp, airline[0]?.Password))) {
-        throw new Error('Invalid credentials');
-    }
+    if (!airline[0] || !(await bcrypt.compare(temp, airline[0]?.Password))) return 0;
     else {
         await airlineModel.activateAirline(airline[0].IdCompagniaAerea);
         const hashedpassword = await bcrypt.hash(password, 10);
