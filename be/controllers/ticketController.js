@@ -8,7 +8,7 @@ exports.getTickets = async (req, res, next) => {
         if (req.role == 2) user = req.id;
         else if (req.role == 1) airline = req.id;
         const tickets = await ticketService.getTickets(airline, id, user, flight, row, col, clas);
-        res.json({ tickets });
+        res.json(tickets);
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);

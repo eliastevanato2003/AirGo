@@ -7,7 +7,8 @@ exports.getUsers = async (req, res, next) => {
         const users = await userService.getUsers(id, name, surname, email);
         res.json(users);
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
     }
 };
 
@@ -36,7 +37,8 @@ exports.newUser = async (req, res, next) => {
         if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" });
         else {
             await emailService.deleteEmail(req.body.email);
-            if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
+            if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+            else if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
             else if (err.routine == 'DateTimeParseError') res.status(400).json({ message: "Invalid date" });
             else next(err);
         }
@@ -52,7 +54,7 @@ exports.updateUser = async (req, res, next) => {
             if (email) await emailService.updateEmail(user.Mail, email);
             const nuser = await userService.updateUser(req.id, name || user.Nome, surname || user.Cognome, number || user.Telefono, dob || user.DoB, password);
             res.json({ nuser: nuser });
-        } else res.status(500).json({message: "User not found"});
+        } else res.status(500).json({ message: "User not found" });
     } catch (err) {
         if (err.code == '23505' && err.constraint == 'Utenti_Telefono_key') res.status(409).json({ message: "Phone number already in use" });
         else if (err.code == '23505' && err.constraint == 'IndirizziEmail_Email_key') res.status(409).json({ message: "Email already in use" })
@@ -64,8 +66,10 @@ exports.updateUser = async (req, res, next) => {
 //check biglietti attivi
 exports.deleteUser = async (req, res, next) => {
     try {
-        const nuser = await userService.deleteUser(req.id);
-        if(nuser >= 1) await emailService.deactivateEmail(req.email);
+        const { id } = req.body ?? {};
+        const user = await userService.getUser(id);
+        const nuser = await userService.deleteUser(id);
+        if (nuser >= 1) await emailService.deactivateEmail(user.Mail);
         res.json({ nuser: nuser });
     } catch (err) {
         next(err);
@@ -77,8 +81,11 @@ exports.login = async (req, res, next) => {
     if (!email || !password) res.status(400).json({ message: "Required data missing" });
     try {
         const token = await userService.login(email, password);
-        res.json(token);
+        if(token.message) res.status(401).json({ message: "Invalid credentials" });
+        else res.json(token);
     } catch (err) {
-        res.status(401).json({ message: "Invalid credentials" });
+        console.log(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 };

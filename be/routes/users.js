@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const userController= require('../controllers/userController');
+const userController = require('../controllers/userController');
 const { authenticateToken } = require('../middlewares/authMiddleware');
 const { authorizeRoles } = require("../middlewares/roleMiddleware")
 
@@ -13,6 +13,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @surname (Opzionale) Il cognome dell'utente
  * @email (Opzionale) L'email dell'utente
  * @returns {200} {object} Le info degli utenti 
+ * @returns {400} {message: string} Dati non validi 
  */
 router.get("/getUsers", authenticateToken, authorizeRoles(0), userController.getUsers);
 
@@ -22,7 +23,7 @@ router.get("/getUsers", authenticateToken, authorizeRoles(0), userController.get
  * @description Restituisce le proprie informazioni ad un utente autenticato
  * @returns {200} {object} Le info dell'utente 
  */
-router.get("/getUser", authenticateToken, authorizeRoles(0,2), userController.getUser);
+router.get("/getUser", authenticateToken, authorizeRoles(0, 2), userController.getUser);
 
 /**
  * @route POST /api/users/newUser
@@ -38,7 +39,7 @@ router.get("/getUser", authenticateToken, authorizeRoles(0,2), userController.ge
  * @returns {400} {message: string} Data non valida
  * @returns {409} {message: string} Dati già in uso
  * @returns {500} {message: string} Errore durante l'inserimento dell'email
- */ 
+ */
 router.post("/newUser", userController.newUser);
 
 /**
@@ -59,12 +60,14 @@ router.post("/newUser", userController.newUser);
 router.post("/updateUser", authenticateToken, authorizeRoles(2), userController.updateUser);
 
 /**
- * @route POST /api/users/deleteUser
+ * @route DELETE /api/users/deleteUser
  * @access role: 2
- * @description Cancella l'utente con cui si è fatto il login
- * @returns {200} Il numero di utenti cancellati
+ * @description Cancella l'utente indicato
+ * @id L'id dell'utente da cancellare
+ * @returns {200} {nuser: number} Il numero di utenti cancellati
+ * @returns {400} {message: string} Dati non validi 
  */
-router.post("/deleteUser", authenticateToken, authorizeRoles(2), userController.deleteUser);
+router.delete("/deleteUser", authenticateToken, authorizeRoles(0), userController.deleteUser);
 
 /**
  * @route POST /api/users/login
@@ -72,6 +75,7 @@ router.post("/deleteUser", authenticateToken, authorizeRoles(2), userController.
  * @email L'email con cui eseguire l'accesso
  * @password La password con cui eseguire l'accesso
  * @returns {200} {token: string} Il token di autorizzazione per le richieste successive
+ * @returns {400} {message: string} Dati non validi 
  * @returns {401} {message: string} Credenziali non valide
  */
 router.post("/login", userController.login);
