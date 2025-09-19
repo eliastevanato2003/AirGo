@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Seat } from '../../../models/user/seat.model';
-import { NgClass, NgFor, JsonPipe } from '@angular/common';
+import { NgClass, NgFor, JsonPipe, CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
@@ -8,35 +8,38 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
 import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
+import { TicketService } from '../../../services/user/ticket.service';
 
 @Component({
   selector: 'app-seat-selection',
   templateUrl: './seat-selection.component.html',
   styleUrls: ['./seat-selection.component.css'],
-  imports: [NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive, JsonPipe],
+  imports: [CommonModule, NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive, JsonPipe],
   standalone: true
 })
-export class SeatSelectionComponent {
+export class SeatSelectionComponent implements OnInit {
   seats: Seat[] = [];
 
   public ticketCount: number = 1;
   public price: number = 0;
 
-  private planeId: number = 0;
-  private flight: FlightStatus | null = null;
+  public seatclass: string[] = [];
+  public chseat: Seat[] = []; // Array dei posti selezionati
 
-  constructor(private flightService: FlightService, private route: ActivatedRoute) { }
+  public flightId: number = 0;
+  public flight: FlightStatus | null = null;
 
-  ngOnInit() {
-    this.route.queryParams.subscribe(
-      params => {
-        this.planeId = params['id'];
-      });
-    this.getPlaneSeats();
+  constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService) { }
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.flightId = params['id'];
+      this.getPlaneSeats();
+    });
   }
 
   getPlaneSeats() {
-    this.flightService.getFlightStatus(this.planeId).subscribe({
+    this.flightService.getFlightStatus(this.flightId).subscribe({
       next: (response) => {
         this.flight = response[0];
         this.generateSeats();
@@ -49,50 +52,65 @@ export class SeatSelectionComponent {
   }
 
   generateSeats() {
-    // FIRST CLASS
-    this.seats.push({
-      id: '00',
-      row: 0,
-      column: '0',
-      type: 'firstclass',
-      price: this.flight!.CostoPC,
-      selected: false
+    this.ticketService.getTickets(this.flight!.IdVolo).subscribe({
+      next: (response) => {
+        const bookedSeats = response.tickets;
+
+        // Pulisci l'array dei posti
+        this.seats = [];
+        // FIRST CLASS
+        this.seats.push({
+          id: '00',
+          row: 0,
+          column: '0',
+          type: 'firstclass',
+          price: this.flight!.CostoPC,
+          selected: false
+        });
+
+        // BUSINESS
+        let row = 1;
+        for (row; row <= this.flight!.RigheB; row++) {
+          for (let col = 0; col < this.flight!.ColonneB; col++) {
+            this.seats.push({
+              id: `${row}${col}`,
+              row,
+              column: String.fromCharCode(65 + col),
+              type: 'business',
+              price: this.flight!.CostoB,
+              selected: false,
+              unavailable: bookedSeats.some((ticket: any) => ticket.RigPosto === row && ticket.ColPosto === String.fromCharCode(65 + col))
+            });
+          }
+        }
+
+        const bRow = row;
+
+        // ECONOMY
+        for (row; row <= this.flight!.RigheE + bRow; row++) {
+          for (let col = 0; col < this.flight!.ColonneE; col++) {
+            this.seats.push({
+              id: `${row}${col}`,
+              row,
+              column: String.fromCharCode(65 + col),
+              type: 'economy',
+              price: this.flight!.CostoE,
+              selected: false
+            });
+          }
+        }
+      },
+      error: (error) => {
+        console.error('getTickets error:', error);
+        // Gestisci l'errore, magari mostrando un messaggio all'utente
+      }
     });
-
-    // BUSINESS
-    let row = 1;
-    for (row; row <= this.flight!.RigheB; row++) {
-      for (let col = 0; col < this.flight!.ColonneB; col++) {
-        this.seats.push({
-          id: `${row}${col}`,
-          row,
-          column: String.fromCharCode(65 + col),
-          type: 'business',
-          price: this.flight!.CostoB,
-          selected: false
-        });
-      }
-    }
-
-    const bRow = row;
-
-    // ECONOMY
-    for (row; row <= this.flight!.RigheE + bRow; row++) {
-      for (let col = 0; col < this.flight!.ColonneE; col++) {
-        this.seats.push({
-          id: `${row}${col}`,
-          row,
-          column: String.fromCharCode(65 + col),
-          type: 'economy',
-          price: this.flight!.CostoE,
-          selected: false
-        });
-      }
-    }
-    console.log(this.flight);
   }
 
   selectSeat(seat: Seat) {
+    if (seat.unavailable) {
+      return; // Non fare nulla se il posto non è disponibile
+    }
     // Verifica che non si superi il numero di biglietti
     if (this.getSelectedSeats().length < this.ticketCount) {
       seat.selected = !seat.selected;
@@ -102,12 +120,17 @@ export class SeatSelectionComponent {
         } else {
           this.price -= seat.price + this.flight!.CostoSceltaPosto;
         }
+        const index = this.chseat.indexOf(seat);
+        if (index > -1) {
+          this.chseat.splice(index, 1);
+        }
       } else {
         if (seat.type == 'firstclass') {
           this.price += seat.price;
         } else {
           this.price += seat.price + this.flight!.CostoSceltaPosto;
         }
+        this.chseat.push(seat);
       }
     } else if (seat.selected) {
       seat.selected = false; // Deseleziona se è già selezionato
@@ -116,11 +139,29 @@ export class SeatSelectionComponent {
       } else {
         this.price -= seat.price + this.flight!.CostoSceltaPosto;
       }
+      const index = this.chseat.indexOf(seat);
+      if (index > -1) {
+        this.chseat.splice(index, 1);
+      }
     }
   }
 
   getSelectedSeats() {
     return this.seats.filter(seat => seat.selected);
+  }
+
+  getSeatClass(): string[] {
+    this.seatclass = []; // Reset the array
+    this.getSelectedSeats().forEach(seat => {
+      if (seat.type === 'firstclass') {
+        this.seatclass.push('Prima');
+      } else if (seat.type === 'business') {
+        this.seatclass.push('Business');
+      } else {
+        this.seatclass.push('Economy');
+      }
+    });
+    return this.seatclass;
   }
 
   getSeat(row: number, col: string): Seat | undefined {

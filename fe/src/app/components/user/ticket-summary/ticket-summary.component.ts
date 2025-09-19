@@ -6,6 +6,7 @@ import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { ActivatedRoute } from '@angular/router';
 import { Seat } from '../../../models/user/seat.model';
+import { TicketService } from '../../../services/user/ticket.service';
 
 @Component({
   selector: 'app-ticket-summary',
@@ -20,18 +21,32 @@ export class TicketSummaryComponent implements OnInit {
   public baggageChecked = 'Nessuno';
   public totalPrice = 0;
   public extraBags = 0;
+  public chseat: Seat[] = [];
+  public seatclass: string[] = [];
+  public ticketCount: number = 1;
+  public flightId: number = 0;
+  public names: string[] = [];
+  public surnames: string[] = [];
+  public dobs: string[] = [];
 
   public paymentForm!: FormGroup;
   public confirmed = false;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private ticketService: TicketService) {
     this.route.queryParams.subscribe(params => {
       this.totalPrice = parseInt(params['price']);
       this.selectedSeats = JSON.parse(params['seats'] || '[]');
       JSON.parse(params['extraBag'] || '[]').forEach((res: boolean) => {
-        if(res) this.extraBags++;
+        if (res) this.extraBags++;
       });
       this.baggageChecked = this.extraBags === 1 ? '1 Bagaglio da 10 kg' : this.extraBags === 0 ? 'Nessuno' : this.extraBags + ' Bagagli da 10 kg';
+      this.chseat = JSON.parse(params['chseat'] || '[]');
+      this.seatclass = JSON.parse(params['seatclass'] || '[]');
+      this.ticketCount = parseInt(params['ticketCount']);
+      this.flightId = parseInt(params['flightId']);
+      this.names = JSON.parse(params['names'] || '[]');
+      this.surnames = JSON.parse(params['surnames'] || '[]');
+      this.dobs = JSON.parse(params['dobs'] || '[]');
     });
   }
 
@@ -47,9 +62,19 @@ export class TicketSummaryComponent implements OnInit {
   confirmPayment() {
     if (this.paymentForm.valid) {
       this.confirmed = true;
-      const formData = this.paymentForm.value;
-      console.log('Payment Confirmed', formData);
       // TODO: Ticket activation
+      for (let i = 0; i < this.ticketCount; i++) {
+        const chseat = !!this.chseat.find(seat => seat.id === this.selectedSeats[i].id);
+        console.log(this.names[i], this.surnames[i], this.dobs[i], this.seatclass[i], chseat, this.selectedSeats[i].row, this.selectedSeats[i].column);
+        this.ticketService.addTicket(this.flightId, this.names[i], this.surnames[i], this.dobs[i], this.seatclass[i], this.extraBags, chseat, this.totalPrice, chseat ? this.selectedSeats[i].row.toString() : undefined, chseat ? this.selectedSeats[i].column : undefined).subscribe({
+          next: (res) => {
+            console.log('Biglietto creato correttamente', res);
+          },
+          error: (err) => {
+            console.error('Errore nella creazione del biglietto', err.message);
+          }
+        });
+      }
     } else {
       this.paymentForm.markAllAsTouched();
     }
@@ -61,7 +86,7 @@ export class TicketSummaryComponent implements OnInit {
 
   get seats() {
     return this.selectedSeats.map(seat => {
-      if(seat.row === 0) return 'Prima Classe';
+      if (seat.row === 0) return 'Prima Classe';
       else return seat.row + seat.column;
     });
   }
