@@ -12,6 +12,8 @@ import { PasswordComponent } from './components/airline/password/password.compon
 import { AirlineFlightsComponent } from './components/airline/airlineflights/airlineflights.component';
 import { AirplanesComponent } from './components/airline/airplanes/airplanes.component';
 import { AirlinesComponent } from './components/admin/airlines/airlines.component';
+import { ModelsComponent } from './components/airline/models/models.component';
+import { RoutesComponent } from './components/airline/routes/routes.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -26,5 +28,7 @@ export const routes: Routes = [
     { path: 'admin-airlines', component: AirlinesComponent },
     { path: 'airline-profile', component: AirlineProfileComponent },
     { path: 'password', component: PasswordComponent },
-    { path: 'airline-flights', component: AirlineFlightsComponent }
+    { path: 'airline-flights', component: AirlineFlightsComponent },
+    { path: 'models', component: ModelsComponent },
+    { path: 'routes', component: RoutesComponent }
 ];

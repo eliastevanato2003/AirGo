@@ -6,7 +6,7 @@
       <h2>Gestione Aerei</h2>
       <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
     </div>
-    <button class="add-airplane-btn" (click)="showModal=true">Nuovo aereo</button>
+    <button class="add-btn" (click)="showModal=true">Nuovo aereo</button>
   </div>
 
   <div class="airplane-list">
@@ -24,7 +24,6 @@
   @if(showModal) {
   <div class="modal-overlay">
     <div class="modal-content">
-      @if(!creatingNewModel){
       <h3>Nuovo aereo</h3>
       <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
         <label>Modello</label>
@@ -38,7 +37,7 @@
           </select>
           
 
-          <button type="button" class="add-btn" (click)="create()">Crea</button>
+          <button type="button" class="add-btn" (click)="toCreate()">Crea</button>
         </div>
         
 
@@ -50,62 +49,10 @@
           <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
           <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
         </div>
-      </form>
-    }
-
-    @if(creatingNewModel) {
-      <h3>Nuovo modello</h3>
-      <form [formGroup]="newModelForm" (ngSubmit)="addModel()">
-
-          <label>Nome modello</label>
-          <input type="text" formControlName="name">
-
-          <label>Posti prima classe</label>
-          <input type="number" formControlName="firstclass">
-
-          <label>Righe Business</label>
-          <input type="number" formControlName="rowb">
-
-          <label>Colonne Business</label>
-          <select formControlName="colb">
-            <option value="" disabled>Seleziona numero colonne</option>
-            @for (i of evenNumbers; track i) {
-              <option [value]="i">{{ i }}</option>
-            }
-          </select>
-
-          <label>Righe Economy</label>
-          <input type="number" formControlName="rowe">
-
-          <label>Colonne Economy</label>
-          <select formControlName="cole">
-            <option value="" disabled>Seleziona numero colonne</option>
-            @for (i of evenNumbers; track i) {
-              <option [value]="i">{{ i }}</option>
-            }
-          </select>
-
-          <label>Righe con spazio extra per le gambe</label>
-          <input type="number" formControlName="extraleg">
-
-          <div class="modal-buttons">
-          <button type="submit" class="add-btn" [disabled]="newModelForm.invalid">Aggiungi</button>
-          <button type="button" class="cancel-btn" (click)="closeCreate()">Indietro</button>
-        </div>
-
-      </form>
-      }
+      </form>   
     </div>
   </div>
   }
-
-
-  
-
-
-
 </div>
-
-
 
 <app-footer></app-footer>

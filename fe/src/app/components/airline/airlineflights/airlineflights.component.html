@@ -6,7 +6,7 @@
       <h2>Gestione dei Voli</h2>
       <p>Qui puoi aggiungere, modificare o eliminare voli della tua compagnia aerea</p>
     </div>
-    <button class="add-flight-btn" (click)="showCreate=true">Aggiungi volo</button>
+    <button class="add-btn" (click)="showCreate=true">Aggiungi volo</button>
   </div>
 
  @if(flights) {
@@ -32,7 +32,7 @@
           </div>
         </div>
 
-        <button class="add-flight-btn" (click)="gestisci(flight)">Gestisci</button>
+        <button class="add-btn" (click)="gestisci(flight)">Gestisci</button>
       </div>
     }
   </div>
@@ -98,10 +98,10 @@
 @if(showManage && selectedFlight) {
   <div class="modal-overlay">
     <div class="modal-content manage-modal">
-      <h3>Gestisci volo #{{selectedFlight.IdVolo}}</h3>
+      <h3>Gestisci modello #{{selectedFlight.IdVolo}}</h3>
 
       <div class="manage-body containerb">
-        <div class="flight-details">
+        <div class="info-details">
           <div class="info-box">
             <h4>Info Volo</h4>
             <p><strong>Partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}}) - {{selectedFlight.DataPartenzaPrev}}</p>
@@ -125,7 +125,7 @@
         </div>
 
         <!-- PULSANTI DESTRA -->
-        <div class="flight-actions" style="margin-left:auto;">
+        <div class="info-actions" style="margin-left:auto;">
           @if(selectedFlightStatus === 'Programmato') {
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
           }

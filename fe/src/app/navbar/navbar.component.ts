@@ -21,9 +21,7 @@ export class NavbarComponent implements OnInit {
     this.authService.isLoggedIn().subscribe(status => {
       this.isLoggedIn = status;
     });
-    this.authService.whatRole().subscribe(role => {
-      this.userRole = role;
-    });
+    this.userRole = this.authService.getRole();
   }
 
   login() {
@@ -57,6 +55,14 @@ export class NavbarComponent implements OnInit {
 
   flights() {
     this.router.navigate(['/airline-flights']);
+  }
+
+  models() {
+    this.router.navigate(['/models']);
+  }
+
+  routes() {
+    this.router.navigate(['/routes']);
   }
 
 }

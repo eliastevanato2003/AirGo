@@ -1,0 +1,48 @@
+<app-navbar></app-navbar>
+
+<div class="routes-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione Rotte</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare rotte attuate dalla tua compagnia</p>
+    </div>
+    <button class="add-btn" (click)="showModal=true">Nuova rotta</button>
+  </div>
+
+  <div class="route-list">
+    @for(route of routes; track route.IdRotta) {
+      <div class="route-bar">
+        <div class="route-info">
+          <p><strong>Rotta:</strong> {{ route.IdRotta }}</p>
+          <p><strong>Anno di costruzione:</strong> {{ route.AnnoCostruzione }}</p>
+        </div>
+        <button class="delete-btn">Elimina</button>
+      </div>
+    }
+  </div>
+
+  @if(showModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Nuova rotta</h3>
+      <form [formGroup]="newRouteForm" (ngSubmit)="addRoute()">
+
+        <label>Aeroporto di partenza</label>
+        <select formControlName="from">
+        <option value="" disabled>Seleziona un aeroporto</option>
+        @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+        }
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="newRouteForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
+        </div>
+      </form>   
+    </div>
+  </div>
+  }
+</div>
+
+<app-footer></app-footer>

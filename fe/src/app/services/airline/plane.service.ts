@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
+import { NewPlane, Plane} from '../../models/airline/plane.model';
 
 @Injectable({ providedIn: 'root' })
 export class PlaneService {
@@ -17,26 +18,26 @@ export class PlaneService {
     });
   }
 
-  getPlanes(): Observable<any[]> {
+  getPlanes(): Observable<Plane[]> {
     const url = `${this.baseUrl}/getPlanes`;
-    return this.http.get<any[]>(url, { headers: this.getHeaders() }).pipe(
+    return this.http.get<Plane[]>(url, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }
 
-  getPlanesByAirline(airlineId: number): Observable<any[]> {
+  getPlanesByAirline(airlineId: number): Observable<Plane[]> {
     const url = `${this.baseUrl}/getPlanes?airline=${airlineId}`;
-    return this.http.get<any[]>(url, { headers: this.getHeaders() }).pipe(
+    return this.http.get<Plane[]>(url, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }
 
-  addPlane(model: number, constructionYear: number): Observable<any> {
+  addPlane(newPlane: NewPlane): Observable<any> {
     const url = `${this.baseUrl}/newPlane`;
 
     const body = {
-      model: model,
-      constructionyear: constructionYear
+      model: newPlane.model,
+      constructionyear: newPlane.constructionyear
     };
 
     return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(

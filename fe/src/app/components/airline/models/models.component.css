@@ -1,37 +1,39 @@
 
-.airplanes-container {
+.models-container {
     width: 100%;
     max-width: 900px;
     margin: 30px auto 50px auto;
     padding: 20px;
 }
 
-.airplanes-container .header {
+.models-container .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 20px;
 }
 
-.airplanes-container .header h2 {
+.models-container .header h2 {
     font-size: 26px;
     color: #3b5998;
     margin-bottom: 8px;
 }
 
-.airplanes-container .header p {
+.models-container .header p {
     font-size: 14px;
     color: #777;
     margin-bottom: 20px;
 }
 
-.airplane-list {
+
+
+.model-list {
     display: flex;
     flex-direction: column;
     gap: 15px;
 }
 
-.airplane-bar {
+.model-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -41,15 +43,18 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
 }
 
-.airplane-info p {
+.model-info p {
     margin: 4px 0;
     font-size: 14px;
     color: #444;
 }
 
-.airplane-info p strong {
+.model-info p strong {
     color: #777;
 }
+
+
+
 
 .modal-overlay {
   position: fixed;
@@ -130,8 +135,6 @@
   justify-content: flex-end;
   gap: 10px;
 }
-
-
 
 .containerb{
   display: flex;

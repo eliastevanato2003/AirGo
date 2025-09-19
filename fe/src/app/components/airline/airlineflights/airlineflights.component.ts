@@ -57,14 +57,7 @@ export class AirlineFlightsComponent implements OnInit {
       this.loadPlanes();
       this.loadRoutes();
     } else {
-      this.authService.whatId()
-        .pipe(filter(id => id !== null))
-        .subscribe(id => {
-          this.airlineId = id!;
-          this.loadFlights();
-          this.loadPlanes();
-          this.loadRoutes();
-        });
+      console.error('ID compagnia aerea non trovato');
     }
   }
 

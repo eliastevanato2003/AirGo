@@ -1,11 +1,11 @@
-export interface newModel{
+export interface NewModel{
     Name: string,
     SeatsPC: number,
     RowsB: number,
     ColumnsB: number,
     RowsE: number,
     ColumnsE: number,
-    ExtraLegRows: ExtraLegRow[]
+    ExtraLegRows: number[]
 }
 
 export interface Model{

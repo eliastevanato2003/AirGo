@@ -39,6 +39,11 @@ export class RouteService {
     );
   }
 
-  //TODO delete route
+  deleteRoute(routeid: number): Observable<any> {
+    const url = `${this.baseUrl}/deleteFlightRoute/${routeid}`;
+    return this.http.delete<any>(url, { headers: this.getHeaders() }).pipe(
+      tap()
+    );
+  }
 
 }
