@@ -62,7 +62,7 @@ router.post("/updateModel", authenticateToken, authorizeRoles(0,1), modelControl
  * @returns {200} {nmodel: number} Il numero di modelli eliminati
  * @returns {400} {message: string} Id mancante
  * @returns {400} {message: string} Dati non validi
- * @returns {409} {message: string} Aerei esistenti utilizzanti questo mode
+ * @returns {409} {message: string} Aerei esistenti utilizzanti questo modello
  */
 router.delete("/deleteModel", authenticateToken, authorizeRoles(0), modelController.deleteModel);
 

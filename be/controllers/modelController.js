@@ -41,18 +41,19 @@ exports.updateModel = async (req, res, next) => {
     try {
         const { id, name, seatspc, rowsb, columnsb, rowse, columnse, extralegrows } = req.body ?? {};
         if (id == undefined) res.status(400).json({ message: "Id missing" });
+        else if (columnsb % 2 == 1 || columnse % 2 == 1 || seatspc < 0 || rowsb < 0 || columnsb < 0 || rowse < 0 || columnse < 0) res.status(400).json({ message: "One or more fields have invalid value" });
         else {
             const planes = await planeService.getPlanes(undefined, undefined, id, undefined, undefined);
             if (planes[0]) res.status(409).json({ message: "Planes existing using this model" });
             else {
                 const model = await modelService.getModels(id, undefined);
                 if (model[0]) {
-                    const nmodel = modelService.updateModel(id, name || model[0].Nome, seatspc || model[0].PostiPC, rowsb || model[0].RigheB, columnsb || model[0].ColonneB, rowse || model[0].RigheE, columnse || model[0].Colonnee);
-                    const extralegs = extraLegService.getExtraLegs(undefined, id, undefined);
+                    const nmodel = await modelService.updateModel(id, name || model[0].Nome, seatspc || model[0].PostiPc, rowsb || model[0].RigheB, columnsb || model[0].ColonneB, rowse || model[0].RigheE, columnse || model[0].Colonnee);
+                    const extralegs = await extraLegService.getExtraLegs(undefined, id, undefined);
                     let nextraleg = 0;
                     if (extralegrows) {
                         for (const extraleg of extralegs) await extraLegService.deleteExtraLeg(extraleg.IdRiga);
-                        for (const row of extralegrows) if (row > 0 && row <= rowse || model[0].RigheE) nextraleg += await extraLegService.newExtraLeg(id, row);
+                        for (const row of extralegrows) if (row > 0 && row <= (rowse || model[0].RigheE)) nextraleg += await extraLegService.newExtraLeg(id, row);
                     } else for (const extraleg of extralegs) if (extraleg.NRiga > rowse || model[0].RigheE) await extraLegService.deleteExtraLeg(extraleg.IdRiga);
                     res.json({ nmodel: nmodel, nextraleg: nextraleg });
                 } else res.status(400).json({ message: "Model not found" });
@@ -73,7 +74,7 @@ exports.deleteModel = async (req, res, next) => {
             const planes = await planeService.getPlanes(undefined, undefined, id, undefined, undefined);
             if (planes[0]) res.status(409).json({ message: "Planes existing using this model" });
             else {
-                const extralegs = extraLegService.getExtraLegs(undefined, id, undefined);
+                const extralegs = await extraLegService.getExtraLegs(undefined, id, undefined);
                 for (const extraleg of extralegs) await extraLegService.deleteExtraLeg(extraleg.IdRiga);
                 res.json({ nmodel: await modelService.deleteModel(id) });
             }
