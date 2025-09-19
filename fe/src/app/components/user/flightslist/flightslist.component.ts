@@ -29,7 +29,7 @@ export class FlightsListComponent implements OnInit {
             departure: flight.DataPartenzaPrev,
             arrival: flight.DataArrivoPrev,
             airline: '',
-            price: flight.CostoE
+            price: flight.CostoE,
           } as Flight);
         })
       },
