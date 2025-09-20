@@ -72,7 +72,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   private loadPlanes(): void {
     if (!this.airlineId) return;
-    this.planeService.getPlanesByAirline(this.airlineId).subscribe({
+    this.planeService.getPlanes({id:this.airlineId}).subscribe({
       next: (planes) => this.planes = planes,
       error: (err) => console.error('Errore caricamento aerei', err)
     });

@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PlaneService } from '../../../services/airline/plane.service';
 import { ModelService } from '../../../services/airline/model.service';
 import { NewPlane, Plane } from '../../../models/airline/plane.model';
-import { filter } from 'rxjs/operators';
+import { forkJoin } from 'rxjs';
 import { Model, NewModel } from '../../../models/airline/model.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -27,6 +27,8 @@ export class AirplanesComponent implements OnInit {
   airlineId: number | null = null;
   newAirplane: NewPlane | null = null;
   newPlaneForm: FormGroup;
+  filterForm: FormGroup;
+
 
   constructor(
     private authService: AuthService,
@@ -39,7 +41,12 @@ export class AirplanesComponent implements OnInit {
       model: ['', Validators.required],
       constructionyear: ['', [Validators.required, Validators.min(1900)]]
     });
-    
+    this.filterForm = this.fb.group({
+    id: [''],
+    model: [''],
+    constructionYear: [''],
+    inservice: ['']
+  });    
   }
 
   ngOnInit(): void {
@@ -53,10 +60,15 @@ export class AirplanesComponent implements OnInit {
     }
   }
 
-  private loadPlanes(): void {
+  private loadPlanes(filters: any = {}): void {
     if (!this.airlineId) return;
-    this.planeService.getPlanesByAirline(this.airlineId).subscribe({
-      next: (planes) => this.airplanes = planes,
+
+    filters.airline = this.airlineId;
+
+    this.planeService.getPlanes(filters).subscribe({
+      next: (planes) => {
+        this.airplanes = planes;
+      },
       error: (err) => console.error('Errore caricamento aerei', err)
     });
   }
@@ -111,4 +123,48 @@ export class AirplanesComponent implements OnInit {
   toCreate(): void {
     this.router.navigate(['/models']); 
   }
+
+  ritira(id:number):void{
+    this.planeService.changeService(id, false).subscribe({
+      next: () => {
+        alert('Aereo non più in servizio');
+        this.loadPlanes();
+      },
+      error: (err) => console.error('Errore ritiro aereo', err)
+    })
+  }
+
+  attiva(id:number):void{
+    this.planeService.changeService(id, true).subscribe({
+      next: () => {
+        alert('Aereo ora in servizio');
+        this.loadPlanes();
+      },
+      error: (err) => console.error('Errore attivazione aereo', err)
+    })
+  }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadPlanes(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset({
+      id: '',
+      model: '',
+      constructionYear: '',
+      inservice: ''
+    });
+    this.loadPlanes();
+  }
+
+
 }

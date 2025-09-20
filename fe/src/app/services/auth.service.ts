@@ -89,7 +89,7 @@ export class AuthService {
       tap(response => {
         this.saveToken(response.token);
         this.saveRole(response.role);
-        this.saveId(response.id);
+        if(response.role==1){this.saveId(response.id);}
         console.log("Login avvenuto con successo");
       })
     );

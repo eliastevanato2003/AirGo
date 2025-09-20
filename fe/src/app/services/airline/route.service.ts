@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
@@ -18,12 +18,21 @@ export class RouteService {
     });
   }
 
-  getRoutes(): Observable<Route[]> {
+  getRoutes(filters?: { id?: number; departure?: number; arrival?: number }): Observable<Route[]> {
     const url = `${this.baseUrl}/getFlightRoutes`;
-    return this.http.get<Route[]>(url, { headers: this.getHeaders() }).pipe(
+
+    let params = new HttpParams();
+    if (filters) {
+      if (filters.id) params = params.set('id', filters.id);
+      if (filters.departure) params = params.set('departure', filters.departure);
+      if (filters.arrival) params = params.set('arrival', filters.arrival);
+    }
+
+    return this.http.get<Route[]>(url, { headers: this.getHeaders(), params }).pipe(
       tap()
     );
   }
+
 
   addRoute(data: NewRoute): Observable<any> {
     const url = `${this.baseUrl}/newFlightRoute`;
@@ -41,18 +50,18 @@ export class RouteService {
   }
 
   updateRoute(id: number, from: string, to: string): Observable<any> {
-  const url = `${this.baseUrl}/updateFlightRoute`;
+    const url = `${this.baseUrl}/updateFlightRoute`;
 
-  const body = {
-    id: id,
-    from: from,
-    to: to
-  };
+    const body = {
+      id: id,
+      from: from,
+      to: to
+    };
 
-  return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
-    tap()
-  );
-}
+    return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
+      tap()
+    );
+  }
 
 
 }

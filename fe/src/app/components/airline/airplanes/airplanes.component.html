@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="airplanes-container">
+<div class="first-container">
   <div class="header">
     <div class="title-group">
       <h2>Gestione Aerei</h2>
@@ -8,18 +8,65 @@
     </div>
     <button class="add-btn" (click)="showModal=true">Nuovo aereo</button>
   </div>
+</div>
+  <div class="filters">
+  <h3>Filtra Aerei</h3>
+  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
 
+    <label>ID Aereo</label>
+    <input type="number" formControlName="id" placeholder="ID aereo">
+
+    <label>Modello</label>
+    <select formControlName="model">
+      <option value="">Tutti</option>
+      @for(model of models; track model.IdModello) {
+        <option [value]="model.IdModello">{{ model.Nome }}</option>
+      }
+    </select>
+
+    <label>Anno di costruzione</label>
+    <input type="number" formControlName="constructionYear" placeholder="Es. 2015">
+
+    <label>Stato</label>
+    <select formControlName="inservice">
+      <option value="">Tutti</option>
+      <option [value]="true">In servizio</option>
+      <option [value]="false">Fuori servizio</option>
+    </select>
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
+    </div>
+  </form>
+</div>
+
+<div class="second-container">
   <div class="airplane-list">
     @for(airplane of airplanes; track airplane.IdAereo) {
       <div class="airplane-bar">
         <div class="airplane-info">
           <p><strong>Aereo:</strong> {{ airplane.NomeModello }} - {{ airplane.IdAereo }}</p>
           <p><strong>Anno di costruzione:</strong> {{ airplane.AnnoCostruzione }}</p>
+
+          @if(airplane.InServizio){
+            <p><strong>Stato:</strong> <span style="color: green;">In servizio</span></p>
+          }@else{
+            <p><strong>Stato:</strong> <span style="color: red;">Fuori servizio</span></p>
+          }
         </div>
-        <button class="delete-btn" (click)="deletePlane(airplane.IdAereo)">Elimina</button>
+
+        @if(airplane.InServizio){
+          <button class="delete-btn" (click)="ritira(airplane.IdAereo)">Ritira</button>
+        }@else{
+          <button class="save-btn" (click)="attiva(airplane.IdAereo)">Attiva</button>
+          <button class="delete-btn" (click)="deletePlane(airplane.IdAereo)">Elimina</button>
+        }
       </div>
     }
   </div>
+
+
 
   @if(showModal) {
   <div class="modal-overlay">

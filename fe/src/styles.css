@@ -82,7 +82,36 @@ html, body {
 }
 
 
+.dismiss-btn {
+  background-color: #dc3545;
+  padding: 12px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  color: white;
+}
 
+.dismiss-btn:hover {
+  background-color: #c82333;
+}
+
+.save-btn {
+  background: #28a745;
+  padding: 12px 20px;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
 
 
 .modal-overlay {
@@ -103,7 +132,7 @@ html, body {
 .modal-content {
   background: white;
   max-height: 90vh; 
-  max-width: 500px;      
+  width: 500px;      
   overflow-y: auto;  
   padding: 1.5rem;
   border-radius: 10px;
@@ -165,6 +194,8 @@ html, body {
   gap: 10px;
 }
 
+
+
 .containerb{
   display: flex;
   flex-direction: row;
@@ -224,4 +255,73 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.filters {
+  margin: 1rem auto; 
+  padding: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+  background: #f9f9f9;
+  width: 80%;
+  text-align: center; 
+}
+
+.filters-form {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap; 
+}
+
+.filters-form label {
+  margin-right: 0.5rem;
+  font-weight: 500;
+}
+
+.filters-form input,
+.filters-form select {
+  padding: 0.4rem 0.6rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.filter-buttons {
+  margin-left: auto; 
+  display: flex;
+  gap: 0.5rem;
+}
+
+
+
+
+.first-container {
+    width: 60%;
+    margin: 30px auto;
+}
+
+.first-container .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.first-container .header h2 {
+    font-size: 26px;
+    color: #3b5998;
+    margin-bottom: 8px;
+}
+
+.first-container .header p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 20px;
+}
+
+.second-container {
+    width: 100%;
+    max-width: 900px;
+    margin: 30px auto 50px auto;
+    padding: 20px;
 }

@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="routes-container">
+<div class="first-container">
   <div class="header">
     <div class="title-group">
       <h2>Gestione Rotte</h2>
@@ -8,7 +8,39 @@
     </div>
     <button class="add-btn" (click)="showModal=true">Nuova rotta</button>
   </div>
+</div>
 
+  <div class="filters">
+  <h3>Filtra Rotte</h3>
+  <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
+    
+    <label>ID Rotta</label>
+    <input type="number" formControlName="id" placeholder="ID rotta">
+
+    <label>Aeroporto di partenza</label>
+    <select formControlName="departure">
+      <option value="">Tutti</option>
+      @for(airport of airports; track airport.IdAeroporto) {
+        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+      }
+    </select>
+
+    <label>Aeroporto di arrivo</label>
+    <select formControlName="arrival">
+      <option value="">Tutti</option>
+      @for(airport of airports; track airport.IdAeroporto) {
+        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+      }
+    </select>
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)="reset()">Reset</button>
+    </div>
+  </form>
+</div>
+
+<div class="second-container">
   <div class="route-list">
   <div class="routes-grid">
     @for(route of routes; track route.IdRotta) {

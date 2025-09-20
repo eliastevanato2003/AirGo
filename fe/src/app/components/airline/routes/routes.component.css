@@ -1,29 +1,4 @@
 
-.routes-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 30px auto 50px auto;
-    padding: 20px;
-}
-
-.routes-container .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.routes-container .header h2 {
-    font-size: 26px;
-    color: #3b5998;
-    margin-bottom: 8px;
-}
-
-.routes-container .header p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
-}
 
 .modal-content {
   width: 600px; 

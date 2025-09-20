@@ -28,12 +28,18 @@ export class RoutesComponent implements OnInit{
   airports: Airport[] = [];
   newRoute: NewRoute | null = null;
   newRouteForm: FormGroup;
+  filterForm: FormGroup;
 
 
   constructor(private fb: FormBuilder, private routeService: RouteService, private authService: AuthService, private airportService: AirportService) {
     this.newRouteForm = this.fb.group({
       from: ['', Validators.required],
       to: ['', Validators.required]
+    });
+    this.filterForm = this.fb.group({
+      id: [''],
+      departure: [''],
+      arrival: ['']
     });
    }
 
@@ -48,9 +54,8 @@ export class RoutesComponent implements OnInit{
     }
   }
 
-  private loadRoutes(): void {
-    if (!this.airlineid) return;
-    this.routeService.getRoutes().subscribe({
+  loadRoutes(filters?: any): void {
+    this.routeService.getRoutes(filters).subscribe({
       next: (routes) => this.routes = routes,
       error: (err) => console.error('Errore caricamento rotte', err)
     });
@@ -108,5 +113,24 @@ export class RoutesComponent implements OnInit{
   closeManage():void{
     this.showManage=false;
     this.selectedRoute=null;
+  }
+
+  filtra(): void {
+    const filters = this.filterForm.value;
+    const cleaned = {
+      id: filters.id || undefined,
+      departure: filters.departure || undefined,
+      arrival: filters.arrival || undefined
+    };
+    this.loadRoutes(cleaned);
+  }
+
+  reset(): void {
+    this.filterForm.reset({
+      id: '',
+      departure: '',
+      arrival: ''
+    });
+    this.loadRoutes();
   }
 }
