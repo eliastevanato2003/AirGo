@@ -33,7 +33,7 @@ export class AirlinesComponent implements OnInit {
     this.loadAirlines();
   }
 
-  loadAirlines() {
+  private loadAirlines() {
     this.airlineService.getAirlines().subscribe({
       next: (response) => {
         this.airlines = response as Airline[];
@@ -61,7 +61,16 @@ export class AirlinesComponent implements OnInit {
   // TODO: finire delete
   deleteAirline(id: number): void {
     if (confirm('Sei sicuro di voler eliminare questa compagnia aerea?')) {
-      this.airlineService.deleteAirline(id).subscribe(() => this.loadAirlines());
+      this.airlineService.deleteAirline(id).subscribe({
+        next: (res) => {
+          alert('Compagnia aerea eliminata con successo');
+          this.loadAirlines();
+        },
+        error: (err) => {
+          console.error('Errore eliminazione compagnia aerea', err);
+          alert(err.error?.message || 'Errore durante l\'eliminazione');
+        }
+      });
     }
   }
 

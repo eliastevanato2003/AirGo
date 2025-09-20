@@ -2,20 +2,20 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
-import { ModelService } from '../../../services/airline/model.service';
-import { ExtraLegRow, Model, NewModel } from '../../../models/airline/model.model';
+import { ModelService } from '../../../services/admin/model.service';
+import { Model, NewModel } from '../../../models/admin/model.model';
 import { AuthService } from '../../../services/auth.service';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'app-models',
+  selector: 'app-adminmodels',
   imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule],
-  templateUrl: './models.component.html',
-  styleUrl: './models.component.css',
+  templateUrl: './adminmodels.component.html',
+  styleUrl: './adminmodels.component.css',
   standalone: true
 })
-export class ModelsComponent implements OnInit{
+export class AdminModelsComponent implements OnInit{
 
   showModal = false;
   models: Model[] = [];
@@ -179,6 +179,22 @@ export class ModelsComponent implements OnInit{
     if (!model || !model.RigheExtraLeg || model.RigheExtraLeg.length === 0) return '';
     return model.RigheExtraLeg.map(r => r.NRiga).join(', ');
   }
+
+  deleteModel(modelId: number) {
+    if (confirm('Sei sicuro di voler eliminare questo modello?')) {
+      this.modelService.deleteModel(modelId).subscribe({
+        next: (res) => {
+          alert('Modello eliminato con successo');
+          this.loadModels();
+          this.closeManage();
+        },
+        error: (err) => {
+          console.error('Errore eliminazione modello', err);
+          alert(err.error?.message || 'Errore durante l\'eliminazione');
+        }
+      });
+    }
+}
 
 
 }

@@ -1,11 +1,11 @@
 export interface NewModel{
-    Name: string,
-    SeatsPC: number,
-    RowsB: number,
-    ColumnsB: number,
-    RowsE: number,
-    ColumnsE: number,
-    ExtraLegRows: number[]
+    name: string,
+    seatspc: number,
+    rowsb: number,
+    columnsb: number,
+    rowse: number,
+    columnse: number,
+    extralegrows: number[]
 }
 
 export interface Model{

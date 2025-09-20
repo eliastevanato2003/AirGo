@@ -1,0 +1,87 @@
+<app-navbar></app-navbar>
+
+<div class="airports-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione Aeroporti</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare aerporti</p>
+    </div>
+    <button class="add-btn" (click)="showModal=true">Nuovo aeroporto</button>
+  </div>
+
+  <div class="airport-list">
+  <div class="airports-grid">
+    @for(airport of airports; track airport.IdAeroporto) {
+      <div class="airport-card">
+        <div class="airport-codes">
+          <h4>{{airport.CodiceIdentificativo}}</h4>
+        <p>{{airport.Citta}} - {{airport.Nome}}</p>
+        </div>
+        <button class="action-btn" (click)="gestisci(airport)">Gestisci</button>
+      </div>
+    }
+  </div>
+    </div>
+
+
+  @if(showModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Nuovo aeroporto</h3>
+      <form [formGroup]="newAirportForm" (ngSubmit)="addAirport()">
+
+        <label>Nome</label>
+        <input type="text" formControlName="name">
+
+        <label>Città</label>
+        <input type="text" formControlName="city">
+
+        <label>Nazione</label>
+        <input type="text" formControlName="country">
+
+        <label>Codice identificativo</label>
+        <input type="text" formControlName="code">
+
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="newAirportForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="closeCreate()">Annulla</button>
+        </div>
+      </form>   
+    </div>
+  </div>
+  }
+
+  @if(showManage && selectedairport) {
+  <div class="modal-overlay">
+    <div class="modal-content manage-modal">
+      <h3>Gestione aeroporto</h3>
+
+      <div class="manage-body containerb">
+        <div class="info-details">
+          <div class="info-box">
+            <h4>Info Aeroporto</h4>
+            <p><strong>ID:</strong> {{ selectedairport.IdAeroporto }}</p>
+            <p><strong>Nome:</strong> {{ selectedairport.Nome }}</p>
+            <p><strong>Città:</strong> {{ selectedairport.Citta }}</p>
+            <p><strong>Nazione:</strong> {{ selectedairport.Nazione }}</p>
+            <p><strong>Codice identificativo:</strong> {{ selectedairport.CodiceIdentificativo }}</p>
+        </div>
+
+        </div>
+
+       
+        <div class="info-actions">
+            <button class="action-btn">Modifica</button>
+            <button class="delete-btn" (click)="deleteAirport(selectedairport.IdAeroporto)">Elimina</button>
+        </div>
+      </div>
+
+      <div class="close-area">
+        <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+}
+</div>
+
+<app-footer></app-footer>

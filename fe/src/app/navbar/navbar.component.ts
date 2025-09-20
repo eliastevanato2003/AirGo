@@ -37,8 +37,10 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
-    this.home();
+    if (confirm('Sei sicuro di voler effettuare il logout?')) {
+      this.authService.logout();
+      this.home();
+    }
   }
 
   airplanes(){
@@ -63,6 +65,14 @@ export class NavbarComponent implements OnInit {
 
   routes() {
     this.router.navigate(['/routes']);
+  }
+
+  adminairports(){
+    this.router.navigate(['/admin-airports']);
+  }
+
+  adminmodels(){
+    this.router.navigate(['/admin-models'])
   }
 
 }

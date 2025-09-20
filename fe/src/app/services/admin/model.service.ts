@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
-import { Model, NewModel } from '../../models/admin/model.models';
+import { Model, NewModel } from '../../models/admin/model.model';
 
 @Injectable({ providedIn: 'root' })
 export class ModelService {
@@ -28,17 +28,7 @@ export class ModelService {
   addModel(newModel: NewModel): Observable<any> {
     const url = `${this.baseUrl}/newModel`;
 
-    const body = {
-      Name: newModel.Name,
-      Seatspc: newModel.SeatsPC,
-      rowsb: newModel.RowsB,
-      columnsb: newModel.ColumnsB,
-      rowse: newModel.RowsE,
-      columnse: newModel.ColumnsE,
-      extralegrows: newModel.ExtraLegRows
-    };
-
-    return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
+    return this.http.post<any>(url, newModel, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }
@@ -68,7 +58,7 @@ export class ModelService {
   deleteModel(modelId: number): Observable<any> {
     const url = `${this.baseUrl}/deleteModel`;
     return this.http.request<any>('delete', url, {
-      body:modelId,
+      body: { id: modelId },
       headers: this.getHeaders() 
       }
     );

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
@@ -18,27 +18,27 @@ export class ModelService {
     });
   }
 
-  getModels(): Observable<Model[]> {
+  getModels(id?: number, name?: string): Observable<Model[]> {
     const url = `${this.baseUrl}/getModels`;
-    return this.http.get<Model[]>(url, { headers: this.getHeaders() }).pipe(
+
+    let params = new HttpParams();
+    if (id !== undefined && id !== null) {
+      params = params.set('id', id.toString());
+    }
+    if (name) {
+      params = params.set('name', name);
+    }
+
+    return this.http.get<Model[]>(url, { headers: this.getHeaders(), params }).pipe(
       tap()
     );
   }
 
+  
+
   addModel(newModel: NewModel): Observable<any> {
     const url = `${this.baseUrl}/newModel`;
-
-    const body = {
-      Name: newModel.Name,
-      Seatspc: newModel.SeatsPC,
-      rowsb: newModel.RowsB,
-      columnsb: newModel.ColumnsB,
-      rowse: newModel.RowsE,
-      columnse: newModel.ColumnsE,
-      extralegrows: newModel.ExtraLegRows
-    };
-
-    return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
+    return this.http.post<any>(url, newModel, { headers: this.getHeaders() }).pipe(
       tap()
     );
   }

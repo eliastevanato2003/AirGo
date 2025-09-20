@@ -6,7 +6,9 @@
 
       @if(isLoggedIn) {
         @if(userRole === 0) {
+          <li><button class="norm-btn" (click)="adminairports()">Aeroporti</button></li>
           <li><button class="norm-btn" (click)="adminairlines()">Compagnie aeree</button></li>
+          <li><button class="norm-btn" (click)="adminmodels()">Modelli</button></li>
           <li><button class="log-in-btn" (click)="profile()">Profilo</button></li>
         }
         @if(userRole === 1) {
