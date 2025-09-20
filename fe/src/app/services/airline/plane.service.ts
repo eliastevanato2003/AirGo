@@ -47,11 +47,11 @@ export class PlaneService {
   }
 
   deletePlane(idPlane: number): Observable<any> {
-  const url = `${this.baseUrl}/deletePlane`;
+    const url = `${this.baseUrl}/deletePlane`;
 
-  return this.http.request<any>('delete', url, {
-    body: { id: idPlane },
-    headers: this.getHeaders()
-  });
-}
+    return this.http.request<any>('delete', url, {
+      body: { id: idPlane },
+      headers: this.getHeaders()
+    });
+  }
 }

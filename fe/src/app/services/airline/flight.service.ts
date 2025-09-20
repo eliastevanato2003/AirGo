@@ -76,6 +76,19 @@ export class FlightService {
   }
 
   deleteFlight(flightId: number): Observable<any> {
-    return this.http.delete<any>(`${this.baseUrl}/deleteFlight?id=${flightId}`, { headers: this.getHeaders() }).pipe(tap());
+    return this.http.request<any>('delete', `${this.baseUrl}/deleteFlight`, { 
+      body: {id:flightId},
+      headers: this.getHeaders() 
+    });
   }
+
+  assignSeats(flightid: number): Observable<any> {
+    const url = `${this.baseUrl}/assignSeats`;
+    const body = { id: flightid };
+
+    return this.http.post<any>(url, body, {
+      headers: this.getHeaders()
+    });
+  }
+
 }

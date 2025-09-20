@@ -24,4 +24,33 @@ export class AirportService {
       tap()
     );
   }
+
+  newAirport(newairport: NewAirport): Observable<any>{
+    const url= `${this.baseUrl}/newAirport`;
+    return this.http.post<any>(url, newairport, {headers:this.getHeaders()}).pipe(tap());
+  }
+
+  deleteAirport(airportid: number): Observable<any[]>{
+    const url = `${this.baseUrl}/deleteAirport`;
+    return this.http.request<any[]>('delete', url, {
+      body: {id:airportid},
+      headers: this.getHeaders()
+    });
+  }
+
+  updateAirport(
+        id: number,
+        data: {
+        city?: string,
+        county?: string,
+        name?: string,
+        identificationcode?: string
+        }
+    ): Observable<any> {
+        const url = `${this.baseUrl}/updateAirport`;
+        const body = { id, ...data };
+
+        return this.http.post<any>(url, body, { headers: this.getHeaders() });
+    }
+
 }

@@ -25,6 +25,9 @@ export class ModelsComponent implements OnInit{
   newModel: NewModel | null = null;
   newModelForm: FormGroup;
   evenNumbers = [2, 4, 6, 8];
+  showEdit = false;
+  editModelForm!: FormGroup;
+  previewExtraLegEdit: number[] = [];
 
   constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
     this.newModelForm = this.fb.group({
@@ -36,6 +39,7 @@ export class ModelsComponent implements OnInit{
       cole: ['', [Validators.required, Validators.min(0)]],
       extraleg: ['', Validators.pattern(/^(\s*\d+\s*,)*\s*\d+\s*$/)]
     });
+    this
    }
     
 
@@ -81,19 +85,6 @@ export class ModelsComponent implements OnInit{
     });
   }
 
-  deleteModel(modelId: number): void {
-    if (!confirm('Sei sicuro di voler eliminare questo modello?')) return;
-    this.modelService.deleteModel(modelId).subscribe({
-      next: () => {
-        alert('Modello eliminato');
-        this.closeManage();
-        this.loadModels();
-      },
-      error: (err) => console.error('Errore eliminazione modello', err)
-    });
-  }
-
-
   closeCreate(): void {
     this.showModal = false;
     this.newModelForm.reset();
@@ -131,5 +122,7 @@ export class ModelsComponent implements OnInit{
     this.selectedModel = null;
   }
 
+  openEdit(selected:Model): void{
 
+  }
 }

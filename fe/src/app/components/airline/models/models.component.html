@@ -108,8 +108,7 @@
 
             <!-- PULSANTI DESTRA -->
             <div class="info-actions" style="margin-left:auto;">
-            <button class="action-btn">Modifica</button>
-            <button class="delete-btn" (click)="deleteModel(selectedModel.IdModello)">Elimina</button>
+            <button class="action-btn" (click)="openEdit(selectedModel)">Modifica</button>
             </div>
         </div>
 
@@ -118,6 +117,59 @@
             <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
         </div>
         </div>
+        @if(showEdit && selectedModel) {
+          <div class="modal-overlay">
+            <div class="modal-content">
+              <h3>Modifica modello #{{selectedModel.IdModello}}</h3>
+              <form [formGroup]="editModelForm" (ngSubmit)="saveEdit()">
+
+                <label>Nome modello</label>
+                <input type="text" formControlName="name" placeholder="{{selectedModel.Nome}}">
+
+                <label>Posti prima classe</label>
+                <input type="number" formControlName="seatspc" placeholder="{{selectedModel.PostiPc}}">
+
+                <label>Righe Business</label>
+                <input type="number" formControlName="rowsb" placeholder="{{selectedModel.RigheB}}">
+
+                <label>Colonne Business</label>
+                <select formControlName="columnsb">
+                  <option value="" disabled>Seleziona numero colonne</option>
+                  @for (i of evenNumbers; track i) {
+                    <option [value]="i">{{ i }}</option>
+                  }
+                </select>
+
+                <label>Righe Economy</label>
+                <input type="number" formControlName="rowse" placeholder="{{selectedModel.RigheE}}">
+
+                <label>Colonne Economy</label>
+                <select formControlName="columnse">
+                  <option value="" disabled>Seleziona numero colonne</option>
+                  @for (i of evenNumbers; track i) {
+                    <option [value]="i">{{ i }}</option>
+                  }
+                </select>
+
+                <label>Righe con spazio extra per le gambe</label>
+                <input type="text" formControlName="extralegrows" placeholder="es. 1,2,3">
+
+                @if(previewExtraLegEdit.length > 0) {
+                  <div class="preview-extraleg">
+                    <small>Anteprima righe: {{ previewExtraLegEdit.join(', ') }}</small>
+                  </div>
+                }
+
+                <div class="modal-buttons">
+                  <button type="submit" class="add-btn">Salva modifiche</button>
+                  <button type="button" class="cancel-btn" (click)="closeEdit()">Annulla</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        }
+
     </div>
     }
 

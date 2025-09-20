@@ -33,10 +33,26 @@ export class RouteService {
   }
 
   deleteRoute(routeid: number): Observable<any> {
-    const url = `${this.baseUrl}/deleteFlightRoute/${routeid}`;
-    return this.http.delete<any>(url, { headers: this.getHeaders() }).pipe(
-      tap()
+    const url = `${this.baseUrl}/deleteFlightRoute`;
+    return this.http.request<any>('delete', url, { 
+      body: {id:routeid},
+      headers: this.getHeaders() }
     );
   }
+
+  updateRoute(id: number, from: string, to: string): Observable<any> {
+  const url = `${this.baseUrl}/updateFlightRoute`;
+
+  const body = {
+    id: id,
+    from: from,
+    to: to
+  };
+
+  return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
+    tap()
+  );
+}
+
 
 }

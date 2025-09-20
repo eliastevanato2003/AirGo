@@ -56,14 +56,15 @@ export class AirlineService {
             'Authorization': `Bearer ${token}`
         });
         
-        console.log(token);
 
         const message = {
             id: id
         };
 
-        return this.http.post(url, message, { headers: headers }).pipe(
-            tap(() => console.log('Airline eliminata correttamente'))
-        );
+        return this.http.request<any>('delete', url, {
+              body: message,
+              headers: headers
+            });
+        
     }
 }

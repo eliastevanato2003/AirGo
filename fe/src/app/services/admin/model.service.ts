@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
-import { Model, NewModel } from '../../models/airline/model.model';
+import { Model, NewModel } from '../../models/admin/model.models';
 
 @Injectable({ providedIn: 'root' })
 export class ModelService {
@@ -62,6 +62,15 @@ export class ModelService {
       headers: this.getHeaders()
     }).pipe(
       tap()
+    );
+  }
+
+  deleteModel(modelId: number): Observable<any> {
+    const url = `${this.baseUrl}/deleteModel`;
+    return this.http.request<any>('delete', url, {
+      body:modelId,
+      headers: this.getHeaders() 
+      }
     );
   }
   
