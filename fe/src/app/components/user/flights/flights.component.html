@@ -3,44 +3,61 @@
 
   <div class="hero">
     <h1>Le migliori offerte ti aspettano</h1>
-    <div class="search-box">
+    <div class="search-box" [formGroup]="searchFlightsForm">
       <div class="input-group">
         <label>Da</label>
-        <input type="text" [value]="from">
+        <input type="text" formControlName="from" placeholder="Partenza">
+        <ul class="dropdown" *ngIf="fromAirports$ | async as fromAirports">
+          @for(airport of fromAirports; track airport.id) {
+          <li (click)="selectAirport('from', airport.code)">
+            {{ airport.name }} ({{ airport.code }})
+          </li>
+          }
+        </ul>
       </div>
       <div class="input-group">
         <label>A</label>
-        <input type="text" [value]="to">
+        <input type="text" formControlName="to" placeholder="Destinazione">
+        <ul class="dropdown" *ngIf="toAirports$ | async as toAirports">
+          @for(airport of toAirports; track airport.id) {
+          <li (click)="selectAirport('to', airport.code)">
+            {{ airport.name }} ({{ airport.code }})
+          </li>
+          }
+        </ul>
       </div>
       <div class="input-group">
-        <label>Andata</label>
-        <input type="date" [value]="departureDate">
+        <label>Data partenza</label>
+        <input type="date" formControlName="departureDate">
       </div>
       <div class="input-group">
-        <label>Ritorno</label>
-        <input type="date" [value]="returnDate">
+        <label>Data arrivo</label>
+        <input type="date" formControlName="arrivalDate">
       </div>
-      <button class="search-btn" type="button" (click)="searchFlights()">&#10141;</button>
+      <button class="search-btn" type="button" routerLink="/flightslist" [queryParams]="{ data: getData() | json }"
+        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">&#10141;</button>
     </div>
   </div>
   <div class="why-us">
     <h2>Perché scegliere AirGo</h2>
     <div class="cards-container">
-      
+
       <div class="card">
         <div class="card-icon">
           <span class="icon">🏆</span>
         </div>
         <h3>Prezzi imbattibili</h3>
-        <p>Confrontiamo migliaia di offerte da centinaia di compagnie aeree per garantirti sempre il prezzo più basso sul mercato.</p>
+        <p>Confrontiamo migliaia di offerte da centinaia di compagnie aeree per garantirti sempre il prezzo più basso
+          sul mercato.</p>
       </div>
-      
+
       <div class="card">
         <div class="card-icon">
           <span class="icon">🌍</span>
         </div>
         <h3>Vasta scelta globale</h3>
-        <p>Accedi a un inventario globale di voli. Dalle capitali europee alle mete esotiche, ti portiamo ovunque tu voglia andare.</p>
+        <p>Accedi a un inventario globale di voli. Dalle capitali europee alle mete esotiche, ti portiamo ovunque tu
+          voglia andare.</p>
       </div>
 
       <div class="card">
@@ -48,7 +65,8 @@
           <span class="icon">🔒</span>
         </div>
         <h3>Prenotazione sicura e semplice</h3>
-        <p>Il nostro sistema di prenotazione è intuitivo, veloce e protetto con i più alti standard di sicurezza per la tua tranquillità.</p>
+        <p>Il nostro sistema di prenotazione è intuitivo, veloce e protetto con i più alti standard di sicurezza per la
+          tua tranquillità.</p>
       </div>
 
     </div>

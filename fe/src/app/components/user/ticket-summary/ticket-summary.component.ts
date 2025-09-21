@@ -59,6 +59,7 @@ export class TicketSummaryComponent implements OnInit {
     });
   }
 
+  // TODO: addTicket non funziona (price non corretto)
   confirmPayment() {
     if (this.paymentForm.valid) {
       this.confirmed = true;
@@ -71,7 +72,7 @@ export class TicketSummaryComponent implements OnInit {
             console.log('Biglietto creato correttamente', res);
           },
           error: (err) => {
-            console.error('Errore nella creazione del biglietto', err.message);
+            console.error('Errore nella creazione del biglietto', err);
           }
         });
       }

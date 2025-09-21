@@ -1,5 +1,6 @@
 <app-navbar></app-navbar>
 <app-ticket-bar></app-ticket-bar>
+
 <div class="container">
     <h2>Seleziona il tuo posto</h2>
 
@@ -10,49 +11,60 @@
             (input)="onTicketCountChange()" />
     </div>
 
-    <div class="seat-map">
-        <!-- Prima classe (First Class) -->
-        <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected}"
-            (click)="selectSeat(getSeat(0, '0')!)">
-            Prima classe
-        </div>
-
-        <!-- Business + Economy (dinamico in base ai posti) -->
-        <div *ngFor="let rowGroup of groupedSeats" class="seat-row">
-            @if(rowGroup.seats[0].id !== '00') {
-            <!-- Lato sinistro (A, B, C) -->
-            <div *ngFor="let seat of rowGroup.seats.slice(0, rowGroup.seats.length/2)" class="seat" [ngClass]="{
-                  'business': seat.type === 'business',
-                  'economy': seat.type === 'economy',
-                  'selected': seat.selected,
-                  'unavailable': seat.unavailable
-                }" (click)="selectSeat(seat)">
-                {{ seat.row }}{{ seat.column }}
+    <div class="seat-selection">
+        <!-- Mappa dei posti -->
+        <div class="seat-map">
+            <!-- Prima classe (First Class) -->
+            <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected}"
+                (click)="selectSeat(getSeat(0, '0')!)">
+                Prima classe
             </div>
 
-            <!-- Corridoio -->
-            <div class="aisle-space"></div>
-
-            <!-- Lato destro (D, E, F) -->
-            <div *ngFor="let seat of rowGroup.seats.slice(rowGroup.seats.length/2, rowGroup.seats.length)" class="seat" [ngClass]="{
+            <!-- Business + Economy (dinamico in base ai posti) -->
+            @for(rowGroup of groupedSeats; track rowGroup.seats[0].id) {
+            <div class="seat-row">
+                @if(rowGroup.seats[0].id !== '00') {
+                <!-- Lato sinistro (A, B, C) -->
+                @for(seat of rowGroup.seats.slice(0, rowGroup.seats.length/2); track seat.id) {
+                <div class="seat" [ngClass]="{
                   'business': seat.type === 'business',
                   'economy': seat.type === 'economy',
                   'selected': seat.selected,
-                  'unavailable': seat.unavailable
+                  'unavailable': seat.unavailable,
+                  'extralegroom': seat.extraLegroom
                 }" (click)="selectSeat(seat)">
-                {{ seat.row }}{{ seat.column }}
+                    {{ seat.row }}{{ seat.column }}
+                </div>
+                }
+
+                <!-- Corridoio -->
+                <div class="aisle-space"></div>
+
+                <!-- Lato destro (D, E, F) -->
+                @for(seat of rowGroup.seats.slice(rowGroup.seats.length/2, rowGroup.seats.length); track seat.id) {
+                <div class="seat" [ngClass]="{
+                  'business': seat.type === 'business',
+                  'economy': seat.type === 'economy',
+                  'selected': seat.selected,
+                  'unavailable': seat.unavailable,
+                  'extralegroom': seat.extraLegroom
+                }" (click)="selectSeat(seat)">
+                    {{ seat.row }}{{ seat.column }}
+                </div>
+                }
+                }
             </div>
             }
         </div>
 
-        <!-- Etichette per le classi -->
-        <div class="labels">
-            <div class="business-label">Business</div>
-            <div class="economy-label">Economy</div>
-        </div>
+        <!-- Etichette per le classi con icone -->
+        <div class="business-label" [ngClass]="businessLabel" (click)="selectRandomSeat('business')">Business</div>
+        <div class="economy-label" [ngClass]="economyLabel" (click)="selectRandomSeat('economy')">Economy</div>
     </div>
 
-    <button type="submit" class="submit-button" routerLink="/baggageselection" [queryParams]="{ flightId: flightId, chseat: chseat | json, seatclass: getSeatClass() | json, ticketCount: ticketCount | json, price: price, seats: getSelectedSeats() | json }" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Continua</button>
+    <button type="submit" class="submit-button" routerLink="/baggageselection"
+        [queryParams]="{ flightId: flightId, chseat: chseat | json, seatclass: getSeatClass() | json, ticketCount: ticketCount | json, price: price, seats: getSelectedSeats() | json }"
+        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Continua</button>
 </div>
 
 <app-footer></app-footer>

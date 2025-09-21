@@ -1,3 +1,4 @@
--Su component airplanes: delete, avviso data aereo troppo bassa
+-Select con digitazione
 -Alert più carine
 -Controllo 24h partenze
+-Guarda su route di airline

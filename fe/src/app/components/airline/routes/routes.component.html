@@ -14,8 +14,8 @@
   <h3>Filtra Rotte</h3>
   <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
     
-    <label>ID Rotta</label>
-    <input type="number" formControlName="id" placeholder="ID rotta">
+    <label>ID</label>
+    <input type="number" formControlName="id" placeholder="">
 
     <label>Aeroporto di partenza</label>
     <select formControlName="departure">
@@ -79,7 +79,7 @@
         </select>
 
         <label>Aeroporto di arrivo</label>
-        <select formControlName="from">
+        <select formControlName="to">
         <option value="" disabled>Seleziona un aeroporto</option>
         @for(airport of airports; track airport.IdAeroporto) {
             <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
@@ -114,7 +114,7 @@
 
        
         <div class="info-actions">
-            <button class="action-btn">Modifica</button>
+            <button class="action-btn" (click)="openEdit()">Modifica</button>
             <button class="delete-btn" (click)="deleteRoute(selectedRoute.IdRotta)">Elimina</button>
         </div>
       </div>
@@ -123,6 +123,42 @@
         <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
       </div>
     </div>
+
+
+     @if(showEdit && selectedRoute) {
+          <div class="modal-overlay">
+            <div class="modal-content">
+              <h3>Modifica rotta #{{selectedRoute.IdRotta}}</h3>
+              <form [formGroup]="editRouteForm" (ngSubmit)="saveEdit()">
+
+
+                <label>Aeroporto di partenza</label>
+                <select formControlName="from">
+                <option value="" disabled>Seleziona un aeroporto</option>
+                @for(airport of airports; track airport.IdAeroporto) {
+                    <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+                }
+                </select>
+
+                <label>Aeroporto di arrivo</label>
+                <select formControlName="to">
+                <option value="" disabled>Seleziona un aeroporto</option>
+                @for(airport of airports; track airport.IdAeroporto) {
+                    <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+                }
+                </select>
+
+                <div class="modal-buttons">
+                  <button type="submit" class="save-btn">Salva</button>
+                  <button type="button" class="dismiss-btn" (click)="closeEdit()">Annulla</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        }
+
+
   </div>
 }
 </div>

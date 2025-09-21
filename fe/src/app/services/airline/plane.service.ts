@@ -31,7 +31,7 @@ export class PlaneService {
     if (filters.id != null) params = params.set('id', filters.id.toString());
     if (filters.airline != null) params = params.set('airline', filters.airline.toString());
     if (filters.model != null) params = params.set('model', filters.model.toString());
-    if (filters.constructionYear != null) params = params.set('costructionyear', filters.constructionYear.toString());
+    if (filters.constructionYear != null) params = params.set('constructionyear', filters.constructionYear.toString());
     if (filters.inservice != null) params = params.set('inservice', filters.inservice.toString());
 
     return this.http.get<Plane[]>(`${this.baseUrl}/getPlanes`, { 

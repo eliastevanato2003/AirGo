@@ -9,6 +9,25 @@
     <button class="add-btn" (click)="showModal=true">Nuovo modello</button>
   </div>
 </div>
+
+<div class="filters">
+  <h3>Filtra Modelli</h3>
+  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
+
+    <label>ID</label>
+    <input type="number" formControlName="id">
+
+    <label>Nome</label>
+    <input type="text" formControlName="name">
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
+    </div>
+  </form>
+</div>
+
+
 <div class="second-container">
   <div class="model-list">
     @for(model of models; track model.IdModello) {

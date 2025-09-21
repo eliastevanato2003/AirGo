@@ -1,30 +1,4 @@
 
-.flights-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 30px auto 50px auto;
-    padding: 20px;
-}
-
-.flights-container .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.flights-container .header h2 {
-    font-size: 26px;
-    color: #3b5998;
-    margin-bottom: 8px;
-}
-
-.flights-container .header p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
-}
-
 .flight-list {
     display: flex;
     flex-direction: column;
@@ -53,7 +27,7 @@
     gap: 1rem;
 }
 
-.flight-status {
+.flight-status h4{
     flex: 0 0 100px;
     font-weight: bold;
     color: #ff7f50;
@@ -90,4 +64,78 @@
 .arrow {
     font-size: 20px;
     color: #888;
+}
+
+.t {
+    display: flex;
+    flex-direction: row;
+}
+
+.filters-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 16px;
+}
+
+.filter-item {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.filter-block {
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 6px;
+}
+
+.filter-block h4 {
+  margin: 0 0 8px 0;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+
+.info-box {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  overflow: hidden;
+}
+
+.info-box h4 {
+  margin: 0;
+  padding: 10px;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.info-content {
+  padding: 10px;
+  background: #fff;
+}
+
+.check-btn {
+    background: #facc15; 
+    color: #333;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.check-btn:hover {
+    background: #eab308;
 }
