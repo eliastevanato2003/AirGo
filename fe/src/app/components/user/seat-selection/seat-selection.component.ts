@@ -68,7 +68,8 @@ export class SeatSelectionComponent implements OnInit {
   generateSeats() {
     this.ticketService.getTickets(this.flight!.IdVolo).subscribe({
       next: (response) => {
-        const bookedSeats = response.tickets;
+        console.log(response);
+        const bookedSeats = response.tickets ? response.tickets : [];
         console.log('Booked Seats:', bookedSeats);
         // bookedSeats = response;
 
