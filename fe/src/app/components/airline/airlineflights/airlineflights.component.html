@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="flights-container">
+<div class="first-container">
   <div class="header">
     <div class="title-group">
       <h2>Gestione dei Voli</h2>
@@ -8,14 +8,89 @@
     </div>
     <button class="add-btn" (click)="showCreate=true">Aggiungi volo</button>
   </div>
+</div>
 
+
+<div class="filters">
+  <h3>Filtra Voli</h3>
+  <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
+
+    <!-- RIGA SUPERIORE: ID volo e Stato -->
+    <div class="filter-row">
+      <div class="filter-item">
+        <label>ID Volo</label>
+        <input type="number" formControlName="id" placeholder="ID Volo">
+      </div>
+      <div class="filter-item">
+        <label>Stato</label>
+        <select formControlName="status">
+          <option value="All">Tutti</option>
+          <option value="Programmato">Programmato</option>
+          <option value="Decollato">Decollato</option>
+          <option value="Atterrato">Atterrato</option>
+          <option value="Cancellato">Cancellato</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- BLOCCO PARTENZA -->
+    <div class="filter-block">
+      <h4>Partenza</h4>
+      <div class="filter-row">
+        <div class="filter-item">
+          <label>Aeroporto (ID)</label>
+          <input type="number" formControlName="departure">
+        </div>
+        <div class="filter-item">
+          <label>Data minima</label>
+          <input type="date" formControlName="mindatedeparture">
+        </div>
+        <div class="filter-item">
+          <label>Data massima</label>
+          <input type="date" formControlName="maxdatedeparture">
+        </div>
+      </div>
+    </div>
+
+    <!-- BLOCCO ARRIVO -->
+    <div class="filter-block">
+      <h4>Arrivo</h4>
+      <div class="filter-row">
+        <div class="filter-item">
+          <label>Aeroporto (ID)</label>
+          <input type="number" formControlName="arrival">
+        </div>
+        <div class="filter-item">
+          <label>Data minima</label>
+          <input type="date" formControlName="mindatearrival">
+        </div>
+        <div class="filter-item">
+          <label>Data massima</label>
+          <input type="date" formControlName="maxdatearrival">
+        </div>
+      </div>
+    </div>
+
+    <!-- BOTTONI -->
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica filtri</button>
+      <button type="button" (click)="reset()" class="cancel-btn">Reset</button>
+    </div>
+
+  </form>
+</div>
+>
+
+
+<div class="second-container">
  @if(flights) {
   <div class="flight-list">
     @for(flight of flights; track flight.IdVolo) {
       <div class="flight-bar">
         <div class="flight-status">
           <h4>Volo #{{ flight.IdVolo }}</h4>
-          <span>{{ flight.Stato }}</span>
+          <p class="time">{{ flight.DataPartenzaPrev | date:'dd-MM-yyyy' }}</p>
+          <p>Stato: {{ flight.Stato }}</p>
         </div>
 
         <div class="flight-route">
@@ -28,8 +103,11 @@
 
           <div class="codes">
             <p class="code">{{ flight.CodiceArrivo }}</p>
-            <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}</p>
-          </div>
+            <div class="t">
+              <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}
+              @if(flight.DataArrivoPrev && flight.DataPartenzaPrev && (flight.DataArrivoPrev | date:'yyyy-MM-dd') !== (flight.DataPartenzaPrev | date:'yyyy-MM-dd')){+1}</p>
+            </div>
+            </div>
         </div>
 
         <button class="add-btn" (click)="gestisci(flight)">Gestisci</button>
@@ -102,35 +180,69 @@
 
       <div class="manage-body containerb">
         <div class="info-details">
-          <div class="info-box">
-            <h4>Info Volo</h4>
-            <p><strong>Partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}}) - {{selectedFlight.DataPartenzaPrev}}</p>
-            <p><strong>Arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}}) - {{selectedFlight.DataArrivoPrev}}</p>
+
+  
+        <div class="info-box">
+          <h4 (click)="toggleSection('volo')">
+            Info Volo
+            <span>{{ expandedSection === 'volo' ? '▲' : '▼' }}</span>
+          </h4>
+          @if(expandedSection==='volo'){
+          <div class="info-content">
+            <p><strong>Aeroporto di partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}})</p>
+            <p><strong>Orario di partenza:</strong> {{selectedFlight.DataPartenzaPrev}} - {{selectedFlight.DataPartenzaEff}}</p>
+            <p><strong>Aeroporto di arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}})</p>
+            <p><strong>Orario di arrivo:</strong> {{selectedFlight.DataArrivoPrev}} - {{selectedFlight.DataArrivoEff}}</p>
             <p><strong>Stato:</strong> {{selectedFlight.Stato}}</p>
           </div>
+        }
+        </div>
 
-          <div class="info-box">
-            <h4>Classi</h4>
+       
+        <div class="info-box">
+          <h4 (click)="toggleSection('classi')">
+            Classi
+            <span>{{ expandedSection === 'classi' ? '▲' : '▼' }}</span>
+          </h4>
+          @if(expandedSection==='classi'){
+          <div class="info-content">
             <p><strong>Prima Classe:</strong> {{selectedFlight.CostoPC}}€</p>
             <p><strong>Business:</strong> {{selectedFlight.CostoB}}€</p>
             <p><strong>Economy:</strong> {{selectedFlight.CostoE}}€</p>
           </div>
+        }
+        </div>
 
-          <div class="info-box">
-            <h4>Extra</h4>
+        <div class="info-box">
+          <h4 (click)="toggleSection('extra')">
+            Extra
+            <span>{{ expandedSection === 'extra' ? '▲' : '▼' }}</span>
+          </h4>
+          @if(expandedSection==='extra'){
+          <div  class="info-content">
             <p><strong>Bagaglio Extra:</strong> {{selectedFlight.CostoBag}}€</p>
             <p><strong>Spazio Gambe:</strong> {{selectedFlight.CostoLegRoom}}€</p>
             <p><strong>Scelta Posto:</strong> {{selectedFlight.CostoSceltaPosto}}€</p>
           </div>
+        }
         </div>
+
+      </div>
+
 
        
         <div class="info-actions" style="margin-left:auto;">
           @if(selectedFlightStatus === 'Programmato') {
+            <button class="check-btn" (click)="checkin(selectedFlight.IdVolo)">Check-in</button>
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
+            <button class="add-btn" (click)="openEditPrices()">Modifica prezzi</button>
+            <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Elimina</button>
           }
           @if(selectedFlightStatus === 'Decollato') {
             <button class="action-btn" (click)="atterraggioVolo(selectedFlight.IdVolo)">Atterraggio</button>
+          }
+          @if(selectedFlightStatus === 'Atterrato') {
+            <button class="add-btn" (click)="openEditDates()">Modifica orari</button>
           }
         </div>
       </div>
@@ -139,6 +251,52 @@
         <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
       </div>
     </div>
+
+     <!-- Modale Edit Prezzi -->
+    @if(showEditPrices) {
+      <div class="modal-overlay">
+        <div class="modal-content">
+          <h3>Modifica Prezzi</h3>
+          <form [formGroup]="editPricesForm" (ngSubmit)="saveEditPrices()">
+            <label>Prezzo Prima Classe</label>
+            <input type="number" formControlName="pcprice">
+
+            <label>Prezzo Business</label>
+            <input type="number" formControlName="bprice">
+
+            <label>Prezzo Economy</label>
+            <input type="number" formControlName="eprice">
+
+            <div class="modal-buttons">
+              <button type="submit" class="add-btn" [disabled]="editPricesForm.invalid">Salva</button>
+              <button type="button" class="cancel-btn" (click)="closeEditPrices()">Annulla</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
+    <!-- Modale Edit Date Effettive -->
+    @if(showEditDates) {
+      <div class="modal-overlay">
+        <div class="modal-content">
+          <h3>Modifica Orari Effettivi</h3>
+          <form [formGroup]="editDatesForm" (ngSubmit)="saveEditDates()">
+            <label>Data Partenza Effettiva</label>
+            <input type="datetime-local" formControlName="effdepdate">
+
+            <label>Data Arrivo Effettiva</label>
+            <input type="datetime-local" formControlName="effarrdate">
+
+            <div class="modal-buttons">
+              <button type="submit" class="add-btn" [disabled]="editDatesForm.invalid">Salva</button>
+              <button type="button" class="cancel-btn" (click)="closeEditDates()">Annulla</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+
   </div>
 }
 

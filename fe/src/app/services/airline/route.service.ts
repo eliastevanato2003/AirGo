@@ -23,9 +23,9 @@ export class RouteService {
 
     let params = new HttpParams();
     if (filters) {
-      if (filters.id) params = params.set('id', filters.id);
-      if (filters.departure) params = params.set('departure', filters.departure);
-      if (filters.arrival) params = params.set('arrival', filters.arrival);
+      if (filters.id) params = params.set('id', filters.id.toString());
+      if (filters.departure) params = params.set('departure', filters.departure.toString());
+      if (filters.arrival) params = params.set('arrival', filters.arrival.toString());
     }
 
     return this.http.get<Route[]>(url, { headers: this.getHeaders(), params }).pipe(

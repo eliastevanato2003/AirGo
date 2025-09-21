@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
@@ -18,26 +18,40 @@ export class FlightService {
     });
   }
 
-  getFlights(): Observable<FlightDb[]> {
-    const url = `${this.baseUrl}/getFlights?status=All`;
-    return this.http.get<FlightDb[]>(url, { headers: this.getHeaders() }).pipe(
+  getFlights(filters: {
+    id?: number;
+    airline?: number;
+    departure?: number;
+    arrival?: number;
+    datedeparture?: string;     // YYYY-MM-DD
+    datearrival?: string;       // YYYY-MM-DD
+    mindatedeparture?: string;  // YYYY-MM-DD
+    maxdatedeparture?: string;  // YYYY-MM-DD
+    mindatearrival?: string;    // YYYY-MM-DD
+    maxdatearrival?: string;    // YYYY-MM-DD
+    order?: number;
+    plane?: number;
+    status?: string;            // Programmato, Decollato, Atterrato, Cancellato, All
+  } = {}): Observable<FlightDb[]> {
+    const url = `${this.baseUrl}/getFlights`;
+
+    let params = new HttpParams();
+
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value != null) {
+        params = params.set(key, value.toString());
+      }
+    });
+
+    if (!filters.status) {
+      params = params.set('status', 'All');
+    }
+
+    return this.http.get<FlightDb[]>(url, { headers: this.getHeaders(), params }).pipe(
       tap()
     );
   }
 
-  getFlightsByAirline(airlineId: number): Observable<FlightDb[]> {
-    const url = `${this.baseUrl}/getFlights?airline=${airlineId}&status=All`;
-    return this.http.get<FlightDb[]>(url, { headers: this.getHeaders() }).pipe(
-      tap()
-    );
-  }
-
-  getFlightById(flightId: number): Observable<FlightDb>{
-    const url=`${this.baseUrl}/getFlights?id=${flightId}&status=All` ;
-    return this.http.get<FlightDb>(url, { headers: this.getHeaders() }).pipe(
-      tap()
-    );
-  }
 
 
   getFlightStatus(flightId: number): Observable<any> {

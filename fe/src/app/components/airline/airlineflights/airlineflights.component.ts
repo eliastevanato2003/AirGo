@@ -33,6 +33,12 @@ export class AirlineFlightsComponent implements OnInit {
   selectedFlight: FlightDb | null = null;
   showManage = false;
   selectedFlightStatus: string | null = null;
+  filterForm: FormGroup;
+  expandedSection: string | null = null;
+  showEditPrices=false;
+  showEditDates=false;
+  editPricesForm!: FormGroup;
+  editDatesForm!: FormGroup;
 
   constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService) {
     this.newFlightForm = this.fb.group({
@@ -47,6 +53,17 @@ export class AirlineFlightsComponent implements OnInit {
       lrprice: ['', [Validators.required, Validators.min(0)]],
       scprice: ['', [Validators.required, Validators.min(0)]],
     });
+    this.filterForm = this.fb.group({
+      id: [''],
+      departure: [''],
+      arrival: [''],
+      mindatedeparture: [''],
+      maxdatedeparture: [''],
+      mindatearrival: [''],
+      maxdatearrival: [''],
+      status: ['All']
+    });
+
   }
 
    ngOnInit(): void {
@@ -61,9 +78,10 @@ export class AirlineFlightsComponent implements OnInit {
     }
   }
 
-  private loadFlights(): void {
+  private loadFlights(filters:any={}): void {
     if (!this.airlineId) return;
-    this.flightService.getFlightsByAirline(this.airlineId).subscribe({
+    filters.airline = this.airlineId;
+    this.flightService.getFlights(filters).subscribe({
       next: (flights) => this.flights = flights,
       error: (err) => console.error('Errore caricamento voli', err)
     });
@@ -72,7 +90,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   private loadPlanes(): void {
     if (!this.airlineId) return;
-    this.planeService.getPlanes({id:this.airlineId}).subscribe({
+    this.planeService.getPlanes({airline:this.airlineId}).subscribe({
       next: (planes) => this.planes = planes,
       error: (err) => console.error('Errore caricamento aerei', err)
     });
@@ -87,15 +105,6 @@ export class AirlineFlightsComponent implements OnInit {
     console.log(this.routes);
   }
 
-  private loadFlightById(flightId: number): void {
-    this.flightService.getFlightById(flightId).subscribe({
-      next: (flight) => {
-        this.selectedFlight = flight;
-        this.selectedFlightStatus = flight.Stato;
-      },
-      error: (err) => console.error('Errore caricamento volo', err)
-    });
-  }
 
   addFlight(): void {
     if (this.newFlightForm.invalid) {
@@ -122,7 +131,7 @@ export class AirlineFlightsComponent implements OnInit {
       next: (res) => {
         alert('Volo creato con successo');
         this.newFlightForm.reset();
-        this.loadFlights();
+        this.filtra();
         this.showCreate = false;
       },
       error: (err) => {
@@ -146,14 +155,15 @@ export class AirlineFlightsComponent implements OnInit {
     this.showManage = false;
     this.selectedFlight = null;
     this.selectedFlightStatus = null;
+    this.expandedSection=null;
   }
 
   decolloVolo(idvolo: number): void {
     this.flightService.markDeparture(idvolo).subscribe({
       next: (res) => {
         alert('Volo segnato come decollato');
-        this.loadFlights();
-        this.loadFlightById(idvolo);
+        this.filtra();
+        this.closeManage();
       },
       error: (err) => {
         console.error('Errore durante la partenza del volo:', err);
@@ -165,8 +175,8 @@ export class AirlineFlightsComponent implements OnInit {
     this.flightService.markArrival(idvolo).subscribe({
       next: (res) => {
         alert('Volo segnato come atterrato');
-        this.loadFlights();
-        this.loadFlightById(idvolo);
+        this.filtra();
+        this.closeManage();
       },
       error: (err) => {
         console.error('Errore durante l\'atterraggio del volo:', err);
@@ -175,6 +185,159 @@ export class AirlineFlightsComponent implements OnInit {
   }
 
 
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
 
+    Object.keys(filters).forEach(key => {
+      if (!filters[key]) delete filters[key];
+    });
+
+    this.loadFlights(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset({ status: 'All' });
+    this.filtra();
+  }
+
+  toggleSection(section: string): void {
+    this.expandedSection = this.expandedSection === section ? null : section;
+  }
+
+  cancellaVolo(id:number):void{
+    if (confirm('Sei sicuro di voler eliminare questo volo?')) {
+      this.flightService.deleteFlight(id).subscribe({
+        next: (res) => {
+          alert('Volo eliminato con successo');
+          this.filtra();
+          this.closeManage();
+        },
+        error: (err) => {
+          console.error('Errore eliminazione volo', err);
+          alert(err.error?.message || 'Errore durante l\'eliminazione');
+        }
+      });
+    }
+  }
+
+  checkin(id:number):void{
+
+
+    this.flightService.assignSeats(id).subscribe({
+      next: (res) => {
+        alert('Check-in effettuato con successo');
+        this.filtra();
+        this.closeManage();
+      },
+      error: (err) => {
+        console.error('Errore nel check-in del volo', err);
+        alert(err.error?.message || 'Errore durante il check-in');
+      }
+    });
+  }
+
+  // === PER I PREZZI ===
+  openEditPrices(): void {
+    if (!this.selectedFlight) return;
+
+    this.editPricesForm = this.fb.group({
+      pcprice: [this.selectedFlight.CostoPC, [Validators.required, Validators.min(0)]],
+      bprice: [this.selectedFlight.CostoB, [Validators.required, Validators.min(0)]],
+      eprice: [this.selectedFlight.CostoE, [Validators.required, Validators.min(0)]],
+    });
+
+    this.showEditPrices = true;
+  }
+
+  closeEditPrices(): void {
+    this.showEditPrices = false;
+    this.editPricesForm.reset();
+  }
+
+  saveEditPrices(): void {
+    if (!this.selectedFlight || this.editPricesForm.invalid) return;
+
+    const f = this.editPricesForm.value;
+
+    // controlla se ci sono modifiche
+    if (f.pcprice === this.selectedFlight.CostoPC &&
+        f.bprice === this.selectedFlight.CostoB &&
+        f.eprice === this.selectedFlight.CostoE) {
+      this.closeEditPrices();
+      return;
+    }
+
+    this.flightService.updatePrices(
+      this.selectedFlight.IdVolo,
+      f.pcprice,
+      f.bprice,
+      f.eprice
+    ).subscribe({
+      next: () => {
+        alert("Prezzi aggiornati con successo");
+        this.closeEditPrices();
+        this.filtra(); // ricarica la lista filtrata
+        this.closeManage();
+      },
+      error: (err) => {
+        console.error("Errore aggiornamento prezzi", err);
+        alert(err.error?.message || "Errore durante l'aggiornamento dei prezzi");
+      }
+    });
+  }
+
+
+  // === PER LE DATE EFFETTIVE ===
+  openEditDates(): void {
+    if (!this.selectedFlight) return;
+
+    this.editDatesForm = this.fb.group({
+      effdepdate: [this.formatDateForInput(this.selectedFlight.DataPartenzaEff), Validators.required],
+      effarrdate: [this.formatDateForInput(this.selectedFlight.DataArrivoEff), Validators.required],
+    });
+
+    this.showEditDates = true;
+  }
+
+  closeEditDates(): void {
+    this.showEditDates = false;
+    this.editDatesForm.reset();
+  }
+
+  saveEditDates(): void {
+    if (!this.selectedFlight || this.editDatesForm.invalid) return;
+
+    const f = this.editDatesForm.value;
+
+    if (f.effdepdate === this.selectedFlight.DataPartenzaEff &&
+        f.effarrdate === this.selectedFlight.DataArrivoEff) {
+      this.closeEditDates();
+      return;
+    }
+
+    this.flightService.updateEffectiveDate(
+      this.selectedFlight.IdVolo,
+      f.effdepdate,
+      f.effarrdate
+    ).subscribe({
+      next: () => {
+        alert("Orari aggiornati con successo");
+        this.closeEditDates();
+        this.filtra();
+        this.closeManage();
+      },
+      error: (err) => {
+        console.error("Errore aggiornamento orari", err);
+        alert(err.error?.message || "Errore durante l'aggiornamento orari");
+      }
+    });
+  }
+
+
+  private formatDateForInput(date: any): string | null {
+    if (!date) return null;
+    const d = new Date(date);
+    return d.toISOString().slice(0,16);
+  }
 
 }

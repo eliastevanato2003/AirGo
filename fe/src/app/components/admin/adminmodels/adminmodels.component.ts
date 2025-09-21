@@ -77,7 +77,7 @@ export class AdminModelsComponent implements OnInit{
       next: () => {
         alert('Nuovo modello creato');
         this.closeCreate();
-        this.loadModels();
+        this.filtra();
       },
         error: (err) => {
           console.error('Errore creazione modello', err);
@@ -186,7 +186,7 @@ export class AdminModelsComponent implements OnInit{
       next: () => {
         alert('Modello aggiornato con successo');
         this.closeEdit();
-        this.loadModels(); 
+        this.filtra(); 
         this.closeManage();
       },
       error: (err) => {
@@ -213,7 +213,7 @@ export class AdminModelsComponent implements OnInit{
       this.modelService.deleteModel(modelId).subscribe({
         next: (res) => {
           alert('Modello eliminato con successo');
-          this.loadModels();
+          this.filtra();
           this.closeManage();
         },
         error: (err) => {

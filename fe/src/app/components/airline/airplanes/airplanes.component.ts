@@ -45,7 +45,7 @@ export class AirplanesComponent implements OnInit {
     id: ['', Validators.min(0)],
     model: [''],
     constructionYear: [''],
-    inservice: ['']
+    inservice: [true]
   });    
   }
 
@@ -94,7 +94,7 @@ export class AirplanesComponent implements OnInit {
       next: () => {
         alert('Nuovo aereo creato');
         this.closeModal();
-        this.loadPlanes();
+        this.filtra();
       },
       error: (err) => console.error('Errore creazione aereo', err)
     });
@@ -105,7 +105,7 @@ export class AirplanesComponent implements OnInit {
     this.planeService.deletePlane(id).subscribe({
       next: () => {
         alert('Aereo rimosso');
-        this.loadPlanes();
+        this.filtra();
       },
       error: (err) => console.error('Errore rimozione aereo', err)
     })
@@ -128,7 +128,7 @@ export class AirplanesComponent implements OnInit {
     this.planeService.changeService(id, false).subscribe({
       next: () => {
         alert('Aereo non più in servizio');
-        this.loadPlanes();
+        this.filtra();
       },
       error: (err) => console.error('Errore ritiro aereo', err)
     })
@@ -138,7 +138,7 @@ export class AirplanesComponent implements OnInit {
     this.planeService.changeService(id, true).subscribe({
       next: () => {
         alert('Aereo ora in servizio');
-        this.loadPlanes();
+        this.filtra();
       },
       error: (err) => console.error('Errore attivazione aereo', err)
     })
@@ -161,7 +161,7 @@ export class AirplanesComponent implements OnInit {
       id: '',
       model: '',
       constructionYear: '',
-      inservice: ''
+      inservice: true
     });
     this.loadPlanes();
   }
