@@ -12,6 +12,18 @@ exports.getAirports = async (req, res, next) => {
     }
 }
 
+exports.getAirportsLike = async (req, res, next) => {
+    try {
+        const { city } = req.query ?? {};
+        console.log("icoa")
+        const airports = await airportService.getAirportsLike(city);
+        res.json(airports);
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid query parameter" });
+        else next(err);
+    }
+}
+
 exports.newAirport = async (req, res, next) => {
     try {
         const { city, country, name, identificationcode } = req.body ?? {};

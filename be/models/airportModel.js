@@ -6,6 +6,13 @@ exports.getAirports = async (id, city, country, identificationcode) => {
     return result.rows;
 }
 
+exports.getAirportsLike = async (city) => {
+    const pattern = `${city}%`
+    const sql = 'SELECT * FROM "Aeroporti" WHERE "Citta" LIKE $1 AND "IsActive" = true';
+    const result = await pool.query(sql, [pattern]);
+    return result.rows;
+}
+
 exports.newAirport = async (city, country, name, identificationcode) => { 
     const sql = 'INSERT INTO "Aeroporti"("Citta", "Nazione", "Nome", "CodiceIdentificativo") VALUES ($1, $2, $3, $4);'
     const result = await pool.query(sql, [city, country, name, identificationcode]);

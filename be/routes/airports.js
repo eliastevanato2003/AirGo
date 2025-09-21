@@ -17,6 +17,15 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
 router.get("/getAirports", airportController.getAirports);
 
 /**
+ * @route GET /api/airports/getAirportsLike
+ * @description Restituisce le informazioni degli aeroporti filtrate con la funzione like sulla città
+ * @city La citta dell'aereoporto
+ * @returns {200} {object} Le info degli aeroporti 
+ * @returns {400} {message: string} Uno o più parametri invalidi 
+ */
+router.get("/getAirportsLike", airportController.getAirportsLike);
+
+/**
  * @route POST /api/airports/newAirport
  * @access role: 0
  * @description Crea un nuovo aeroporto
