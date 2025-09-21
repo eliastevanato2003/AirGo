@@ -40,17 +40,19 @@
       <!-- Sezione Bagagli -->
       <div class="container">
         <h2>Bagagli per il check-in</h2>
-        <div *ngFor="let option of options" [ngClass]="{selected: option.id === selectedOption[i]}"
-          (click)="selectOption(option.id, i)">
+        @for(option of options; track option.id) {
+        <div [ngClass]="{selected: option.id === selectedOption[i]}" (click)="selectOption(option.id, i)">
           <div class="title"><strong>{{ option.name }}</strong></div>
           <div class="price">{{ option.price }} €</div>
         </div>
+        }
       </div>
     </div>
     }
 
     <button type="submit" class="submit-button" [disabled]="!passengerForm.valid" (click)="submitted = true"
-      routerLink="/ticketsummary" [queryParams]="{ flightId: flightId, price: price, seats: seats | json, extraBag: extraBag | json, chseat: chseat | json, seatclass: seatclass | json, ticketCount: ticketCount, dobs: getDobArray() | json, names: getNameArray() | json, surnames: getSurnameArray() | json }"
+      routerLink="/ticketsummary"
+      [queryParams]="{ flightId: flightId, price: price, seats: seats | json, extraBag: extraBag | json, chseat: chseat | json, seatclass: seatclass | json, ticketCount: ticketCount, dobs: getDobArray() | json, names: getNameArray() | json, surnames: getSurnameArray() | json }"
       routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
       Continua
     </button>

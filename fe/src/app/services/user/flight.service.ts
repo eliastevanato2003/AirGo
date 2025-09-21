@@ -2,7 +2,6 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { tap } from "rxjs";
 import { FlightStatus } from "../../models/user/flight.model";
-import { Airport } from "../../models/user/airport.model";
 import { Model } from "../../models/airline/model.model";
 
 @Injectable({ providedIn: 'root' })
@@ -11,14 +10,34 @@ export class FlightService {
 
   getFlights(from: number, to: number, minDepartureDate: string, maxDepartureDate: string) {
     const url = 'http://localhost:3000/api/flights/getFlights';
+    let message;
 
     // Filtri della get
-    const message = {
+    if(from === 0 && to === 0) {
+      message = {
+        datedeparture: minDepartureDate,
+        datearrival: maxDepartureDate
+      };
+    } else if(from === 0) {
+      message = {
+        arrival: to,
+        datedeparture: minDepartureDate,
+        datearrival: maxDepartureDate
+      };
+    } else if(to === 0) {
+      message = {
+        departure: from,
+        datedeparture: minDepartureDate,
+        datearrival: maxDepartureDate
+      };
+    } else {
+      message = {
       departure: from,
       arrival: to,
       datedeparture: minDepartureDate,
       datearrival: maxDepartureDate
     };
+  }
 
     // Richiesta dei dati
     return this.http.get(url, { params: message }).pipe(tap());
@@ -44,14 +63,5 @@ export class FlightService {
 
     // Richiesta dei dati
     return this.http.get<Model[]>(url, { params: message }).pipe(tap());
-  }
-
-  getAirportIdByName(name: string) {
-    const url = 'http://localhost:3000/api/airports/getAirports';
-    const message = {
-      city: name
-    };
-
-    return this.http.get<Airport[]>(url, { params: message }).pipe(tap());
   }
 }

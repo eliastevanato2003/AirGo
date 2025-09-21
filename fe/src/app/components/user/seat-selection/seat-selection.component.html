@@ -21,25 +21,12 @@
             </div>
 
             <!-- Business + Economy (dinamico in base ai posti) -->
-            <div *ngFor="let rowGroup of groupedSeats" class="seat-row">
+            @for(rowGroup of groupedSeats; track rowGroup.seats[0].id) {
+            <div class="seat-row">
                 @if(rowGroup.seats[0].id !== '00') {
                 <!-- Lato sinistro (A, B, C) -->
-                <div *ngFor="let seat of rowGroup.seats.slice(0, rowGroup.seats.length/2)" class="seat" [ngClass]="{
-                  'business': seat.type === 'business',
-                  'economy': seat.type === 'economy',
-                  'selected': seat.selected,
-                  'unavailable': seat.unavailable,
-                  'extralegroom': seat.extraLegroom
-                }" (click)="selectSeat(seat)">
-                    {{ seat.row }}{{ seat.column }}
-                </div>
-
-                <!-- Corridoio -->
-                <div class="aisle-space"></div>
-
-                <!-- Lato destro (D, E, F) -->
-                <div *ngFor="let seat of rowGroup.seats.slice(rowGroup.seats.length/2, rowGroup.seats.length)"
-                    class="seat" [ngClass]="{
+                @for(seat of rowGroup.seats.slice(0, rowGroup.seats.length/2); track seat.id) {
+                <div class="seat" [ngClass]="{
                   'business': seat.type === 'business',
                   'economy': seat.type === 'economy',
                   'selected': seat.selected,
@@ -49,7 +36,25 @@
                     {{ seat.row }}{{ seat.column }}
                 </div>
                 }
+
+                <!-- Corridoio -->
+                <div class="aisle-space"></div>
+
+                <!-- Lato destro (D, E, F) -->
+                @for(seat of rowGroup.seats.slice(rowGroup.seats.length/2, rowGroup.seats.length); track seat.id) {
+                <div class="seat" [ngClass]="{
+                  'business': seat.type === 'business',
+                  'economy': seat.type === 'economy',
+                  'selected': seat.selected,
+                  'unavailable': seat.unavailable,
+                  'extralegroom': seat.extraLegroom
+                }" (click)="selectSeat(seat)">
+                    {{ seat.row }}{{ seat.column }}
+                </div>
+                }
+                }
             </div>
+            }
         </div>
 
         <!-- Etichette per le classi con icone -->

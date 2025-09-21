@@ -6,11 +6,25 @@
     <div class="search-box" [formGroup]="searchFlightsForm">
       <div class="input-group">
         <label>Da</label>
-        <input type="text" formControlName="from">
+        <input type="text" formControlName="from" placeholder="Partenza">
+        <ul class="dropdown" *ngIf="fromAirports$ | async as fromAirports">
+          @for(airport of fromAirports; track airport.id) {
+          <li (click)="selectAirport('from', airport.code)">
+            {{ airport.name }} ({{ airport.code }})
+          </li>
+          }
+        </ul>
       </div>
       <div class="input-group">
         <label>A</label>
-        <input type="text" formControlName="to">
+        <input type="text" formControlName="to" placeholder="Destinazione">
+        <ul class="dropdown" *ngIf="toAirports$ | async as toAirports">
+          @for(airport of toAirports; track airport.id) {
+          <li (click)="selectAirport('to', airport.code)">
+            {{ airport.name }} ({{ airport.code }})
+          </li>
+          }
+        </ul>
       </div>
       <div class="input-group">
         <label>Data partenza</label>
@@ -20,9 +34,8 @@
         <label>Data arrivo</label>
         <input type="date" formControlName="arrivalDate">
       </div>
-      <button class="search-btn" type="button" routerLink="/flightslist"
-        [queryParams]="{ data: getData() | json }" routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }">&#10141;</button>
+      <button class="search-btn" type="button" routerLink="/flightslist" [queryParams]="{ data: getData() | json }"
+        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">&#10141;</button>
     </div>
   </div>
   <div class="why-us">

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Seat } from '../../../models/user/seat.model';
-import { NgClass, NgFor, JsonPipe, CommonModule } from '@angular/common';
+import { NgClass, JsonPipe, CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
@@ -15,7 +15,7 @@ import { ExtraLegRow } from '../../../models/airline/model.model';
   selector: 'app-seat-selection',
   templateUrl: './seat-selection.component.html',
   styleUrls: ['./seat-selection.component.css'],
-  imports: [CommonModule, NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, NgFor, RouterLink, RouterLinkActive, JsonPipe],
+  imports: [CommonModule, NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, RouterLink, RouterLinkActive, JsonPipe],
   standalone: true
 })
 export class SeatSelectionComponent implements OnInit {
@@ -69,6 +69,7 @@ export class SeatSelectionComponent implements OnInit {
     this.ticketService.getTickets(this.flight!.IdVolo).subscribe({
       next: (response) => {
         const bookedSeats = response.tickets;
+        console.log('Booked Seats:', bookedSeats);
         // bookedSeats = response;
 
         // Pulisci l'array dei posti

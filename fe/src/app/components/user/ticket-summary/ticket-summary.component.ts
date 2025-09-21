@@ -59,6 +59,7 @@ export class TicketSummaryComponent implements OnInit {
     });
   }
 
+  // TODO: addTicket non funziona (price non corretto)
   confirmPayment() {
     if (this.paymentForm.valid) {
       this.confirmed = true;

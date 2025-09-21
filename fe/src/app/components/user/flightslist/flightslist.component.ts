@@ -2,7 +2,11 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Flight, FlightDb } from '../../../models/user/flight.model';
 import { FlightService } from '../../../services/user/flight.service';
-import { RouterLinkActive, RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterLinkActive, RouterLink, ActivatedRoute, Router } from '@angular/router';
+import { AirportService } from '../../../services/user/airport.service';
+import { AuthService } from '../../../services/auth.service';
+
+// TODO: scalo (?)
 
 @Component({
   selector: 'app-flightslist',
@@ -14,19 +18,27 @@ import { RouterLinkActive, RouterLink, ActivatedRoute } from '@angular/router';
 export class FlightsListComponent implements OnInit {
   flights: Flight[] = [];
 
-  constructor(private flightService: FlightService, private route: ActivatedRoute) { }
+  constructor(private authService: AuthService, private flightService: FlightService, private airportService: AirportService, private route: ActivatedRoute, private router: Router) { }
 
   ngOnInit(): void {
-    let from: number = 0;
-    let to: number = 0;
+    let from = 0;
+    let to = 0;
     this.route.queryParams.subscribe(params => {
       const data = JSON.parse(params['data'] || '[]');
-      this.flightService.getAirportIdByName(data.from).subscribe({
+      this.airportService.getAirportIdByName(data.from.split(' ')[0]).subscribe({
         next: (response) => {
-          from = response[0].IdAeroporto;
-          this.flightService.getAirportIdByName(data.to).subscribe({
+          if (!response[0]) {
+            from = 0;
+          } else {
+            from = response[0].IdAeroporto;
+          }
+          this.airportService.getAirportIdByName(data.to.split(' ')[0]).subscribe({
             next: (response) => {
-              to = response[0].IdAeroporto;
+              if(!response[0]) {
+                to = 0;
+              } else {
+                to = response[0].IdAeroporto;
+              }
               this.flightService.getFlights(from, to, data.departureDate, data.arrivalDate).subscribe({
                 next: (res) => {
                   let response = res as FlightDb[];
@@ -60,5 +72,13 @@ export class FlightsListComponent implements OnInit {
         }
       });
     });
+  }
+
+  buy() {
+    const token = this.authService.getToken();
+    if (!token) {
+      alert('Devi essere loggato per acquistare un volo.');
+      this.router.navigate(['/login']);
+    }
   }
 }
