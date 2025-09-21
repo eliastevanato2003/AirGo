@@ -11,7 +11,7 @@ const { authorizeRoles } = require("../middlewares/roleMiddleware")
  * @airline (Opzionale) L'id della compagnia aerea proprietaria
  * @model (Opzionale) L'id del modello dell'aereo
  * @costructionyear (Opzionale) L'anno di costruzione dell'aereo
- * @inservice (Opzionale) Lo stato di servizio dell'aereo, di default a true
+ * @inservice (Opzionale) Lo stato di servizio dell'aereo, di default a true, "All" per averli tutti
  * @returns {200} {object} Le info dell'aereo
  * @returns {400} {message: string} Uno o più parametri invalidi 
  */

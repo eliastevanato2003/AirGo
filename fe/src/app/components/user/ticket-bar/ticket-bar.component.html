@@ -1,13 +1,13 @@
 <div class="stepper">
-  <div class="step">
+  <div class="step" [ngClass]="{ 'active': currentStep === 'posti' }">
     <span class="icon">🪑</span>
     <span class="label">Posti</span>
   </div>
-  <div class="step">
+  <div class="step" [ngClass]="{ 'active': currentStep === 'bagagli' }">
     <span class="icon">🎒</span>
     <span class="label">Bagagli</span>
   </div>
-  <div class="step">
+  <div class="step" [ngClass]="{ 'active': currentStep === 'pagamento' }">
     <span class="icon">💳</span>
     <span class="label">Revisione e pagamento</span>
   </div>
