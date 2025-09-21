@@ -6,4 +6,5 @@ export interface Seat {
   type: 'economy' | 'business' | 'firstclass';
   selected?: boolean;
   unavailable?: boolean;
+  extraLegroom?: boolean;
 }

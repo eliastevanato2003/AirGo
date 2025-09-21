@@ -1,13 +1,36 @@
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
+import { filter } from 'rxjs/internal/operators/filter';
 
 @Component({
   selector: 'app-ticket-bar',
   templateUrl: './ticket-bar.component.html',
   styleUrls: ['./ticket-bar.component.css'],
-  imports: [],
+  imports: [NgClass],
   standalone: true
 })
 export class TicketBarComponent {
-  constructor(private router: Router) {}
+  currentStep: string = '';
+
+  constructor(private router: Router) {
+    this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd)
+    ).subscribe(() => {
+      this.setCurrentStep();
+    });
+  }
+
+  setCurrentStep() {
+    const url = this.router.url;
+    if (url.includes('seatselection')) {
+      this.currentStep = 'posti';
+    } else if (url.includes('baggageselection')) {
+      this.currentStep = 'bagagli';
+    } else if (url.includes('payment')) {
+      this.currentStep = 'pagamento';
+    }
+  }
+
+
 }

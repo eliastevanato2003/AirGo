@@ -1,9 +1,7 @@
 <header class="header">
-  <div class="logo">AirGo</div>
+  <div class="logo" (click)="home()">AirGo</div>
   <nav>
     <ul>
-      <li><button class="norm-btn" (click)="home()">Home</button></li>
-
       @if(isLoggedIn) {
         @if(userRole === 0) {
           <li><button class="norm-btn" (click)="adminairlines()">Compagnie aeree</button></li>
