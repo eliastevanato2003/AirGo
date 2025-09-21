@@ -27,6 +27,7 @@ export class ModelsComponent implements OnInit{
   evenNumbers = [2, 4, 6, 8];
   showEdit = false;
   editModelForm!: FormGroup;
+  filterForm: FormGroup;
 
   constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
     this.newModelForm = this.fb.group({
@@ -38,6 +39,11 @@ export class ModelsComponent implements OnInit{
       cole: ['', [Validators.required, Validators.min(0)]],
       extraleg: ['', Validators.pattern(/^(\s*\d+\s*,)*\s*\d+\s*$/)]
     });
+
+    this.filterForm= this.fb.group({
+      id:['', Validators.min(0)],
+      name: ['']
+    })
    }
     
 
@@ -50,8 +56,8 @@ export class ModelsComponent implements OnInit{
     }
   }
 
-  private loadModels(): void {
-    this.modelService.getModels().subscribe({
+  private loadModels(filters:any={}): void {
+    this.modelService.getModels(filters).subscribe({
       next: (models) => this.models = models,
       error: (err) => console.error('Errore caricamento modelli', err)
     });
@@ -146,27 +152,51 @@ export class ModelsComponent implements OnInit{
 
     const f = this.editModelForm.value;
 
-    const updatedModel = {  
-      name: f.name,
-      seatspc: f.seatspc,
-      rowsb: f.rowsb,
-      columnsb: f.columnsb,
-      rowse: f.rowse,
-      columnse: f.columnse,
-      extralegrows: this.parseExtraLegRows(f.extralegrows)
-    };
+    const updatedModel: any = {};
 
-    this.modelService.updateModel(this.selectedModel.IdModello,  updatedModel).subscribe({
+    if (f.name !== this.selectedModel.Nome) {
+      updatedModel.name = f.name;
+    }
+    if (f.seatspc !== this.selectedModel.PostiPc) {
+      updatedModel.seatspc = f.seatspc;
+    }
+    if (f.rowsb !== this.selectedModel.RigheB) {
+      updatedModel.rowsb = f.rowsb;
+    }
+    if (f.columnsb !== this.selectedModel.ColonneB) {
+      updatedModel.columnsb = f.columnsb;
+    }
+    if (f.rowse !== this.selectedModel.RigheE) {
+      updatedModel.rowse = f.rowse;
+    }
+    if (f.columnse !== this.selectedModel.ColonneE) {
+      updatedModel.columnse = f.columnse;
+    }
+
+    const newExtraLeg = this.parseExtraLegRows(f.extralegrows);
+    const oldExtraLeg = (this.selectedModel.RigheExtraLeg || []).map(r => r.NRiga);
+
+    if (JSON.stringify(newExtraLeg) !== JSON.stringify(oldExtraLeg)) {
+      updatedModel.extralegrows = newExtraLeg;
+    }
+
+    if (Object.keys(updatedModel).length === 0) {
+      this.closeEdit();
+      return;
+    }
+
+    this.modelService.updateModel(this.selectedModel.IdModello, updatedModel).subscribe({
       next: () => {
         alert('Modello aggiornato con successo');
         this.closeEdit();
-        this.loadModels(); 
+        this.filtra(); 
         this.closeManage();
       },
-      error: (err) => console.error('Errore aggiornamento modello', err)
+      error: (err) => {
+        console.error('Errore aggiornamento modello', err);
+        alert(err.error?.message || 'Errore durante l\'aggiornamento');
+      }
     });
-
-    
   }
 
 
@@ -178,6 +208,23 @@ export class ModelsComponent implements OnInit{
   getExtraLegString(model: Model | null): string {
     if (!model || !model.RigheExtraLeg || model.RigheExtraLeg.length === 0) return '';
     return model.RigheExtraLeg.map(r => r.NRiga).join(', ');
+  }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadModels(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset();
+    this.loadModels();
   }
 
 

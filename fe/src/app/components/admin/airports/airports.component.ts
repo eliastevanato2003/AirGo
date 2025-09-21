@@ -67,7 +67,7 @@ export class AirportsComponent implements OnInit{
       next: () => {
         alert('Nuovo aeroporto creato');
         this.closeCreate();
-        this.loadAirports();
+        this.filtra();
       },
       error: (err) => console.error('Errore creazione aeroporto', err)
     });
@@ -86,7 +86,7 @@ export class AirportsComponent implements OnInit{
         next: (res) => {
           alert('Aeroporto eliminato con successo');
           this.closeManage();
-          this.loadAirports();
+          this.filtra();
         },
         error: (err) => {
           console.error('Errore eliminazione aeroporto', err);
@@ -134,7 +134,7 @@ export class AirportsComponent implements OnInit{
       next: () => {
         alert('Aeroporto aggiornato con successo');
         this.closeEdit();
-        this.loadAirports();
+        this.filtra();
         this.closeManage();
       },
       error: (err) => {

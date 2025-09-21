@@ -29,6 +29,8 @@ export class RoutesComponent implements OnInit{
   newRoute: NewRoute | null = null;
   newRouteForm: FormGroup;
   filterForm: FormGroup;
+  editRouteForm!: FormGroup;
+  showEdit=false;
 
 
   constructor(private fb: FormBuilder, private routeService: RouteService, private authService: AuthService, private airportService: AirportService) {
@@ -83,21 +85,29 @@ export class RoutesComponent implements OnInit{
       next: () => {
         alert('Nuova rotta creata');
         this.closeModal();
-        this.loadRoutes();
+        this.filtra();
       },
-      error: (err) => console.error('Errore creazione rotta', err)
+      error: (err) => {
+        console.error('Errore creazione rotta', err);
+        alert(err.error?.message || 'Errore durante la creazione');
+      }
     });
   }
 
   deleteRoute(id:number): void{
-    this.routeService.deleteRoute(id).subscribe({
-      next: () =>{
-        alert('Rotta rimossa');
-        this.closeManage();
-        this.loadRoutes();
-      },
-      error: (err) => console.error('Errore rimozione rotta')
-    });
+    if (confirm('Sei sicuro di voler eliminare questa rotta?')) {
+      this.routeService.deleteRoute(id).subscribe({
+        next: () =>{
+          alert('Rotta rimossa');
+          this.closeManage();
+          this.filtra();
+        },
+        error: (err) => {
+          console.error('Errore rimozione rotta');
+          alert(err.error?.message || 'Errore durante l\'eliminazione');
+        }
+      });
+    }
   }
 
   gestisci(selected: Route): void{
@@ -132,5 +142,49 @@ export class RoutesComponent implements OnInit{
       arrival: ''
     });
     this.loadRoutes();
+  }
+
+  saveEdit(): void {
+  if (!this.selectedRoute || this.editRouteForm.invalid) return;
+
+  const f = this.editRouteForm.value;
+  if (f.from === this.selectedRoute.IdPartenza && f.to === this.selectedRoute.IdDestinazione) {
+    this.closeEdit();
+    return;
+  }
+
+  this.routeService.updateRoute(
+    this.selectedRoute.IdRotta,
+    f.from,
+    f.to
+  ).subscribe({
+    next: () => {
+      alert('Rotta aggiornata con successo');
+      this.closeEdit();
+      this.filtra();
+      this.closeManage();
+    },
+    error: (err) => {
+      console.error('Errore aggiornamento rotta', err);
+      alert(err.error?.message || 'Errore durante l\'aggiornamento');
+    }
+  });
+}
+
+
+
+  openEdit(): void {
+    if(!this.selectedRoute)return;    
+    
+    this.editRouteForm = this.fb.group({
+      from: [this.selectedRoute.IdPartenza || '', Validators.required],
+      to: [this.selectedRoute.IdDestinazione || '', Validators.required],
+    });
+    this.showEdit = true;
+  }
+
+  closeEdit(): void {
+    this.showEdit = false;
+    this.editRouteForm.reset();
   }
 }
