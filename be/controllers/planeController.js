@@ -7,6 +7,7 @@ exports.getPlanes = async (req, res, next) => {
         const { id, airline, model, constructionyear } = req.query ?? {};
         let { inservice } = req.query ?? {};
         if (inservice == undefined) inservice = true;
+        else if (inservice == 'All') inservice = undefined;
         const planes = await planeService.getPlanes(id, airline, model, constructionyear, inservice);
         res.json(planes);
     } catch (err) {
