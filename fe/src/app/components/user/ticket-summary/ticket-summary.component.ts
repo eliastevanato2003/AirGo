@@ -71,7 +71,7 @@ export class TicketSummaryComponent implements OnInit {
             console.log('Biglietto creato correttamente', res);
           },
           error: (err) => {
-            console.error('Errore nella creazione del biglietto', err.message);
+            console.error('Errore nella creazione del biglietto', err);
           }
         });
       }
