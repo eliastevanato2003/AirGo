@@ -1,0 +1,130 @@
+<app-navbar></app-navbar>
+
+<div class="first-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione Rotte</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare rotte attuate dalla tua compagnia</p>
+    </div>
+    <button class="add-btn" (click)="showModal=true">Nuova rotta</button>
+  </div>
+</div>
+
+  <div class="filters">
+  <h3>Filtra Rotte</h3>
+  <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
+    
+    <label>ID Rotta</label>
+    <input type="number" formControlName="id" placeholder="ID rotta">
+
+    <label>Aeroporto di partenza</label>
+    <select formControlName="departure">
+      <option value="">Tutti</option>
+      @for(airport of airports; track airport.IdAeroporto) {
+        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+      }
+    </select>
+
+    <label>Aeroporto di arrivo</label>
+    <select formControlName="arrival">
+      <option value="">Tutti</option>
+      @for(airport of airports; track airport.IdAeroporto) {
+        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+      }
+    </select>
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)="reset()">Reset</button>
+    </div>
+  </form>
+</div>
+
+<div class="second-container">
+  <div class="route-list">
+  <div class="routes-grid">
+    @for(route of routes; track route.IdRotta) {
+      <div class="route-card">
+        <h4>Rotta {{route.IdRotta}}</h4>
+        <div class="route-codes">
+          <div class="route-left">
+            <p class="code">{{ route.CodicePartenza }}</p>
+            <p class="city">{{ route.CittaPartenza }}</p>
+          </div>
+          <div class="route-arrow">➔</div>
+          <div class="route-right">
+            <p class="code">{{ route.CodiceDestinazione }}</p>
+            <p class="city">{{ route.CittaDestinazione }}</p>
+          </div>
+        </div>
+        <button class="action-btn" (click)="gestisci(route)">Gestisci</button>
+      </div>
+    }
+  </div>
+</div>
+
+
+  @if(showModal) {
+  <div class="modal-overlay">
+    <div class="modal-content">
+      <h3>Nuova rotta</h3>
+      <form [formGroup]="newRouteForm" (ngSubmit)="addRoute()">
+
+        <label>Aeroporto di partenza</label>
+        <select formControlName="from">
+        <option value="" disabled>Seleziona un aeroporto</option>
+        @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+        }
+        </select>
+
+        <label>Aeroporto di arrivo</label>
+        <select formControlName="from">
+        <option value="" disabled>Seleziona un aeroporto</option>
+        @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
+        }
+        </select>
+
+        <div class="modal-buttons">
+          <button type="submit" class="add-btn" [disabled]="newRouteForm.invalid">Aggiungi</button>
+          <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
+        </div>
+      </form>   
+    </div>
+  </div>
+  }
+
+  @if(showManage && selectedRoute) {
+  <div class="modal-overlay">
+    <div class="modal-content manage-modal">
+      <h3>Gestisci rotta #{{selectedRoute.IdRotta}}</h3>
+
+      <div class="manage-body containerb">
+        <div class="info-details">
+          <div class="info-box">
+            <h4>Info Rotta</h4>
+            <p><strong>ID:</strong> {{ selectedRoute.IdRotta }}</p>
+            <p><strong>Da:</strong> {{ selectedRoute.CodicePartenza }} - {{ selectedRoute.CittaPartenza }} ({{ selectedRoute.NazionePartenza }})</p>
+            <p><strong>A:</strong> {{ selectedRoute.CodiceDestinazione }} - {{ selectedRoute.CittaDestinazione }} ({{ selectedRoute.NazioneDestinazione }})</p>
+            <p><strong>Compagnia:</strong> {{ selectedRoute.NomeCompagnia }} ({{ selectedRoute.CodiceCompagnia }})</p>
+        </div>
+
+        </div>
+
+       
+        <div class="info-actions">
+            <button class="action-btn">Modifica</button>
+            <button class="delete-btn" (click)="deleteRoute(selectedRoute.IdRotta)">Elimina</button>
+        </div>
+      </div>
+
+      <div class="close-area">
+        <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+      </div>
+    </div>
+  </div>
+}
+</div>
+
+<app-footer></app-footer>

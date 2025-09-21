@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Airline, NewAirline } from '../../../models/admin/airline.model';
 import { AirlineService } from '../../../services/admin/airline.service';
-import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { ReactiveFormsModule, FormControl, FormGroup, FormBuilder, Validators} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
@@ -15,21 +15,33 @@ import { FooterComponent } from '../../../footer/footer.component';
 })
 export class AirlinesComponent implements OnInit {
   airlines: Airline[] | null = [];
-  newAirline: NewAirline = { name: '', code: '', email: '', password: 'password' };
+  newAirline: NewAirline | null= null;
   showModal = false;
+  filterForm: FormGroup;
+  airlineForm: FormGroup | any;
 
-  public airlineForm: FormGroup | any;
-
-  constructor(private airlineService: AirlineService) {
-    this.resetForm();
+  constructor(private airlineService: AirlineService, private fb: FormBuilder) {
+    this.airlineForm = this.fb.group({
+      name:  ['', Validators.required],
+      email: ['', Validators.required],
+      code: ['', Validators.required],
+      password: ['', Validators.required]
+    });
+    
+    this.filterForm = this.fb.group({
+      name:  [''],
+      email: [''],
+      code: [''],
+      id: ['', Validators.min(0)]
+    });
   }
 
   ngOnInit(): void {
     this.loadAirlines();
   }
 
-  loadAirlines() {
-    this.airlineService.getAirlines().subscribe({
+  private loadAirlines(filters:any={}) {
+    this.airlineService.getAirlines(filters).subscribe({
       next: (response) => {
         this.airlines = response as Airline[];
       }
@@ -38,34 +50,67 @@ export class AirlinesComponent implements OnInit {
 
   addAirline() {
     const formData = this.airlineForm.value;
-    this.newAirline.name = formData.name!;
-    this.newAirline.code = formData.code!;
-    this.newAirline.email = formData.email!;
-    this.airlineService.addAirline(this.newAirline).subscribe(() => {
+    
+    this.newAirline={
+      name: formData.name,
+      code: formData.code,
+      email: formData.email,
+      password: formData.password
+    };
+
+    this.airlineService.addAirline(this.newAirline).subscribe({
+      next:() => {
+      this.airlineForm.reset();
       this.loadAirlines();
-      this.resetForm();
       this.closeModal();
-    });
-    this.newAirline = { name: '', code: '', email: '', password: 'password' };
+    },
+        error: (err) => {
+          console.error('Errore creazione compagnia aerea', err);
+          alert(err.error?.message || 'Errore durante la creazione');
+        }
+  });
   }
 
-  // TODO: finire delete
+
   deleteAirline(id: number): void {
     if (confirm('Sei sicuro di voler eliminare questa compagnia aerea?')) {
-      this.airlineService.deleteAirline(id).subscribe(() => this.loadAirlines());
+      this.airlineService.deleteAirline(id).subscribe({
+        next: (res) => {
+          alert('Compagnia aerea eliminata con successo');
+          this.loadAirlines();
+        },
+        error: (err) => {
+          console.error('Errore eliminazione compagnia aerea', err);
+          alert(err.error?.message || 'Errore durante l\'eliminazione');
+        }
+      });
     }
   }
 
-  resetForm() {
-    this.airlineForm = new FormGroup({
-      name: new FormControl(''),
-      code: new FormControl(''),
-      email: new FormControl('')
-    });
-  }
+  
 
   closeModal(): void {
     this.showModal = false;
-    this.resetForm();
+    this.airlineForm.reset();
   }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadAirlines(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset();
+    this.loadAirlines();
+  }
+
+
+
 }

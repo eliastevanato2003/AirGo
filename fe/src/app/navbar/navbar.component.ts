@@ -21,9 +21,7 @@ export class NavbarComponent implements OnInit {
     this.authService.isLoggedIn().subscribe(status => {
       this.isLoggedIn = status;
     });
-    this.authService.whatRole().subscribe(role => {
-      this.userRole = role;
-    });
+    this.userRole = this.authService.getRole();
   }
 
   login() {
@@ -39,8 +37,10 @@ export class NavbarComponent implements OnInit {
   }
 
   logout() {
-    this.authService.logout();
-    this.home();
+    if (confirm('Sei sicuro di voler effettuare il logout?')) {
+      this.authService.logout();
+      this.home();
+    }
   }
 
   airplanes(){
@@ -57,6 +57,22 @@ export class NavbarComponent implements OnInit {
 
   flights() {
     this.router.navigate(['/airline-flights']);
+  }
+
+  models() {
+    this.router.navigate(['/models']);
+  }
+
+  routes() {
+    this.router.navigate(['/routes']);
+  }
+
+  adminairports(){
+    this.router.navigate(['/admin-airports']);
+  }
+
+  adminmodels(){
+    this.router.navigate(['/admin-models'])
   }
 
 }

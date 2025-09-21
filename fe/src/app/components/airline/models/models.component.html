@@ -1,0 +1,179 @@
+<app-navbar></app-navbar>
+
+<div class="first-container">
+  <div class="header">
+    <div class="title-group">
+      <h2>Gestione Modelli</h2>
+      <p>Qui puoi aggiungere, modificare o eliminare modelli di aerei</p>
+    </div>
+    <button class="add-btn" (click)="showModal=true">Nuovo modello</button>
+  </div>
+</div>
+<div class="second-container">
+  <div class="model-list">
+    @for(model of models; track model.IdModello) {
+      <div class="model-bar">
+        <div class="model-info">
+          <p><strong>Modello:</strong> {{ model.Nome }} - {{ model.IdModello }}</p>
+          <p><strong>Posti Prima Classe:</strong> {{ model.PostiPc }}</p>
+          <p><strong>Business:</strong> Righe={{ model.RigheB }} , Colonne={{ model.ColonneB }}</p>
+          <p><strong>Economy:</strong> Righe={{ model.RigheE }} , Colonne={{ model.ColonneE }}</p>
+          <p><strong>Righe con extra legroom:</strong> {{getExtraLegString(model)}}</p>
+        </div>
+        <button class="action-btn" (click)="gestisci(model)">Gestisci</button>
+      </div>
+    }
+  </div>
+
+  @if(showModal) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h3>Nuovo modello</h3>
+        <form [formGroup]="newModelForm" (ngSubmit)="addModel()">
+
+          <label>Nome modello</label>
+          <input type="text" formControlName="name">
+
+          <label>Posti prima classe</label>
+          <input type="number" formControlName="firstclass">
+
+          <label>Righe Business</label>
+          <input type="number" formControlName="rowb">
+
+          <label>Colonne Business</label>
+          <select formControlName="colb">
+            <option value="" disabled>Seleziona numero colonne</option>
+            @for (i of evenNumbers; track i) {
+              <option [value]="i">{{ i }}</option>
+            }
+          </select>
+
+          <label>Righe Economy</label>
+          <input type="number" formControlName="rowe">
+
+          <label>Colonne Economy</label>
+          <select formControlName="cole">
+            <option value="" disabled>Seleziona numero colonne</option>
+            @for (i of evenNumbers; track i) {
+              <option [value]="i">{{ i }}</option>
+            }
+          </select>
+
+          <label>Righe con spazio extra per le gambe</label>
+          <input type="text" formControlName="extraleg" placeholder="es. 1,2,3,4">
+
+          @if(previewExtraLeg.length > 0) {
+            <div class="preview-extraleg">
+              <small>Anteprima righe: {{ previewExtraLeg.join(', ') }}</small>
+            </div>
+          }
+
+          <div class="modal-buttons">
+            <button type="submit" class="add-btn" [disabled]="newModelForm.invalid">Aggiungi</button>
+            <button type="button" class="cancel-btn" (click)="closeCreate()">Indietro</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  }
+
+  @if(showManage && selectedModel) {
+    <div class="modal-overlay">
+        <div class="modal-content manage-modal">
+        <h3>Gestisci modello #{{selectedModel.IdModello}}</h3>
+
+        <div class="manage-body containerb">
+            <div class="info-details">
+            <div class="info-box">
+                <h4>Info Modello</h4>
+                <p><strong>Nome:</strong> {{selectedModel.Nome}}</p>
+                <p><strong>Extra Legroom:</strong> {{getExtraLegString(selectedModel)}}</p>
+            </div>
+
+            <div class="info-box">
+                <h4>Prima Classe</h4>
+                <p><strong>Posti:</strong> {{selectedModel.PostiPc}}</p>
+            </div>
+            <div class="info-box">
+                <h4>Business</h4>
+                <p><strong>Righe:</strong> {{selectedModel.RigheB}}</p>
+                <p><strong>Colonne:</strong> {{selectedModel.ColonneB}}</p>
+            </div>
+            <div class="info-box">
+                <h4>Economy</h4>
+                <p><strong>Righe:</strong> {{selectedModel.RigheE}}</p>
+                <p><strong>Colonne:</strong> {{selectedModel.ColonneE}}</p>
+            </div>
+            </div>
+
+            <!-- PULSANTI DESTRA -->
+            <div class="info-actions" style="margin-left:auto;">
+            <button class="action-btn" (click)="openEdit()">Modifica</button>
+            </div>
+        </div>
+
+        <!-- CHIUDI IN FONDO -->
+        <div class="close-area">
+            <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+        </div>
+        </div>
+        @if(showEdit && selectedModel) {
+          <div class="modal-overlay">
+            <div class="modal-content">
+              <h3>Modifica modello #{{selectedModel.IdModello}}</h3>
+              <form [formGroup]="editModelForm" (ngSubmit)="saveEdit()">
+
+                <label>Nome modello</label>
+                <input type="text" formControlName="name" placeholder="{{selectedModel.Nome}}">
+
+                <label>Posti prima classe</label>
+                <input type="number" formControlName="seatspc" placeholder="{{selectedModel.PostiPc}}">
+
+                <label>Righe Business</label>
+                <input type="number" formControlName="rowsb" placeholder="{{selectedModel.RigheB}}">
+
+                <label>Colonne Business</label>
+                <select formControlName="columnsb">
+                  <option value="" disabled>Seleziona numero colonne</option>
+                  @for (i of evenNumbers; track i) {
+                    <option [value]="i">{{ i }}</option>
+                  }
+                </select>
+
+                <label>Righe Economy</label>
+                <input type="number" formControlName="rowse" placeholder="{{selectedModel.RigheE}}">
+
+                <label>Colonne Economy</label>
+                <select formControlName="columnse">
+                  <option value="" disabled>Seleziona numero colonne</option>
+                  @for (i of evenNumbers; track i) {
+                    <option [value]="i">{{ i }}</option>
+                  }
+                </select>
+
+                <label>Righe con spazio extra per le gambe</label>
+                <input type="text" formControlName="extralegrows" placeholder="es. 1,2,3">
+
+                @if(previewExtraLegEdit.length > 0) {
+                  <div class="preview-extraleg">
+                    <small>Anteprima righe: {{ previewExtraLegEdit.join(', ') }}</small>
+                  </div>
+                }
+
+                <div class="modal-buttons">
+                  <button type="submit" class="save-btn">Salva</button>
+                  <button type="button" class="dismiss-btn" (click)="closeEdit()">Annulla</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        }
+
+    </div>
+    }
+
+</div>
+
+<app-footer></app-footer>

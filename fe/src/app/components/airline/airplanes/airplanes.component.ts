@@ -5,10 +5,11 @@ import { AuthService } from '../../../services/auth.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { PlaneService } from '../../../services/airline/plane.service';
 import { ModelService } from '../../../services/airline/model.service';
-import { Plane } from '../../../models/airline/plane.model';
-import { filter } from 'rxjs/operators';
-import { Model } from '../../../models/airline/model.model';
+import { NewPlane, Plane } from '../../../models/airline/plane.model';
+import { forkJoin } from 'rxjs';
+import { Model, NewModel } from '../../../models/airline/model.model';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -23,32 +24,29 @@ export class AirplanesComponent implements OnInit {
   airplanes: Plane[] = [];
   models: Model[] = [];
   showModal = false;
-  creatingNewModel = false;
-  evenNumbers = [2, 4, 6, 8];
   airlineId: number | null = null;
-
+  newAirplane: NewPlane | null = null;
   newPlaneForm: FormGroup;
-  newModelForm: FormGroup;
+  filterForm: FormGroup;
+
 
   constructor(
     private authService: AuthService,
     private planeService: PlaneService,
     private modelService: ModelService,
     private fb: FormBuilder,
+    private router: Router
   ) {
     this.newPlaneForm = this.fb.group({
       model: ['', Validators.required],
       constructionyear: ['', [Validators.required, Validators.min(1900)]]
     });
-    this.newModelForm = this.fb.group({
-      name: ['', Validators.required],
-      firstclass: ['', [Validators.required, Validators.min(0)]],
-      rowb: ['', [Validators.required, Validators.min(0)]],
-      colb: ['', [Validators.required, Validators.min(0)]],
-      rowe: ['', [Validators.required, Validators.min(0)]],
-      cole: ['', [Validators.required, Validators.min(0)]],
-      extraleg: ['']
-    });
+    this.filterForm = this.fb.group({
+    id: ['', Validators.min(0)],
+    model: [''],
+    constructionYear: [''],
+    inservice: ['']
+  });    
   }
 
   ngOnInit(): void {
@@ -58,20 +56,19 @@ export class AirplanesComponent implements OnInit {
       this.loadPlanes();
       this.loadModels();
     } else {
-      this.authService.whatId()
-        .pipe(filter(id => id !== null))
-        .subscribe(id => {
-          this.airlineId = id!;
-          this.loadPlanes();
-          this.loadModels();
-        });
+      console.error('ID compagnia aerea non trovato');
     }
   }
 
-  private loadPlanes(): void {
+  private loadPlanes(filters: any = {}): void {
     if (!this.airlineId) return;
-    this.planeService.getPlanesByAirline(this.airlineId).subscribe({
-      next: (planes) => this.airplanes = planes,
+
+    filters.airline = this.airlineId;
+
+    this.planeService.getPlanes(filters).subscribe({
+      next: (planes) => {
+        this.airplanes = planes;
+      },
       error: (err) => console.error('Errore caricamento aerei', err)
     });
   }
@@ -88,7 +85,12 @@ export class AirplanesComponent implements OnInit {
 
     const form = this.newPlaneForm.value;
 
-    this.planeService.addPlane(form.model, form.constructionyear).subscribe({
+    this.newAirplane = {
+      model: form.model,
+      constructionyear: form.constructionyear,
+    };
+
+    this.planeService.addPlane(this.newAirplane).subscribe({
       next: () => {
         alert('Nuovo aereo creato');
         this.closeModal();
@@ -98,31 +100,17 @@ export class AirplanesComponent implements OnInit {
     });
   }
 
-  addModel(): void {
-    if (this.newModelForm.invalid) return;
 
-    const f = this.newModelForm.value;
-    const extralegrows = f.extraleg
-      ? f.extraleg.split(',').map((n: string) => Number(n.trim()))
-      : [];
-
-    this.modelService.addModel(
-      f.name,
-      f.firstclass,
-      f.rowb,
-      f.colb,
-      f.rowe,
-      f.cole,
-      extralegrows
-    ).subscribe({
+  deletePlane(id:number): void{
+    this.planeService.deletePlane(id).subscribe({
       next: () => {
-        alert('Nuovo modello creato');
-        this.closeCreate();
-        this.loadModels();
+        alert('Aereo rimosso');
+        this.loadPlanes();
       },
-      error: (err) => console.error('Errore creazione modello', err)
-    });
+      error: (err) => console.error('Errore rimozione aereo', err)
+    })
   }
+  
 
   closeModal(): void {
     this.showModal = false;
@@ -130,15 +118,53 @@ export class AirplanesComponent implements OnInit {
     this.newPlaneForm.reset({ model: '', constructionyear: null });
   }
 
-  closeCreate(): void {
-    this.creatingNewModel = false;
-    this.newModelForm.reset();
-    this.newModelForm.reset({ name: '', firstclass: null, rowb: null, colb: '', rowe: null, cole: '', extraleg: null });
+  
+
+  toCreate(): void {
+    this.router.navigate(['/models']); 
   }
 
-  create(): void {
-    this.creatingNewModel = true;
-    this.newPlaneForm.reset();
-    this.newPlaneForm.reset({ model: '', constructionyear: null });
+  ritira(id:number):void{
+    this.planeService.changeService(id, false).subscribe({
+      next: () => {
+        alert('Aereo non più in servizio');
+        this.loadPlanes();
+      },
+      error: (err) => console.error('Errore ritiro aereo', err)
+    })
   }
+
+  attiva(id:number):void{
+    this.planeService.changeService(id, true).subscribe({
+      next: () => {
+        alert('Aereo ora in servizio');
+        this.loadPlanes();
+      },
+      error: (err) => console.error('Errore attivazione aereo', err)
+    })
+  }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadPlanes(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset({
+      id: '',
+      model: '',
+      constructionYear: '',
+      inservice: ''
+    });
+    this.loadPlanes();
+  }
+
+
 }

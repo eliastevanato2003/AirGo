@@ -57,14 +57,7 @@ export class AirlineFlightsComponent implements OnInit {
       this.loadPlanes();
       this.loadRoutes();
     } else {
-      this.authService.whatId()
-        .pipe(filter(id => id !== null))
-        .subscribe(id => {
-          this.airlineId = id!;
-          this.loadFlights();
-          this.loadPlanes();
-          this.loadRoutes();
-        });
+      console.error('ID compagnia aerea non trovato');
     }
   }
 
@@ -79,7 +72,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   private loadPlanes(): void {
     if (!this.airlineId) return;
-    this.planeService.getPlanesByAirline(this.airlineId).subscribe({
+    this.planeService.getPlanes({id:this.airlineId}).subscribe({
       next: (planes) => this.planes = planes,
       error: (err) => console.error('Errore caricamento aerei', err)
     });
@@ -87,7 +80,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   private loadRoutes(): void {
     if (!this.airlineId) return;
-    this.routeService.getRoutesByAirline(this.airlineId).subscribe({
+    this.routeService.getRoutes().subscribe({
       next: (routes) => this.routes = routes,
       error: (err) => console.error('Errore caricamento rotte', err)
     });
