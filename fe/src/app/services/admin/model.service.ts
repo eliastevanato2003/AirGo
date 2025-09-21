@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
@@ -18,9 +18,18 @@ export class ModelService {
     });
   }
 
-  getModels(): Observable<Model[]> {
+  getModels(filters:{id?: number, name?: string}={}): Observable<Model[]> {
     const url = `${this.baseUrl}/getModels`;
-    return this.http.get<Model[]>(url, { headers: this.getHeaders() }).pipe(
+
+    let params = new HttpParams();
+    if (filters.id !== undefined && filters.id !== null) {
+      params = params.set('id', filters.id.toString());
+    }
+    if (filters.name) {
+      params = params.set('name', filters.name);
+    }
+
+    return this.http.get<Model[]>(url, { headers: this.getHeaders(), params }).pipe(
       tap()
     );
   }

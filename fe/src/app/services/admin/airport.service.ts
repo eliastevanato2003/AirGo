@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { Observable, tap } from 'rxjs';
@@ -18,9 +18,19 @@ export class AirportService {
     });
   }
 
-  getAirports(): Observable<Airport[]> {
-    const url = `${this.baseUrl}/getAirports`;
-    return this.http.get<Airport[]>(url, { headers: this.getHeaders() }).pipe(
+  getAirports(filters:{id?:number,city?:string,country?:string,code?:string}={}):Observable<Airport[]>{
+
+    let params = new HttpParams();
+
+    if (filters.id != null) params = params.set('id', filters.id.toString());
+    if (filters.city != null) params = params.set('city', filters.city.toString());
+    if (filters.country != null) params = params.set('country', filters.country.toString());
+    if (filters.code != null) params = params.set('identificationcode', filters.code.toString());
+
+    return this.http.get<Airport[]>(`${this.baseUrl}/getAirports`, { 
+      headers: this.getHeaders(),
+      params 
+    }).pipe(
       tap()
     );
   }
@@ -42,7 +52,7 @@ export class AirportService {
         id: number,
         data: {
         city?: string,
-        county?: string,
+        country?: string,
         name?: string,
         identificationcode?: string
         }

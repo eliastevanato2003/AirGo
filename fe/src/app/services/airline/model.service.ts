@@ -18,20 +18,18 @@ export class ModelService {
     });
   }
 
-  getModels(id?: number, name?: string): Observable<Model[]> {
+  getModels(filters:{id?: number, name?: string}={}): Observable<Model[]> {
     const url = `${this.baseUrl}/getModels`;
 
     let params = new HttpParams();
-    if (id !== undefined && id !== null) {
-      params = params.set('id', id.toString());
+    if (filters.id !== undefined && filters.id !== null) {
+      params = params.set('id', filters.id.toString());
     }
-    if (name) {
-      params = params.set('name', name);
+    if (filters.name) {
+      params = params.set('name', filters.name);
     }
 
-    return this.http.get<Model[]>(url, { headers: this.getHeaders(), params }).pipe(
-      tap()
-    );
+    return this.http.get<Model[]>(url, { headers: this.getHeaders(), params });
   }
 
   

@@ -1,8 +1,8 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "../auth.service";
 import { Airline, NewAirline } from "../../models/admin/airline.model";
-import { tap } from "rxjs";
+import { Observable,tap } from "rxjs";
 
 @Injectable({ providedIn: 'root' })
 export class AirlineService {
@@ -11,30 +11,33 @@ export class AirlineService {
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    getAirlines() {
-        const url = 'http://localhost:3000/api/airlines/getAirlines'
-
+    private getHeaders():HttpHeaders{
         const token = this.authService.getToken();
 
-        const headers = new HttpHeaders({
+        return new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
+    }
 
-        return this.http.get<any[]>(url, { headers: headers }).pipe(
+    getAirlines(filters:{id?:number, name?:string, code?:string, email?:string}={}):Observable<Airline[]> {
+        const url = 'http://localhost:3000/api/airlines/getAirlines'
+
+        let params = new HttpParams();
+
+        if (filters.id != null) params = params.set('id', filters.id.toString());
+        if (filters.name != null) params = params.set('name', filters.name.toString());
+        if (filters.email != null) params = params.set('email', filters.email.toString());
+        if (filters.code != null) params = params.set('identificationcode', filters.code.toString());
+
+
+        return this.http.get<any[]>(url, { headers: this.getHeaders(), params }).pipe(
             tap()
         );
     }
 
-    addAirline(airline: NewAirline) {
+    addAirline(airline: NewAirline):Observable<any>{
         const url = 'http://localhost:3000/api/airlines/newAirline'
-
-        const token = this.authService.getToken();
-
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        });
 
         const message = {
             name: airline.name,
@@ -43,27 +46,15 @@ export class AirlineService {
             password: airline.password
         };
 
-        return this.http.post(url, message, { headers: headers }).pipe(tap());
+        return this.http.post(url, message, { headers: this.getHeaders() }).pipe(tap());
     }
 
-    deleteAirline(id: number) {
+    deleteAirline(id: number):Observable<any>{
         const url = 'http://localhost:3000/api/airlines/deleteAirline'
 
-        const token = this.authService.getToken();
-
-        const headers = new HttpHeaders({
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-        });
-        
-
-        const message = {
-            id: id
-        };
-
         return this.http.request<any>('delete', url, {
-              body: message,
-              headers: headers
+              body: {id:id},
+              headers: this.getHeaders()
             });
         
     }

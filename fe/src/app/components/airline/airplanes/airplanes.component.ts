@@ -42,7 +42,7 @@ export class AirplanesComponent implements OnInit {
       constructionyear: ['', [Validators.required, Validators.min(1900)]]
     });
     this.filterForm = this.fb.group({
-    id: [''],
+    id: ['', Validators.min(0)],
     model: [''],
     constructionYear: [''],
     inservice: ['']

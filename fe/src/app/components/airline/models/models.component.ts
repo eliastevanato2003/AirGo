@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { ModelService } from '../../../services/airline/model.service';
-import { ExtraLegRow, Model, NewModel } from '../../../models/airline/model.model';
+import { Model, NewModel } from '../../../models/airline/model.model';
 import { AuthService } from '../../../services/auth.service';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';

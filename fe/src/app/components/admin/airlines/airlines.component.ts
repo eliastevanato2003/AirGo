@@ -17,8 +17,8 @@ export class AirlinesComponent implements OnInit {
   airlines: Airline[] | null = [];
   newAirline: NewAirline | null= null;
   showModal = false;
-
-  public airlineForm: FormGroup | any;
+  filterForm: FormGroup;
+  airlineForm: FormGroup | any;
 
   constructor(private airlineService: AirlineService, private fb: FormBuilder) {
     this.airlineForm = this.fb.group({
@@ -27,14 +27,21 @@ export class AirlinesComponent implements OnInit {
       code: ['', Validators.required],
       password: ['', Validators.required]
     });
+    
+    this.filterForm = this.fb.group({
+      name:  [''],
+      email: [''],
+      code: [''],
+      id: ['', Validators.min(0)]
+    });
   }
 
   ngOnInit(): void {
     this.loadAirlines();
   }
 
-  private loadAirlines() {
-    this.airlineService.getAirlines().subscribe({
+  private loadAirlines(filters:any={}) {
+    this.airlineService.getAirlines(filters).subscribe({
       next: (response) => {
         this.airlines = response as Airline[];
       }
@@ -51,14 +58,20 @@ export class AirlinesComponent implements OnInit {
       password: formData.password
     };
 
-    this.airlineService.addAirline(this.newAirline).subscribe(() => {
+    this.airlineService.addAirline(this.newAirline).subscribe({
+      next:() => {
       this.airlineForm.reset();
       this.loadAirlines();
       this.closeModal();
-    });
+    },
+        error: (err) => {
+          console.error('Errore creazione compagnia aerea', err);
+          alert(err.error?.message || 'Errore durante la creazione');
+        }
+  });
   }
 
-  // TODO: finire delete
+
   deleteAirline(id: number): void {
     if (confirm('Sei sicuro di voler eliminare questa compagnia aerea?')) {
       this.airlineService.deleteAirline(id).subscribe({
@@ -80,4 +93,24 @@ export class AirlinesComponent implements OnInit {
     this.showModal = false;
     this.airlineForm.reset();
   }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadAirlines(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset();
+    this.loadAirlines();
+  }
+
+
+
 }

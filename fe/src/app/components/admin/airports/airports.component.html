@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="airports-container">
+<div class="first-container">
   <div class="header">
     <div class="title-group">
       <h2>Gestione Aeroporti</h2>
@@ -8,7 +8,32 @@
     </div>
     <button class="add-btn" (click)="showModal=true">Nuovo aeroporto</button>
   </div>
+</div>
 
+<div class="filters">
+  <h3>Filtra Aeroporti</h3>
+  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
+
+    <label>ID</label>
+    <input type="number" formControlName="id">
+
+    <label>Città</label>
+    <input type="text" formControlName="city">
+
+    <label>Nazione</label>
+    <input type="text" formControlName="country">
+
+    <label>Codice identificativo</label>
+    <input type="text" formControlName="code">
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
+    </div>
+  </form>
+</div>
+
+<div class="second-container">
   <div class="airport-list">
   <div class="airports-grid">
     @for(airport of airports; track airport.IdAeroporto) {
@@ -71,7 +96,7 @@
 
        
         <div class="info-actions">
-            <button class="action-btn">Modifica</button>
+            <button class="action-btn" (click)="openEdit()">Modifica</button>
             <button class="delete-btn" (click)="deleteAirport(selectedairport.IdAeroporto)">Elimina</button>
         </div>
       </div>
@@ -80,6 +105,33 @@
         <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
       </div>
     </div>
+     @if(showEdit && selectedairport) {
+          <div class="modal-overlay">
+            <div class="modal-content">
+              <h3>Modifica aeroporto #{{selectedairport.IdAeroporto}}</h3>
+              <form [formGroup]="editAirportForm" (ngSubmit)="saveEdit()">
+
+                <label>Nome</label>
+                <input type="text" formControlName="name" placeholder="{{selectedairport.Nome}}">
+
+                <label>Città</label>
+                <input type="text" formControlName="city" placeholder="{{selectedairport.Citta}}">
+
+                <label>Nazione</label>
+                <input type="text" formControlName="country" placeholder="{{selectedairport.Nazione}}">
+
+                <label>CodiceIdentificativo</label>
+                <input type="text" formControlName="code" placeholder="{{selectedairport.CodiceIdentificativo}}">
+
+                <div class="modal-buttons">
+                  <button type="submit" class="save-btn">Salva</button>
+                  <button type="button" class="dismiss-btn" (click)="closeEdit()">Annulla</button>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        }
   </div>
 }
 </div>

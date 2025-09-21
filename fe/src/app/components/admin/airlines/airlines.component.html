@@ -1,6 +1,6 @@
 <app-navbar></app-navbar>
 
-<div class="airlines-container">
+<div class="first-container">
   <div class="header">
     <div class="title-group">
       <h2>Gestione Compagnie Aeree</h2>
@@ -8,7 +8,33 @@
     </div>
     <button class="add-airline-btn" (click)="showModal=true">Aggiungi compagnia</button>
   </div>
+</div>
 
+<div class="filters">
+  <h3>Filtra Compagnie aeree</h3>
+  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
+
+    <label>ID</label>
+    <input type="number" formControlName="id">
+
+    <label>Nome</label>
+    <input type="text" formControlName="name">
+
+    <label>Email</label>
+    <input type="email" formControlName="email">
+
+    <label>Codice Identificativo</label>
+    <input type="text" formControlName="code">
+
+    <div class="filter-buttons">
+      <button type="submit" class="save-btn">Applica</button>
+      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
+    </div>
+  </form>
+</div>
+
+
+<div class="second-container">
   @if(airlines) {
   <div class="airline-list">
     @for(airline of airlines; track airline.IdCompagniaAerea) {

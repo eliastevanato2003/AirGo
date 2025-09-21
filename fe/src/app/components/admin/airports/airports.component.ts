@@ -21,6 +21,8 @@ export class AirportsComponent implements OnInit{
   newAirport: NewAirport | null = null;
   newAirportForm: FormGroup;
   showEdit = false;
+  filterForm: FormGroup;
+  editAirportForm!: FormGroup;
 
   constructor(private airportservice: AirportService, private fb: FormBuilder){
     this.newAirportForm = this.fb.group({
@@ -29,14 +31,20 @@ export class AirportsComponent implements OnInit{
       name: ['', [Validators.required]],
       code: ['', [Validators.required]],
     });
+    this.filterForm= this.fb.group({
+      id:['', Validators.min(0)],
+      city: [''],
+      country: [''],
+      code: [''],
+    })
   }
 
    ngOnInit(): void {
     this.loadAirports();
   }
 
-  private loadAirports(): void{
-    this.airportservice.getAirports().subscribe({
+  private loadAirports(filters:any={}): void{
+    this.airportservice.getAirports(filters).subscribe({
       next: (airports) => this.airports = airports,
       error: (err) => console.error('Errore caricamento aeroporti', err)
     });
@@ -96,5 +104,78 @@ export class AirportsComponent implements OnInit{
   closeManage(): void{
     this.showManage=false;
     this.selectedairport=null;
+  }
+
+  saveEdit(): void {
+    if (!this.selectedairport || this.editAirportForm.invalid) return;
+
+    const f = this.editAirportForm.value;
+    const updatedAirport: any = {};
+
+    if (f.name !== this.selectedairport.Nome) {
+      updatedAirport.name = f.name;
+    }
+    if (f.city !== this.selectedairport.Citta) {
+      updatedAirport.city = f.city;
+    }
+    if (f.country !== this.selectedairport.Nazione) {
+      updatedAirport.country = f.country;
+    }
+    if (f.code !== this.selectedairport.CodiceIdentificativo) {
+      updatedAirport.identificationcode = f.code;
+    }
+
+    if (Object.keys(updatedAirport).length === 0) {
+      this.closeEdit();
+      return;
+    }
+
+    this.airportservice.updateAirport(this.selectedairport.IdAeroporto, updatedAirport).subscribe({
+      next: () => {
+        alert('Aeroporto aggiornato con successo');
+        this.closeEdit();
+        this.loadAirports();
+        this.closeManage();
+      },
+      error: (err) => {
+        console.error('Errore aggiornamento aeroporto', err);
+        alert(err.error?.message || 'Errore durante l\'aggiornamento');
+      }
+    });
+  }
+
+
+  openEdit(): void {
+    if(!this.selectedairport)return;    
+    
+    this.editAirportForm = this.fb.group({
+      name: [this.selectedairport.Nome || '', Validators.required],
+      city: [this.selectedairport.Citta || '', Validators.required],
+      country: [this.selectedairport.Nazione || '', Validators.required],
+      code: [this.selectedairport.CodiceIdentificativo || '', Validators.required],
+    });
+    this.showEdit = true;
+  }
+
+  closeEdit(): void {
+    this.showEdit = false;
+    this.editAirportForm.reset();
+  }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadAirports(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset();
+    this.loadAirports();
   }
 }

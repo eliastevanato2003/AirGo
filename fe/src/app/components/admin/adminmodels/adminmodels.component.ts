@@ -21,12 +21,12 @@ export class AdminModelsComponent implements OnInit{
   models: Model[] = [];
   selectedModel: Model | null = null;
   showManage = false;
-  airlineid: number | null = null;
   newModel: NewModel | null = null;
   newModelForm: FormGroup;
   evenNumbers = [2, 4, 6, 8];
   showEdit = false;
   editModelForm!: FormGroup;
+  filterForm: FormGroup;
 
   constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
     this.newModelForm = this.fb.group({
@@ -38,20 +38,21 @@ export class AdminModelsComponent implements OnInit{
       cole: ['', [Validators.required, Validators.min(0)]],
       extraleg: ['', Validators.pattern(/^(\s*\d+\s*,)*\s*\d+\s*$/)]
     });
+
+    this.filterForm= this.fb.group({
+      id:['', Validators.min(0)],
+      name: ['']
+    })
    }
     
 
   ngOnInit(): void {
-    this.airlineid = this.authService.getId();
-    if (this.airlineid) {
       this.loadModels();
-    } else {
-      console.error('ID compagnia aerea non trovato');
-    }
   }
 
-  private loadModels(): void {
-    this.modelService.getModels().subscribe({
+  
+  private loadModels(filters:any={}): void {
+    this.modelService.getModels(filters).subscribe({
       next: (models) => this.models = models,
       error: (err) => console.error('Errore caricamento modelli', err)
     });
@@ -71,7 +72,6 @@ export class AdminModelsComponent implements OnInit{
       columnse: f.cole,
       extralegrows: this.parseExtraLegRows(f.extraleg)
     }
-      
 
     this.modelService.addModel(this.newModel).subscribe({
       next: () => {
@@ -79,7 +79,10 @@ export class AdminModelsComponent implements OnInit{
         this.closeCreate();
         this.loadModels();
       },
-      error: (err) => console.error('Errore creazione modello', err)
+        error: (err) => {
+          console.error('Errore creazione modello', err);
+          alert(err.error?.message || 'Errore durante la creazione');
+        }
     });
   }
 
@@ -97,7 +100,7 @@ export class AdminModelsComponent implements OnInit{
 
     for (const part of parts) {
       const trimmed = part.trim();
-      if (!/^\d+$/.test(trimmed)) break; // stop al primo non numero
+      if (!/^\d+$/.test(trimmed)) break;
       result.push(Number(trimmed));
     }
 
@@ -146,28 +149,53 @@ export class AdminModelsComponent implements OnInit{
 
     const f = this.editModelForm.value;
 
-    const updatedModel = {  
-      name: f.name,
-      seatspc: f.seatspc,
-      rowsb: f.rowsb,
-      columnsb: f.columnsb,
-      rowse: f.rowse,
-      columnse: f.columnse,
-      extralegrows: this.parseExtraLegRows(f.extralegrows)
-    };
+    const updatedModel: any = {};
 
-    this.modelService.updateModel(this.selectedModel.IdModello,  updatedModel).subscribe({
+    if (f.name !== this.selectedModel.Nome) {
+      updatedModel.name = f.name;
+    }
+    if (f.seatspc !== this.selectedModel.PostiPc) {
+      updatedModel.seatspc = f.seatspc;
+    }
+    if (f.rowsb !== this.selectedModel.RigheB) {
+      updatedModel.rowsb = f.rowsb;
+    }
+    if (f.columnsb !== this.selectedModel.ColonneB) {
+      updatedModel.columnsb = f.columnsb;
+    }
+    if (f.rowse !== this.selectedModel.RigheE) {
+      updatedModel.rowse = f.rowse;
+    }
+    if (f.columnse !== this.selectedModel.ColonneE) {
+      updatedModel.columnse = f.columnse;
+    }
+
+    const newExtraLeg = this.parseExtraLegRows(f.extralegrows);
+    const oldExtraLeg = (this.selectedModel.RigheExtraLeg || []).map(r => r.NRiga);
+
+    if (JSON.stringify(newExtraLeg) !== JSON.stringify(oldExtraLeg)) {
+      updatedModel.extralegrows = newExtraLeg;
+    }
+
+    if (Object.keys(updatedModel).length === 0) {
+      this.closeEdit();
+      return;
+    }
+
+    this.modelService.updateModel(this.selectedModel.IdModello, updatedModel).subscribe({
       next: () => {
         alert('Modello aggiornato con successo');
         this.closeEdit();
         this.loadModels(); 
         this.closeManage();
       },
-      error: (err) => console.error('Errore aggiornamento modello', err)
+      error: (err) => {
+        console.error('Errore aggiornamento modello', err);
+        alert(err.error?.message || 'Errore durante l\'aggiornamento');
+      }
     });
-
-    
   }
+
 
 
   closeEdit(): void {
@@ -194,7 +222,24 @@ export class AdminModelsComponent implements OnInit{
         }
       });
     }
-}
+  }
+
+  filtra(): void {
+    const filters = { ...this.filterForm.value };
+
+    Object.keys(filters).forEach(key => {
+      if (filters[key] === '' || filters[key] === null) {
+        delete filters[key];
+      }
+    });
+
+    this.loadModels(filters);
+  }
+
+  reset(): void {
+    this.filterForm.reset();
+    this.loadModels();
+  }
 
 
 }
