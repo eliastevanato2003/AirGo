@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Seat } from '../../../models/user/seat.model';
-import { NgClass, JsonPipe, CommonModule } from '@angular/common';
+import { NgClass, CommonModule } from '@angular/common';
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
 import { TicketService } from '../../../services/user/ticket.service';
@@ -17,7 +17,7 @@ import { AuthService } from '../../../services/auth.service';
   selector: 'app-seat-selection',
   templateUrl: './seat-selection.component.html',
   styleUrls: ['./seat-selection.component.css'],
-  imports: [CommonModule, NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule, RouterLink, RouterLinkActive, JsonPipe],
+  imports: [CommonModule, NgClass, NavbarComponent, TicketBarComponent, FooterComponent, FormsModule],
   standalone: true
 })
 export class SeatSelectionComponent implements OnInit {
@@ -31,15 +31,18 @@ export class SeatSelectionComponent implements OnInit {
   public chseat: Seat[] = [];
   public extraLegRoom: ExtraLegRow[] = [];
 
-  public businessLabel: string = '';
-  public economyLabel: string = '';
+  public businessLabel: boolean = false;
+  public economyLabel: boolean = false;
 
   public flightId: number = 0;
   public flight: FlightStatus | null = null;
 
+  public unavailableBusiness: boolean = false;
+  public unavailableEconomy: boolean = false;
+
   constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService, private authService: AuthService, private router: Router) {
     const token = this.authService.getToken();
-    if(!token) {
+    if (!token) {
       this.router.navigate(['/login']);
     }
   }
@@ -67,70 +70,78 @@ export class SeatSelectionComponent implements OnInit {
       },
       error: (error) => {
         console.error('getPlanes error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
       }
     });
   }
 
   generateSeats() {
-  if (!this.flight) return;
+    if (!this.flight) return;
 
-  this.ticketService.getTickets({ flight: this.flight.IdVolo }).subscribe({
-    next: (bookedSeats: TicketDB[]) => {  
-      this.seats = [];
+    this.ticketService.getTickets({ flight: this.flight.IdVolo }).subscribe({
+      next: (bookedSeats: TicketDB[]) => {
+        this.seats = [];
 
-      // PRIMA CLASSE
-      this.seats.push({
-        id: '00',
-        row: 0,
-        column: '0',
-        type: 'firstclass',
-        price: this.flight!.CostoPC,
-        selected: false
-      });
+        console.log('Booked Seats:', bookedSeats);
 
-      // BUSINESS
-      let row = 1;
-      for (; row <= this.flight!.RigheB; row++) {
-        for (let col = 0; col < this.flight!.ColonneB; col++) {
-          const colLetter = String.fromCharCode(65 + col);
-          this.seats.push({
-            id: `${row}${col}`,
-            row,
-            column: colLetter,
-            type: 'business',
-            price: this.flight!.CostoB,
-            selected: false,
-            unavailable: bookedSeats.some(ticket => ticket.RigPosto === row && ticket.ColPosto === colLetter),
-            extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
-          });
+        this.unavailableBusiness = this.flight!.PostiOccB === this.flight!.PostiB;
+        this.unavailableEconomy = this.flight!.PostiOccE === this.flight!.PostiE;
+
+        // PRIMA CLASSE
+        this.seats.push({
+          id: '00',
+          row: 0,
+          displayRow: 0,
+          column: '0',
+          type: 'firstclass',
+          price: this.flight!.CostoPC,
+          selected: false,
+          unavailable: this.flight!.PostiOccPc === this.flight!.PostiPc,
+        });
+
+        // BUSINESS
+        for (let row = 1; row <= this.flight!.RigheB; row++) {
+          for (let col = 0; col < this.flight!.ColonneB; col++) {
+            const colLetter = String.fromCharCode(65 + col);
+            this.seats.push({
+              id: `B${row}${col}`,
+              row: row,
+              displayRow: row,
+              column: colLetter,
+              type: 'business',
+              price: this.flight!.CostoB,
+              selected: false,
+              unavailable: bookedSeats.some(ticket => ticket.RigPosto === row && ticket.ColPosto === colLetter && ticket.Classe === 'Business'),
+              extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
+            });
+          }
         }
-      }
 
-      const bRow = row;
+        // ECONOMY
+        const economyOffset = this.flight!.RigheB;
 
-      // ECONOMY
-      for (; row <= this.flight!.RigheE + bRow; row++) {
-        for (let col = 0; col < this.flight!.ColonneE; col++) {
-          const colLetter = String.fromCharCode(65 + col);
-          this.seats.push({
-            id: `${row}${col}`,
-            row,
-            column: colLetter,
-            type: 'economy',
-            price: this.flight!.CostoE,
-            selected: false,
-            unavailable: bookedSeats.some(ticket => ticket.RigPosto === row && ticket.ColPosto === colLetter),
-            extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
-          });
+        for (let row = 1; row <= this.flight!.RigheE; row++) {
+          const realRow = row + economyOffset;
+          for (let col = 0; col < this.flight!.ColonneE; col++) {
+            const colLetter = String.fromCharCode(65 + col);
+            this.seats.push({
+              id: `E${realRow}${col}`,
+              row: realRow,
+              displayRow: row,
+              column: colLetter,
+              type: 'economy',
+              price: this.flight!.CostoE,
+              selected: false,
+              unavailable: bookedSeats.some(ticket => ticket.RigPosto === row + economyOffset && ticket.ColPosto === colLetter && ticket.Classe === 'Economy'),
+              extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
+            });
+          }
         }
+      },
+      error: (error) => {
+        console.error('getTickets error:', error);
       }
-    },
-    error: (error) => {
-      console.error('getTickets error:', error);
-    }
-  });
-}
+    });
+  }
 
   selectSeat(seat: Seat) {
     if (seat.unavailable) {
@@ -197,11 +208,10 @@ export class SeatSelectionComponent implements OnInit {
     const availableSeats = this.seats.filter(seat => seat.type === classType && !seat.selected && !seat.unavailable);
 
     if (availableSeats.length > 0) {
-      // Se ci sono posti disponibili, seleziona un posto casuale
       if (classType === 'business') {
-        if (this.businessLabel === 'selected') {
+        if (this.businessLabel) {
           this.casualSeats--;
-          this.businessLabel = '';
+          this.businessLabel = false;
           this.price -= this.flight!.CostoB;
           const index = this.seatclass.indexOf('Business');
           if (index > -1) {
@@ -209,16 +219,16 @@ export class SeatSelectionComponent implements OnInit {
           }
         } else {
           if (this.getSelectedSeats().length + this.casualSeats < this.ticketCount) {
-            this.businessLabel = 'selected';
+            this.businessLabel = true;
             this.price += this.flight!.CostoB;
             this.seatclass.push('Business');
             this.casualSeats++;
           }
         }
       } else {
-        if (this.economyLabel === 'selected') {
+        if (this.economyLabel) {
           this.casualSeats--;
-          this.economyLabel = '';
+          this.economyLabel = false;
           this.price -= this.flight!.CostoE;
           const index = this.seatclass.indexOf('Economy');
           if (index > -1) {
@@ -226,7 +236,7 @@ export class SeatSelectionComponent implements OnInit {
           }
         } else {
           if (this.getSelectedSeats().length + this.casualSeats < this.ticketCount) {
-            this.economyLabel = 'selected';
+            this.economyLabel = true;
             this.price += this.flight!.CostoE;
             this.seatclass.push('Economy');
             this.casualSeats++;
@@ -238,7 +248,6 @@ export class SeatSelectionComponent implements OnInit {
     }
   }
 
-  // TODO: aggiungere i seat casuali in this.seats
   // Quando il numero di biglietti cambia
   onTicketCountChange() {
     // Ottieni i posti selezionati
@@ -278,4 +287,29 @@ export class SeatSelectionComponent implements OnInit {
 
     return grouped;
   }
+
+  submit() {
+  const selectedSeats = this.getSelectedSeats();
+
+  if ((selectedSeats.length + this.casualSeats) < this.ticketCount) {
+    alert("Seleziona tutti i posti prima di continuare.");
+    return;
+  }
+
+  selectedSeats.forEach(seat => {
+    this.seatclass.push(seat.type === 'business' ? 'Business' : seat.type === 'economy' ? 'Economy' : 'First Class');
+  });
+
+  this.router.navigate(['/baggageselection'], {
+    queryParams: {
+      flightId: this.flightId,
+      chseat: JSON.stringify(this.chseat),
+      seatclass: JSON.stringify(this.seatclass),
+      ticketCount: JSON.stringify(this.ticketCount),
+      price: JSON.stringify(this.price),
+      seats: JSON.stringify(selectedSeats),
+      extraBagPrice: JSON.stringify(this.flight?.CostoBag)
+    }
+  });
+}
 }
