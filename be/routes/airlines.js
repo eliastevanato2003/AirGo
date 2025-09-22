@@ -82,4 +82,6 @@ router.delete("/deleteAirline", authenticateToken, authorizeRoles(0), airlineCon
  */
 router.post("/activateAirline", airlineController.activateAirline);
 
+router.get("/getStatsRoute", authenticateToken, authorizeRoles(1), airlineController.getStatsRoute);
+
 module.exports = router;

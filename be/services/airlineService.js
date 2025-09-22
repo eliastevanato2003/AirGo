@@ -32,3 +32,5 @@ exports.updateAirline = async (id, name, identificationcode, password) => {
 }
 
 exports.deleteAirline = async (id) => await airlineModel.deleteAirline(id);
+
+exports.getStatsRoute = async (id) => await airlineModel.getStatsRoute(id);
