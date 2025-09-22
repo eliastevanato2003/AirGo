@@ -47,7 +47,7 @@ exports.deleteAirline = async (id) => {
 }
 
 exports.getStatsRoute = async (id) => {
-    const sql = 'SELCET * FROM "statistiche" WHERE "CompagniaAerea" = $1';
+    const sql = 'SELECT * FROM "statistiche" WHERE "CompagniaAerea" = $1';
     const result = await pool.query(sql, [id]);
-    return result.rowCount;
+    return result.rows;
 }
