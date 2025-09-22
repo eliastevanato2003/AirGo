@@ -103,11 +103,9 @@ exports.deleteAirline = async (req, res, next) => {
 
 exports.getStatsRoute = async(req, res, next) => {
     try {
-        console.log("ciao")
         const stats = await airlineService.getStatsRoute(req.id);
         res.json(stats);
     } catch (err) {
-        console.log("ciao")
         next(err);
     }
 }
