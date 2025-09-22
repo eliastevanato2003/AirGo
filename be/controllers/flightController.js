@@ -263,6 +263,24 @@ exports.deleteFlight = async (req, res, next) => {
     }
 }
 
+exports.cancelFlight = async (req, res, next) => {
+    try {
+        const { id } = req.body ?? {};
+        if(id == undefined){
+            res.status(400).json({message: "Id missing"});
+            return;
+        }
+        const flight = await flightService.getFlights(id, req.id, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, "Programmato");
+        if (flight[0]) {
+            const nflight = await flightService.updateFlight(id, flight[0].DataPartenzaEff, flight[0].DataArrivvoEff, "Cancellato", flight[0].CostoPC, flight[0].CostoB, flight[0].CostoE);
+            res.json({ nflight: nflight });
+        } else res.status(400).json({ message: "Flight not found" });
+    } catch (err) {
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
+    }
+}
+
 function seats(row, col) {
     let arr = [];
     for (let i = 1; i <= row; i++) {
