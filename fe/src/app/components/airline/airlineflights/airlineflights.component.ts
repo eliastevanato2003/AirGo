@@ -60,8 +60,8 @@ export class AirlineFlightsComponent implements OnInit {
       id: [''],
       departure: [''],
       arrival: [''],
-      mindatedeparture: [''],
-      mindatearrival: [''],
+      datedeparture: [''],
+      datearrival: [''],
       status: ['All']
     });
 
@@ -100,7 +100,15 @@ export class AirlineFlightsComponent implements OnInit {
   private loadRoutes(): void {
     if (!this.airlineId) return;
     this.routeService.getRoutes().subscribe({
-      next: (routes) => this.routes = routes,
+      next: (routes) => {
+        this.routes = routes;
+     
+            this.routes = this.routes.map(r => ({
+              ...r,
+              label: `${r.CodicePartenza} ➔ ${r.CodiceDestinazione}`
+            }));
+          },
+
       error: (err) => console.error('Errore caricamento rotte', err)
     });
   }
@@ -206,12 +214,6 @@ export class AirlineFlightsComponent implements OnInit {
   filtra(): void {
     const filters = { ...this.filterForm.value };
 
-    if (filters.mindatedeparture && !filters.maxdatedeparture) {
-      filters.maxdatedeparture = filters.mindatedeparture;
-    }
-    if (filters.mindatearrival && !filters.maxdatearrival) {
-      filters.maxdatearrival = filters.mindatearrival;
-    }
 
     Object.keys(filters).forEach(key => {
       if (!filters[key]) delete filters[key];
@@ -232,7 +234,7 @@ export class AirlineFlightsComponent implements OnInit {
 
   cancellaVolo(id:number):void{
     if (confirm('Sei sicuro di voler eliminare questo volo?')) {
-      this.flightService.deleteFlight(id).subscribe({
+      this.flightService.cancelFlight(id).subscribe({
         next: (res) => {
           alert('Volo eliminato con successo');
           this.filtra();
@@ -313,17 +315,25 @@ export class AirlineFlightsComponent implements OnInit {
   }
 
 
-  // === PER LE DATE EFFETTIVE ===
+
   openEditDates(): void {
-    if (!this.selectedFlight) return;
+  if (!this.selectedFlight || !this.selectedFlight.DataPartenzaEff || !this.selectedFlight.DataArrivoEff) return;
 
-    this.editDatesForm = this.fb.group({
-      effdepdate: [this.formatDateForInput(this.selectedFlight.DataPartenzaEff), Validators.required],
-      effarrdate: [this.formatDateForInput(this.selectedFlight.DataArrivoEff), Validators.required],
-    });
+  const addHours = (dateStr: string, hours: number) => {
+    if (!dateStr) return dateStr;
+    const d = new Date(dateStr);
+    d.setHours(d.getHours() + hours);
+    return d.toISOString().slice(0, 16); // formato compatibile con input datetime-local
+  };
 
-    this.showEditDates = true;
-  }
+  this.editDatesForm = this.fb.group({
+    effdepdate: [addHours(this.selectedFlight.DataPartenzaEff, 2), Validators.required],
+    effarrdate: [addHours(this.selectedFlight.DataArrivoEff, 2), Validators.required],
+  });
+
+  this.showEditDates = true;
+}
+
 
   closeEditDates(): void {
     this.showEditDates = false;
@@ -331,33 +341,50 @@ export class AirlineFlightsComponent implements OnInit {
   }
 
   saveEditDates(): void {
-    if (!this.selectedFlight || this.editDatesForm.invalid) return;
+  if (!this.selectedFlight || this.editDatesForm.invalid) return;
 
-    const f = this.editDatesForm.value;
+  const f = this.editDatesForm.value;
 
-    if (f.effdepdate === this.selectedFlight.DataPartenzaEff &&
-        f.effarrdate === this.selectedFlight.DataArrivoEff) {
-      this.closeEditDates();
-      return;
-    }
+  const toUTCISOString = (dateStr: string) => {
+    if (!dateStr) return dateStr;
+    const d = new Date(dateStr);
+    return new Date(
+      d.getFullYear(),
+      d.getMonth(),
+      d.getDate(),
+      d.getHours(),
+      d.getMinutes(),
+      d.getSeconds()
+    ).toISOString(); // ISO con Z finale
+  };
 
-    this.flightService.updateEffectiveDate(
-      this.selectedFlight.IdVolo,
-      f.effdepdate,
-      f.effarrdate
-    ).subscribe({
-      next: () => {
-        alert("Orari aggiornati con successo");
-        this.closeEditDates();
-        this.filtra();
-        this.closeManage();
-      },
-      error: (err) => {
-        console.error("Errore aggiornamento orari", err);
-        alert(err.error?.message || "Errore durante l'aggiornamento orari");
-      }
-    });
+  const effdep = toUTCISOString(f.effdepdate);
+  const effarr = toUTCISOString(f.effarrdate);
+
+  if (effdep === this.selectedFlight.DataPartenzaEff &&
+      effarr === this.selectedFlight.DataArrivoEff) {
+    this.closeEditDates();
+    return;
   }
+
+  this.flightService.updateEffectiveDate(
+    this.selectedFlight.IdVolo,
+    effdep,
+    effarr
+  ).subscribe({
+    next: () => {
+      alert("Orari aggiornati con successo");
+      this.closeEditDates();
+      this.filtra();
+      this.closeManage();
+    },
+    error: (err) => {
+      console.error("Errore aggiornamento orari", err);
+      alert(err.error?.message || "Errore durante l'aggiornamento orari");
+    }
+  });
+}
+
 
 
   private formatDateForInput(date: any): string | null {

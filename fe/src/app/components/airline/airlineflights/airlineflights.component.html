@@ -41,7 +41,7 @@
 
         <div class="input-group">
           <label>Data partenza</label>
-          <input type="date" formControlName="mindatedeparture">
+          <input type="date" formControlName="datedeparture">
         </div>
      
 
@@ -58,8 +58,8 @@
         </div>
 
         <div class="input-group">
-          <label>Data ritorno</label>
-          <input type="date" formControlName="mindatearrival">
+          <label>Data arrivo</label>
+          <input type="date" formControlName="datearrival">
         </div>
       
 
@@ -132,7 +132,7 @@
           <ng-select
             formControlName="route"
             [items]="routes"
-            bindLabel="CodicePartenza"
+            bindLabel="label"
             bindValue="IdRotta"
             [searchable]="true">
             <ng-template ng-option-tmp let-item="item">
@@ -140,6 +140,7 @@
             </ng-template>
           </ng-select>
         </div>
+
 
 
         <label for="schdepdate">Data partenza</label>
@@ -262,7 +263,7 @@
             <button class="check-btn" (click)="checkin(selectedFlight.IdVolo)">Assegna posti</button>
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
             <button class="add-btn" (click)="openEditPrices()">Modifica prezzi</button>
-            <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Elimina</button>
+            <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Cancella</button>
           }
           @if(selectedFlightStatus === 'Decollato') {
             <button class="action-btn" (click)="atterraggioVolo(selectedFlight.IdVolo)">Atterraggio</button>

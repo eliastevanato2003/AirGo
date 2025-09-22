@@ -60,9 +60,10 @@ export class AirlinesComponent implements OnInit {
 
     this.airlineService.addAirline(this.newAirline).subscribe({
       next:() => {
-      this.airlineForm.reset();
-      this.loadAirlines();
-      this.closeModal();
+        alert('Nuova compagnia aerea creata');
+        this.airlineForm.reset();
+        this.loadAirlines();
+        this.closeModal();
     },
         error: (err) => {
           console.error('Errore creazione compagnia aerea', err);
@@ -110,7 +111,5 @@ export class AirlinesComponent implements OnInit {
     this.filterForm.reset();
     this.loadAirlines();
   }
-
-
 
 }
