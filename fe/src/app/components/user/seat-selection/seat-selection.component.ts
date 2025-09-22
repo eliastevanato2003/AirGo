@@ -10,6 +10,7 @@ import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
 import { TicketService } from '../../../services/user/ticket.service';
 import { ExtraLegRow } from '../../../models/airline/model.model';
+import { TicketDB } from '../../../models/user/ticket.model';
 
 @Component({
   selector: 'app-seat-selection',
@@ -66,66 +67,65 @@ export class SeatSelectionComponent implements OnInit {
   }
 
   generateSeats() {
-    this.ticketService.getTickets(this.flight!.IdVolo).subscribe({
-      next: (response) => {
-        console.log(response);
-        const bookedSeats = response.tickets ? response.tickets : [];
-        console.log('Booked Seats:', bookedSeats);
-        // bookedSeats = response;
+  if (!this.flight) return;
 
-        // Pulisci l'array dei posti
-        this.seats = [];
-        // FIRST CLASS
-        this.seats.push({
-          id: '00',
-          row: 0,
-          column: '0',
-          type: 'firstclass',
-          price: this.flight!.CostoPC,
-          selected: false
-        });
+  this.ticketService.getTickets({ flight: this.flight.IdVolo }).subscribe({
+    next: (bookedSeats: TicketDB[]) => {  
+      console.log('Booked Seats:', bookedSeats);
 
-        // BUSINESS
-        let row = 1;
-        for (row; row <= this.flight!.RigheB; row++) {
-          for (let col = 0; col < this.flight!.ColonneB; col++) {
-            this.seats.push({
-              id: `${row}${col}`,
-              row,
-              column: String.fromCharCode(65 + col),
-              type: 'business',
-              price: this.flight!.CostoB,
-              selected: false,
-              unavailable: bookedSeats.some((ticket: any) => ticket.RigPosto === row && ticket.ColPosto === String.fromCharCode(65 + col)),
-              extraLegroom: this.extraLegRoom.some((seat: any) => seat.NRiga === row)
-            });
-          }
+      this.seats = [];
+
+      this.seats.push({
+        id: '00',
+        row: 0,
+        column: '0',
+        type: 'firstclass',
+        price: this.flight!.CostoPC,
+        selected: false
+      });
+
+      // BUSINESS
+      let row = 1;
+      for (; row <= this.flight!.RigheB; row++) {
+        for (let col = 0; col < this.flight!.ColonneB; col++) {
+          const colLetter = String.fromCharCode(65 + col);
+          this.seats.push({
+            id: `${row}${col}`,
+            row,
+            column: colLetter,
+            type: 'business',
+            price: this.flight!.CostoB,
+            selected: false,
+            unavailable: bookedSeats.some(ticket => ticket.RigPosto === row && ticket.ColPosto === colLetter),
+            extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
+          });
         }
-
-        const bRow = row;
-
-        // ECONOMY
-        for (row; row <= this.flight!.RigheE + bRow; row++) {
-          for (let col = 0; col < this.flight!.ColonneE; col++) {
-            this.seats.push({
-              id: `${row}${col}`,
-              row,
-              column: String.fromCharCode(65 + col),
-              type: 'economy',
-              price: this.flight!.CostoE,
-              selected: false,
-              unavailable: bookedSeats.some((ticket: any) => ticket.RigPosto === row && ticket.ColPosto === String.fromCharCode(65 + col)),
-              extraLegroom: this.extraLegRoom.some((seat: any) => seat.NRiga === row)
-            });
-          }
-        }
-      },
-      error: (error) => {
-        console.error('getTickets error:', error);
-        // Gestisci l'errore, magari mostrando un messaggio all'utente
       }
-    });
-  }
+
+      const bRow = row;
+
+      // ECONOMY
+      for (; row <= this.flight!.RigheE + bRow; row++) {
+        for (let col = 0; col < this.flight!.ColonneE; col++) {
+          const colLetter = String.fromCharCode(65 + col);
+          this.seats.push({
+            id: `${row}${col}`,
+            row,
+            column: colLetter,
+            type: 'economy',
+            price: this.flight!.CostoE,
+            selected: false,
+            unavailable: bookedSeats.some(ticket => ticket.RigPosto === row && ticket.ColPosto === colLetter),
+            extraLegroom: this.extraLegRoom.some(seat => seat.NRiga === row)
+          });
+        }
+      }
+    },
+    error: (error) => {
+      console.error('getTickets error:', error);
+    }
+  });
+}
 
   selectSeat(seat: Seat) {
     if (seat.unavailable) {

@@ -1,104 +1,102 @@
-<app-navbar></app-navbar>
+<div class="air-go-container">
+  <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione Aerei</h2>
-      <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
-    </div>
+  <!-- Hero con immagine e filtro dentro -->
+  <div class="hero hero-airplanes">
+    <h1>Gestione Aerei</h1>
+    <p>Qui puoi aggiungere o eliminare aerei della tua compagnia</p>
     <button class="add-btn" (click)="showModal=true">Nuovo aereo</button>
-  </div>
-</div>
-  <div class="filters">
-  <h3>Filtra Aerei</h3>
-  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
 
-    <label>ID Aereo</label>
-    <input type="number" formControlName="id" placeholder="ID aereo">
+    <!-- Filtro aerei dentro la hero -->
+    <div class="search-box filter-inside" [formGroup]="filterForm">
+      <div class="input-group">
+        <label>ID Aereo</label>
+        <input type="number" formControlName="id" placeholder="ID aereo">
+      </div>
 
-    <label>Modello</label>
-    <select formControlName="model">
-      <option value="">Tutti</option>
-      @for(model of models; track model.IdModello) {
-        <option [value]="model.IdModello">{{ model.Nome }}</option>
-      }
-    </select>
+      <div class="input-group">
+        <label>Modello</label>
+        <select formControlName="model">
+          <option value="">Tutti</option>
+          @for(model of models; track model.IdModello) {
+            <option [value]="model.IdModello">{{ model.Nome }}</option>
+          }
+        </select>
+      </div>
 
-    <label>Anno di costruzione</label>
-    <input type="number" formControlName="constructionYear" placeholder="Es. 2015">
+      <div class="input-group">
+        <label>Anno di costruzione</label>
+        <input type="number" formControlName="constructionYear" placeholder="Es. 2015">
+      </div>
 
-    <label>Stato</label>
-    <select formControlName="inservice">
-      <option [value]="true">In servizio</option>
-      <option [value]="false">Fuori servizio</option>
-    </select>
+      <div class="input-group">
+        <label>Stato</label>
+        <select formControlName="inservice">
+          <option [value]="true">In servizio</option>
+          <option [value]="false">Fuori servizio</option>
+        </select>
+      </div>
 
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica</button>
-      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
+      <button class="search-btn" type="submit" (click)="filtra()">&#10141;</button>
+      <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
     </div>
-  </form>
-</div>
+  </div>
 
-<div class="second-container">
-  <div class="airplane-list">
-    @for(airplane of airplanes; track airplane.IdAereo) {
-      <div class="airplane-bar">
-        <div class="airplane-info">
-          <p><strong>Aereo:</strong> {{ airplane.NomeModello }} - {{ airplane.IdAereo }}</p>
-          <p><strong>Anno di costruzione:</strong> {{ airplane.AnnoCostruzione }}</p>
+  <!-- Lista aerei -->
+  <div class="second-container">
+    <div class="airplane-list">
+      @for(airplane of airplanes; track airplane.IdAereo) {
+        <div class="airplane-bar">
+          <div class="airplane-info">
+            <p><strong>Aereo:</strong> {{ airplane.NomeModello }} - {{ airplane.IdAereo }}</p>
+            <p><strong>Anno di costruzione:</strong> {{ airplane.AnnoCostruzione }}</p>
+
+            @if(airplane.InServizio){
+              <p><strong>Stato:</strong> <span class="status inservice">In servizio</span></p>
+            }@else{
+              <p><strong>Stato:</strong> <span class="status outservice">Fuori servizio</span></p>
+            }
+          </div>
 
           @if(airplane.InServizio){
-            <p><strong>Stato:</strong> <span style="color: green;">In servizio</span></p>
+            <button class="delete-btn" (click)="ritira(airplane.IdAereo)">Ritira</button>
           }@else{
-            <p><strong>Stato:</strong> <span style="color: red;">Fuori servizio</span></p>
+            <button class="save-btn" (click)="attiva(airplane.IdAereo)">Attiva</button>
+            <button class="delete-btn" (click)="deletePlane(airplane.IdAereo)">Elimina</button>
           }
         </div>
-
-        @if(airplane.InServizio){
-          <button class="delete-btn" (click)="ritira(airplane.IdAereo)">Ritira</button>
-        }@else{
-          <button class="save-btn" (click)="attiva(airplane.IdAereo)">Attiva</button>
-          <button class="delete-btn" (click)="deletePlane(airplane.IdAereo)">Elimina</button>
-        }
-      </div>
-    }
-  </div>
-
-
-
-  @if(showModal) {
-  <div class="modal-overlay">
-    <div class="modal-content">
-      <h3>Nuovo aereo</h3>
-      <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
-        <label>Modello</label>
-
-        <div class="containerb">
-          <select formControlName="model">
-            <option value="" disabled>Seleziona un modello</option>
-            @for(model of models; track model.IdModello) {
-              <option [value]="model.IdModello">{{ model.Nome }}</option>
-            }
-          </select>
-          
-
-          <button type="button" class="add-btn" (click)="toCreate()">Crea</button>
-        </div>
-        
-
-
-        <label>Anno di costruzione</label>
-        <input type="number" formControlName="constructionyear">
-
-        <div class="modal-buttons">
-          <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
-          <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
-        </div>
-      </form>   
+      }
     </div>
   </div>
-  }
-</div>
 
-<app-footer></app-footer>
+  <!-- Modal aggiunta aereo -->
+  @if(showModal) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h3>Nuovo aereo</h3>
+        <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
+          <label>Modello</label>
+          <div class="containerb">
+            <select formControlName="model">
+              <option value="" disabled>Seleziona un modello</option>
+              @for(model of models; track model.IdModello) {
+                <option [value]="model.IdModello">{{ model.Nome }}</option>
+              }
+            </select>
+            <button type="button" class="add-btn" (click)="toCreate()">Crea</button>
+          </div>
+
+          <label>Anno di costruzione</label>
+          <input type="number" formControlName="constructionyear">
+
+          <div class="modal-buttons">
+            <button type="submit" class="add-btn" [disabled]="newPlaneForm.invalid">Aggiungi</button>
+            <button type="button" class="cancel-btn" (click)="closeModal()">Annulla</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+
+  <app-footer></app-footer>
+</div>

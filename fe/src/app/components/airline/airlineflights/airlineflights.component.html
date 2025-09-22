@@ -1,120 +1,104 @@
-<app-navbar></app-navbar>
+<div class="air-go-container">
+  <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione dei Voli</h2>
-      <p>Qui puoi aggiungere, modificare o eliminare voli della tua compagnia aerea</p>
-    </div>
-    <button class="add-btn" (click)="showCreate=true">Aggiungi volo</button>
-  </div>
-</div>
+  <!-- Hero con filtri e pulsante aggiungi -->
+  <div class="hero hero-flights">
+    <h1>Gestione dei Voli</h1>
+    <p>Qui puoi aggiungere, modificare o eliminare voli della tua compagnia aerea</p>
+    <button class="add-btn hero-add-btn" (click)="showCreate=true">Aggiungi volo</button>
 
+    <!-- Filtri -->
+    <div [formGroup]="filterForm"  class="search-box filter-inside">
+      
+      
+        <div class="input-group">
+          <label>ID Volo</label>
+          <input type="number" formControlName="id" placeholder="ID Volo">
+        </div>
+        <div class="input-group">
+          <label>Stato</label>
+          <select formControlName="status">
+            <option value="All">Tutti</option>
+            <option value="Programmato">Programmato</option>
+            <option value="Decollato">Decollato</option>
+            <option value="Atterrato">Atterrato</option>
+            <option value="Cancellato">Cancellato</option>
+          </select>
+        </div>
+      
 
-<div class="filters">
-  <h3>Filtra Voli</h3>
-  <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
-
-    <!-- RIGA SUPERIORE: ID volo e Stato -->
-    <div class="filter-row">
-      <div class="filter-item">
-        <label>ID Volo</label>
-        <input type="number" formControlName="id" placeholder="ID Volo">
-      </div>
-      <div class="filter-item">
-        <label>Stato</label>
-        <select formControlName="status">
-          <option value="All">Tutti</option>
-          <option value="Programmato">Programmato</option>
-          <option value="Decollato">Decollato</option>
-          <option value="Atterrato">Atterrato</option>
-          <option value="Cancellato">Cancellato</option>
-        </select>
-      </div>
-    </div>
-
-    <!-- BLOCCO PARTENZA -->
-    <div class="filter-block">
-      <h4>Partenza</h4>
-      <div class="filter-row">
-        <div class="filter-item">
-          <label>Aeroporto (ID)</label>
+      
+        <div class="input-group">
+          <label>Partenza (Aeroporto ID)</label>
           <input type="number" formControlName="departure">
         </div>
-        <div class="filter-item">
+        <div class="input-group">
           <label>Data minima</label>
           <input type="date" formControlName="mindatedeparture">
         </div>
-        <div class="filter-item">
+        <div class="input-group">
           <label>Data massima</label>
           <input type="date" formControlName="maxdatedeparture">
         </div>
-      </div>
-    </div>
+     
 
-    <!-- BLOCCO ARRIVO -->
-    <div class="filter-block">
-      <h4>Arrivo</h4>
-      <div class="filter-row">
-        <div class="filter-item">
-          <label>Aeroporto (ID)</label>
+      
+        <div class="input-group">
+          <label>Arrivo (Aeroporto ID)</label>
           <input type="number" formControlName="arrival">
         </div>
-        <div class="filter-item">
+        <div class="input-group">
           <label>Data minima</label>
           <input type="date" formControlName="mindatearrival">
         </div>
-        <div class="filter-item">
+        <div class="input-group">
           <label>Data massima</label>
           <input type="date" formControlName="maxdatearrival">
         </div>
-      </div>
+      
+
+
+        <button type="button" (click)="filtra()" class="search-btn">&#10141; Applica</button>
+        <button type="button" (click)="reset()" class="search-btn reset">Reset</button>
     </div>
 
-    <!-- BOTTONI -->
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica filtri</button>
-      <button type="button" (click)="reset()" class="cancel-btn">Reset</button>
-    </div>
+  </div>
 
-  </form>
-</div>
->
+  <!-- Lista voli -->
+  <div class="second-container">
+    @if(flights) {
+      <div class="flight-list">
+        @for(flight of flights; track flight.IdVolo) {
+          <div class="flight-bar">
+            <div class="flight-status">
+              <h4>Volo #{{ flight.IdVolo }}</h4>
+              <p class="time">{{ flight.DataPartenzaPrev | date:'dd-MM-yyyy' }}</p>
+              <p>Stato: {{ flight.Stato }}</p>
+            </div>
 
+            <div class="flight-route">
+              <div class="codes">
+                <p class="code">{{ flight.CodicePartenza }}</p>
+                <p class="time">{{ flight.DataPartenzaPrev | date:'HH:mm' }}</p>
+              </div>
 
-<div class="second-container">
- @if(flights) {
-  <div class="flight-list">
-    @for(flight of flights; track flight.IdVolo) {
-      <div class="flight-bar">
-        <div class="flight-status">
-          <h4>Volo #{{ flight.IdVolo }}</h4>
-          <p class="time">{{ flight.DataPartenzaPrev | date:'dd-MM-yyyy' }}</p>
-          <p>Stato: {{ flight.Stato }}</p>
-        </div>
+              <div class="arrow">➔</div>
 
-        <div class="flight-route">
-          <div class="codes">
-            <p class="code">{{ flight.CodicePartenza }}</p>
-            <p class="time">{{ flight.DataPartenzaPrev | date:'HH:mm' }}</p>
+              <div class="codes">
+                <p class="code">{{ flight.CodiceArrivo }}</p>
+                <div class="t">
+                  <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}
+                  @if(flight.DataArrivoPrev && flight.DataPartenzaPrev && (flight.DataArrivoPrev | date:'yyyy-MM-dd') !== (flight.DataPartenzaPrev | date:'yyyy-MM-dd')){+1}</p>
+                </div>
+              </div>
+            </div>
+
+            <button class="add-btn" (click)="gestisci(flight)">Gestisci</button>
           </div>
-
-          <div class="arrow">➔</div>
-
-          <div class="codes">
-            <p class="code">{{ flight.CodiceArrivo }}</p>
-            <div class="t">
-              <p class="time">{{ flight.DataArrivoPrev | date:'HH:mm' }}
-              @if(flight.DataArrivoPrev && flight.DataPartenzaPrev && (flight.DataArrivoPrev | date:'yyyy-MM-dd') !== (flight.DataPartenzaPrev | date:'yyyy-MM-dd')){+1}</p>
-            </div>
-            </div>
-        </div>
-
-        <button class="add-btn" (click)="gestisci(flight)">Gestisci</button>
+        }
       </div>
     }
   </div>
-}
 
 
   @if(showCreate) {
@@ -189,12 +173,35 @@
           </h4>
           @if(expandedSection==='volo'){
           <div class="info-content">
-            <p><strong>Aeroporto di partenza:</strong> {{selectedFlight.CittaPartenza}} ({{selectedFlight.CodicePartenza}})</p>
-            <p><strong>Orario di partenza:</strong> {{selectedFlight.DataPartenzaPrev}} - {{selectedFlight.DataPartenzaEff}}</p>
-            <p><strong>Aeroporto di arrivo:</strong> {{selectedFlight.CittaArrivo}} ({{selectedFlight.CodiceArrivo}})</p>
-            <p><strong>Orario di arrivo:</strong> {{selectedFlight.DataArrivoPrev}} - {{selectedFlight.DataArrivoEff}}</p>
-            <p><strong>Stato:</strong> {{selectedFlight.Stato}}</p>
+            <p>
+              <strong>Aeroporto di partenza:</strong> 
+              {{ selectedFlight.CittaPartenza }} ({{ selectedFlight.CodicePartenza }})
+            </p>
+
+            <p>
+              <strong>Orario di partenza:</strong> 
+              {{ selectedFlight.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm' }} 
+              - 
+              {{ selectedFlight.DataPartenzaEff ? (selectedFlight.DataPartenzaEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora decollato' }}
+            </p>
+
+            <p>
+              <strong>Aeroporto di arrivo:</strong> 
+              {{ selectedFlight.CittaArrivo }} ({{ selectedFlight.CodiceArrivo }})
+            </p>
+
+            <p>
+              <strong>Orario di arrivo:</strong> 
+              {{ selectedFlight.DataArrivoPrev | date:'dd/MM/yyyy HH:mm' }} 
+              - 
+              {{ selectedFlight.DataArrivoEff ? (selectedFlight.DataArrivoEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora atterrato' }}
+            </p>
+
+            <p>
+              <strong>Stato:</strong> {{ selectedFlight.Stato }}
+            </p>
           </div>
+
         }
         </div>
 
@@ -233,7 +240,7 @@
        
         <div class="info-actions" style="margin-left:auto;">
           @if(selectedFlightStatus === 'Programmato') {
-            <button class="check-btn" (click)="checkin(selectedFlight.IdVolo)">Check-in</button>
+            <button class="check-btn" (click)="checkin(selectedFlight.IdVolo)">Assegna posti</button>
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
             <button class="add-btn" (click)="openEditPrices()">Modifica prezzi</button>
             <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Elimina</button>
@@ -302,6 +309,7 @@
 
 
  
-</div>
+
 
 <app-footer></app-footer>
+</div>

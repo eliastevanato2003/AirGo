@@ -1,0 +1,143 @@
+<div class="air-go-container">
+  <app-navbar></app-navbar>
+
+  <div class="hero hero-tickets">
+    <h1>Gestione Biglietti</h1>
+    <p>Qui puoi visualizzare e filtrare i tuoi biglietti</p>
+
+    <div class="search-box filter-inside" [formGroup]="filterForm">
+      <div class="input-group">
+        <label>ID Biglietto</label>
+        <input type="number" formControlName="idTicket">
+      </div>
+
+      <div class="input-group">
+        <label>ID Volo</label>
+        <input type="number" formControlName="idFlight">
+      </div>
+
+      <button class="search-btn" type="submit" (click)="filtra()">&#10141;</button>
+      <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
+    </div>
+  </div>
+
+  <div class="second-container">
+    <div class="ticket-list">
+      @for(ticket of tickets; track ticket.IdBiglietto) {
+        <div class="ticket-bar">
+          <div class="ticket-info">
+            <p><strong>Biglietto:</strong> {{ ticket.IdBiglietto }}</p>
+            <p><strong>Volo:</strong> {{ ticket.Volo }}</p>
+          </div>
+
+          <button class="add-btn" (click)="gestisci(ticket)">Gestisci</button>
+        </div>
+      }
+    </div>
+  </div>
+
+  @if(showManage && selectedTicket) {
+    <div class="modal-overlay">
+      <div class="modal-content manage-modal">
+        <h3>Gestisci Biglietto #{{selectedTicket.IdBiglietto}}</h3>
+
+        <div class="manage-body containerb">
+          <div class="info-details">
+
+            <div class="info-box">
+              <h4 (click)="toggleSection('passeggero')">
+                Info Passeggero
+                <span>{{ expandedSection === 'passeggero' ? '▲' : '▼' }}</span>
+              </h4>
+              @if(expandedSection === 'passeggero') {
+                <div class="info-content">
+                  <p><strong>Nome:</strong> {{selectedTicket.Nome}}</p>
+                  <p><strong>Cognome:</strong> {{selectedTicket.Cognome}}</p>
+                  <p><strong>Data di nascita:</strong> {{selectedTicket.DoB | date:'dd/MM/yyyy'}}</p>
+                </div>
+              }
+            </div>
+
+            <div class="info-box">
+              <h4 (click)="toggleSection('posto')">
+                Posto
+                <span>{{ expandedSection === 'posto' ? '▲' : '▼' }}</span>
+              </h4>
+              @if(expandedSection === 'posto') {
+                <div class="info-content">
+                  <p><strong>Numero Posto:</strong> {{selectedTicket.NPosto}}</p>
+                  <p><strong>Colonna Posto:</strong> {{selectedTicket.ColPosto}}</p>
+                </div>
+              }
+            </div>
+
+            <div class="info-box">
+              <h4 (click)="toggleSection('costo')">
+                Costo
+                <span>{{ expandedSection === 'costo' ? '▲' : '▼' }}</span>
+              </h4>
+              @if(expandedSection === 'costo') {
+                <div class="info-content">
+                  <p><strong>Costo Totale:</strong> {{selectedTicket.Costo}}€</p>
+                  <p><strong>Numero Bagagli Extra:</strong> {{selectedTicket.NBagagliExtra}}</p>
+                  <p><strong>Classe:</strong> {{selectedTicket.Classe}}</p>
+                </div>
+              }
+            </div>
+
+            <div class="info-box">
+              <h4 (click)="toggleSection('volo')">
+                Info Volo
+                <span>{{ expandedSection === 'volo' ? '▲' : '▼' }}</span>
+              </h4>
+              @if(expandedSection === 'volo') {
+                <div class="info-content">
+                  <p><strong>Partenza:</strong> {{selectedTicket.Partenza}}</p>
+                  <p><strong>Destinazione:</strong> {{selectedTicket.Destinazione}}</p>
+                  <p><strong>Data Partenza:</strong> {{selectedTicket.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm'}}</p>
+                  <p><strong>Data Arrivo:</strong> {{selectedTicket.DataArrivoPrev | date:'dd/MM/yyyy HH:mm'}}</p>
+                </div>
+              }
+            </div>
+
+          </div>
+
+          <div class="info-actions" style="margin-left:auto;">
+            <button class="action-btn" (click)="openEdit()">Modifica</button>
+          </div>
+        </div>
+
+        <div class="close-area">
+          <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if(showEdit && selectedTicket) {
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h3>Modifica Biglietto #{{selectedTicket.IdBiglietto}}</h3>
+        <form [formGroup]="updateForm" (ngSubmit)="saveEdit()">
+
+          <label>Nome</label>
+          <input type="text" formControlName="Nome" placeholder="Inserisci nome">
+
+          <label>Cognome</label>
+          <input type="text" formControlName="Cognome" placeholder="Inserisci cognome">
+
+          <label>Data di nascita</label>
+          <input type="date" formControlName="DoB">
+
+          <div class="modal-buttons">
+            <button type="submit" class="save-btn" [disabled]="updateForm.invalid">Salva</button>
+            <button type="button" class="dismiss-btn" (click)="closeEdit()">Annulla</button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  }
+
+  <app-footer></app-footer>
+</div>

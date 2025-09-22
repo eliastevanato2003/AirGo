@@ -1,36 +1,37 @@
-<app-navbar></app-navbar>
+<div class="air-go-container">
+  <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione Compagnie Aeree</h2>
-      <p>Qui puoi aggiungere o eliminare compagnie aeree</p>
-    </div>
-    <button class="add-airline-btn" (click)="showModal=true">Aggiungi compagnia</button>
-  </div>
-</div>
+ 
+  <div class="hero hero-airlines">
+    <h1 style="color:white;">Gestione Compagnie Aeree</h1>
+    <p style="color:white;">Qui puoi aggiungere o eliminare compagnie aeree</p>
+    <button class="add-btn" (click)="showModal=true">Aggiungi compagnia</button>
 
-<div class="filters">
-  <h3>Filtra Compagnie aeree</h3>
-  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
+  <div [formGroup]="filterForm"  (ngSubmit)="filtra()" class="search-box filter-inside">
 
+    <div class="input-group">
     <label>ID</label>
     <input type="number" formControlName="id">
+    </div>
 
+    <div class="input-group">
     <label>Nome</label>
     <input type="text" formControlName="name">
+    </div>
 
+    <div class="input-group">
     <label>Email</label>
     <input type="email" formControlName="email">
+    </div>
 
+    <div class="input-group">
     <label>Codice Identificativo</label>
     <input type="text" formControlName="code">
-
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica</button>
-      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
     </div>
-  </form>
+
+      <button type="submit" class="search-btn">&#10141;</button>
+      <button type="button" class="search-btn reset" (click)=reset() >Reset</button>
+  </div>
 </div>
 
 
@@ -78,3 +79,4 @@
 </div>
 
 <app-footer></app-footer>
+</div>

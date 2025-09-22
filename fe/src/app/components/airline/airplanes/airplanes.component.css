@@ -1,6 +1,7 @@
 .airplane-list {
     display: flex;
     flex-direction: column;
+    margin-top: 3rem;
     gap: 15px;
 }
 
@@ -22,4 +23,10 @@
 
 .airplane-info p strong {
     color: #777;
+}
+
+.hero.hero-airplanes {
+  background-image: url('../../../assets/img/deposit.png');
+  background-size: cover;
+  background-position: center;
 }
