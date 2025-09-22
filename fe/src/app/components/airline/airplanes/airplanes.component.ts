@@ -6,8 +6,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PlaneService } from '../../../services/airline/plane.service';
 import { ModelService } from '../../../services/airline/model.service';
 import { NewPlane, Plane } from '../../../models/airline/plane.model';
-import { forkJoin } from 'rxjs';
-import { Model, NewModel } from '../../../models/airline/model.model';
+import { Model } from '../../../models/airline/model.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -39,6 +38,10 @@ export class AirplanesComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router
   ) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newPlaneForm = this.fb.group({
       model: ['', Validators.required],
       constructionyear: ['', [Validators.required, Validators.min(1900)]]

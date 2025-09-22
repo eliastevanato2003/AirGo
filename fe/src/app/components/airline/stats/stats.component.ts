@@ -5,6 +5,8 @@ import { NavbarComponent } from "../../../navbar/navbar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { CurrencyPipe } from '@angular/common';
 import { RouterLink, RouterLinkActive } from "@angular/router";
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-stats',
@@ -14,7 +16,12 @@ import { RouterLink, RouterLinkActive } from "@angular/router";
 })
 export class StatsComponent {
   public stats: Stats[] = [];
-  constructor(private airlineService: AirlineService) {}
+  constructor(private airlineService: AirlineService, private authService: AuthService, private router: Router) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
+  }
 
   ngOnInit(): void {
     this.airlineService.getStats().subscribe((response) => {

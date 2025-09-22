@@ -7,6 +7,8 @@ import { Model, NewModel } from '../../../models/airline/model.model';
 import { AuthService } from '../../../services/auth.service';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-models',
@@ -29,7 +31,11 @@ export class ModelsComponent implements OnInit{
   editModelForm!: FormGroup;
   filterForm: FormGroup;
 
-  constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
+  constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder, private router: Router) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newModelForm = this.fb.group({
       name: ['', Validators.required],
       firstclass: ['', [Validators.required, Validators.min(0)]],

@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { Airport } from '../../../models/airline/airport.model';
 import { AirportService } from '../../../services/airline/airport.service';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-airlineflights',
@@ -43,7 +44,11 @@ export class AirlineFlightsComponent implements OnInit {
   editDatesForm!: FormGroup;
   airports: Airport[]=[];
 
-  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService, private airportService: AirportService) {
+  constructor(private router: Router, private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService, private airportService: AirportService) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newFlightForm = this.fb.group({
       plane: ['', Validators.required],
       route: ['', Validators.required],

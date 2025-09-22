@@ -6,6 +6,8 @@ import { AirlineService } from '../../../services/airline/airline.service';
 import { HttpClient } from '@angular/common/http';
 import { Airline } from '../../../models/admin/airline.model';
 import { CommonModule } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-airline-profile',
@@ -20,7 +22,12 @@ export class AirlineProfileComponent implements OnInit{
   hidePassword = true;
   airlineProfile: Airline | undefined;
 
-  constructor(private fb: FormBuilder, private http: HttpClient, private airlineService: AirlineService) { 
+  constructor(private router: Router, private authService: AuthService,private fb: FormBuilder, private http: HttpClient, private airlineService: AirlineService) { 
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
+    
     this.airlineForm = this.fb.group({
       name: ['', Validators.required],
       code: ['', Validators.required],

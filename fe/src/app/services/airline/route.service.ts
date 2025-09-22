@@ -49,19 +49,16 @@ export class RouteService {
     );
   }
 
-  updateRoute(id: number, from: string, to: string): Observable<any> {
-    const url = `${this.baseUrl}/updateFlightRoute`;
+  updateRoute(id: number, dep?: number, arr?: number): Observable<any> {
+  const url = `${this.baseUrl}/updateFlightRoute`;
 
-    const body = {
-      id: id,
-      from: from,
-      to: to
-    };
+  const body: any = { id };
+  if (dep != null) body.dep = dep;
+  if (arr != null) body.arr = arr;
 
-    return this.http.post<any>(url, body, { headers: this.getHeaders() }).pipe(
-      tap()
-    );
-  }
+  return this.http.post<any>(url, body, { headers: this.getHeaders() });
+}
+
 
 
 }

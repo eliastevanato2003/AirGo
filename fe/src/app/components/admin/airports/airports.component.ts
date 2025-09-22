@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormControl, FormGroup, FormBuilder, Validators} f
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-airports',
@@ -24,7 +26,11 @@ export class AirportsComponent implements OnInit{
   filterForm: FormGroup;
   editAirportForm!: FormGroup;
 
-  constructor(private airportservice: AirportService, private fb: FormBuilder){
+  constructor(private router: Router, private authService:AuthService,private airportservice: AirportService, private fb: FormBuilder){
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newAirportForm = this.fb.group({
       city: ['', Validators.required],
       country: ['', [Validators.required]],
