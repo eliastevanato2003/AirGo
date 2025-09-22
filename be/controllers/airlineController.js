@@ -104,7 +104,7 @@ exports.deleteAirline = async (req, res, next) => {
 
 exports.getStatsRoute = async (req, res, next) => {
     try {
-        const { order } = req.body ?? {};
+        let { order } = req.body ?? {};
         if (order != 1 || order != 2) order = 1;
         const stats = await airlineService.getStatsRoute(req.id, order);
         res.json(stats);
