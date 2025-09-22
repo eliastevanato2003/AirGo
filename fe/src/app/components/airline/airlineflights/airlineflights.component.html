@@ -200,9 +200,9 @@
 
             <p>
               <strong>Orario di partenza:</strong> 
-              {{ selectedFlight.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm' }} 
+              {{ selectedFlight.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm' }} (prog)
               - 
-              {{ selectedFlight.DataPartenzaEff ? (selectedFlight.DataPartenzaEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora decollato' }}
+              {{ selectedFlight.DataPartenzaEff ? (selectedFlight.DataPartenzaEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora decollato' }} (eff)
             </p>
 
             <p>
@@ -212,9 +212,9 @@
 
             <p>
               <strong>Orario di arrivo:</strong> 
-              {{ selectedFlight.DataArrivoPrev | date:'dd/MM/yyyy HH:mm' }} 
+              {{ selectedFlight.DataArrivoPrev | date:'dd/MM/yyyy HH:mm' }} (prog)
               - 
-              {{ selectedFlight.DataArrivoEff ? (selectedFlight.DataArrivoEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora atterrato' }}
+              {{ selectedFlight.DataArrivoEff ? (selectedFlight.DataArrivoEff | date:'dd/MM/yyyy HH:mm') : 'Non ancora atterrato' }} (eff)
             </p>
 
             <p>

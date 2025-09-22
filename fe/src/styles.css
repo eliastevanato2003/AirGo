@@ -6,9 +6,9 @@
 html, body {
   margin: 0;
   padding: 0;
-  height: 100%; /* Indispensabile per far occupare al body l'intera altezza della viewport */
-  width: 100%;  /* Indispensabile per far occupare al body l'intera larghezza della viewport */
-  overflow-x: hidden; /* Previene lo scroll orizzontale non desiderato */
+  height: 100%; 
+  width: 100%;
+  overflow-x: hidden; 
 }
 
 .material-symbols-outlined {
@@ -288,54 +288,54 @@ html, body {
   width: 150px;
 }
 
-/* Contenitore principale */
+
 .input-group ng-select {
-  width: 150px;              /* stessa larghezza degli input */
+  width: 150px;              
   font-size: 16px;
-  color: #555;
+  color: #111;
   display: block;
   background: transparent;
 }
 
-/* Campo selezione (container interno) */
+
 .input-group ng-select .ng-select-container {
-  border: 1px solid #ccc;    /* bordo come input normale */
+  border: 1px solid #ccc;    
   border-radius: 4px;
   padding: 5px 8px;
-  background-color: #fff;    /* bianco */
-  height: 36px;              /* altezza simile agli input */
+  background-color: #fff;   
+  height: 36px;              
   display: flex;
   align-items: center;
   font-size: 16px;
-  color: #555;
+  color: #111;
 }
 
-/* Placeholder */
+
 .input-group ng-select .ng-placeholder {
   color: #aaa;
   font-size: 14px;
 }
 
-/* Focus */
+
 .input-group ng-select.ng-select-focused .ng-select-container {
   border-color: #888;
   box-shadow: 0 0 0 1px #888;
 }
 
-/* Dropdown panel */
+
 .input-group ng-select .ng-dropdown-panel {
-  background-color: #fff;   /* sfondo bianco */
+  background-color: #fff;   
   border: 1px solid #ccc;
   border-radius: 4px;
   font-size: 14px;
   color: #555;
-  z-index: 1000;             /* sopra altri elementi */
+  z-index: 1000;             
 }
 
 /* Opzioni */
 .input-group ng-select .ng-option {
-  background-color: #fff;   /* sfondo bianco */
-  color: #555;              /* testo leggibile */
+  background-color: #fff;   
+  color: #111;              
   padding: 5px 10px;
 }
 
@@ -344,18 +344,18 @@ html, body {
   background-color: #f0f0f0;
 }
 
-/* Opzione selezionata */
+
 .input-group ng-select .ng-option-selected {
   background-color: #ddd;
   color: #000;
 }
 
-/* Freccia del select */
+
 .input-group ng-select .ng-arrow {
   color: #555;
 }
 
-/* Rimuove bordi extra interni */
+
 .input-group ng-select .ng-value-container {
   padding: 0;
 }
@@ -406,7 +406,7 @@ html, body {
   background-position: center;
   color: white;
   text-align: center;
-  padding: 80px 20px 150px 20px; /* spazio extra in basso per filtro */
+  padding: 80px 20px 150px 20px; 
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -429,10 +429,10 @@ html, body {
   margin-bottom: 30px;
 }
 
-/* Filtro dentro la hero */
+
 .filter-inside {
   position: absolute;
-  bottom: -60px; /* sovrapposto in basso alla hero */
+  bottom: -60px; 
   left: 50%;
   transform: translateX(-50%);
   background-color: rgba(255, 255, 255, 0.95);
