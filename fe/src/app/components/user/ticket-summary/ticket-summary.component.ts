@@ -34,7 +34,7 @@ export class TicketSummaryComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private ticketService: TicketService) {
     this.route.queryParams.subscribe(params => {
-      this.totalPrice = parseInt(params['price']);
+      this.totalPrice = parseFloat(params['price']) || 0.00;
       this.selectedSeats = JSON.parse(params['seats'] || '[]');
       JSON.parse(params['extraBag'] || '[]').forEach((res: boolean) => {
         if (res) this.extraBags++;
@@ -66,7 +66,6 @@ export class TicketSummaryComponent implements OnInit {
       // TODO: Ticket activation
       for (let i = 0; i < this.ticketCount; i++) {
         const chseat = !!this.chseat.find(seat => seat.id === this.selectedSeats[i].id);
-        console.log(this.names[i], this.surnames[i], this.dobs[i], this.seatclass[i], chseat, this.selectedSeats[i].row, this.selectedSeats[i].column);
         this.ticketService.addTicket(this.flightId, this.names[i], this.surnames[i], this.dobs[i], this.seatclass[i], this.extraBags, chseat, this.totalPrice, chseat ? this.selectedSeats[i].row.toString() : undefined, chseat ? this.selectedSeats[i].column : undefined).subscribe({
           next: (res) => {
             console.log('Biglietto creato correttamente', res);
