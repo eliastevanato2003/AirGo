@@ -104,7 +104,7 @@ exports.deleteAirline = async (req, res, next) => {
 
 exports.getStatsRoute = async (req, res, next) => {
     try {
-        let { order } = req.body ?? {};
+        let { order } = req.query ?? {};
         if (order != 1 || order != 2) order = 1;
         const stats = await airlineService.getStatsRoute(req.id, order);
         res.json(stats);
@@ -116,7 +116,7 @@ exports.getStatsRoute = async (req, res, next) => {
 
 exports.getStatsFlight = async (req, res, next) => {
     try {
-        const { route } = req.body ?? {};
+        const { route } = req.query ?? {};
         const routes = await flightRouteService.getFlightRoutes(route, undefined, undefined, undefined);
         if (routes[0]) {
             const stats = await airlineService.getStatsFlight(req.id, route);
