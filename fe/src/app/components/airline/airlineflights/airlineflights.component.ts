@@ -12,12 +12,14 @@ import { RouteService } from '../../../services/airline/route.service';
 import { FlightDb, NewFlight } from '../../../models/airline/flight.model';
 import { Route } from '../../../models/airline/route.model';
 import { Plane } from '../../../models/airline/plane.model';
-import { filter } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
+import { Airport } from '../../../models/airline/airport.model';
+import { AirportService } from '../../../services/airline/airport.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-airlineflights',
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule, NgSelectModule],
   templateUrl: './airlineflights.component.html',
   styleUrl: './airlineflights.component.css',
   standalone: true
@@ -39,8 +41,9 @@ export class AirlineFlightsComponent implements OnInit {
   showEditDates=false;
   editPricesForm!: FormGroup;
   editDatesForm!: FormGroup;
+  airports: Airport[]=[];
 
-  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService) {
+  constructor(private http: HttpClient, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder, private flightService: FlightService, private planeService: PlaneService, private routeService: RouteService, private airportService: AirportService) {
     this.newFlightForm = this.fb.group({
       plane: ['', Validators.required],
       route: ['', Validators.required],
@@ -58,9 +61,7 @@ export class AirlineFlightsComponent implements OnInit {
       departure: [''],
       arrival: [''],
       mindatedeparture: [''],
-      maxdatedeparture: [''],
       mindatearrival: [''],
-      maxdatearrival: [''],
       status: ['All']
     });
 
@@ -73,6 +74,7 @@ export class AirlineFlightsComponent implements OnInit {
       this.loadFlights();
       this.loadPlanes();
       this.loadRoutes();
+      this.loadAirports();
     } else {
       console.error('ID compagnia aerea non trovato');
     }
@@ -85,7 +87,6 @@ export class AirlineFlightsComponent implements OnInit {
       next: (flights) => this.flights = flights,
       error: (err) => console.error('Errore caricamento voli', err)
     });
-    console.log(this.flights);
   } 
 
   private loadPlanes(): void {
@@ -102,9 +103,15 @@ export class AirlineFlightsComponent implements OnInit {
       next: (routes) => this.routes = routes,
       error: (err) => console.error('Errore caricamento rotte', err)
     });
-    console.log(this.routes);
   }
 
+  private loadAirports(): void{
+    if (!this.airlineId) return;
+    this.airportService.getAirports().subscribe({
+      next: (response) => this.airports = response,
+      error: (err) => console.error('Errore caricamento aeroporti', err)
+    });
+  }
 
   addFlight(): void {
     if (this.newFlightForm.invalid) {
@@ -114,11 +121,21 @@ export class AirlineFlightsComponent implements OnInit {
 
     const formValue = this.newFlightForm.value;
 
+    const fixDate = (dateString: string): string => {
+      if (!dateString) return dateString;
+
+      const localDate = new Date(dateString);
+      const fixed = localDate.toISOString();
+
+      return fixed; 
+    };
+
+
     this.newflight = {
       plane: formValue.plane,
       route: formValue.route,
-      schdepdate: formValue.schdepdate,
-      scharrdate: formValue.scharrdate,
+      schdepdate: fixDate(formValue.schdepdate),
+      scharrdate: fixDate(formValue.scharrdate),
       pcprice: formValue.pcprice,
       bprice: formValue.bprice,
       eprice: formValue.eprice,
@@ -139,6 +156,7 @@ export class AirlineFlightsComponent implements OnInit {
       }
     });
   }
+
 
   closeModal(): void{
     this.showCreate=false;
@@ -188,12 +206,20 @@ export class AirlineFlightsComponent implements OnInit {
   filtra(): void {
     const filters = { ...this.filterForm.value };
 
+    if (filters.mindatedeparture && !filters.maxdatedeparture) {
+      filters.maxdatedeparture = filters.mindatedeparture;
+    }
+    if (filters.mindatearrival && !filters.maxdatearrival) {
+      filters.maxdatearrival = filters.mindatearrival;
+    }
+
     Object.keys(filters).forEach(key => {
       if (!filters[key]) delete filters[key];
     });
 
     this.loadFlights(filters);
   }
+
 
   reset(): void {
     this.filterForm.reset({ status: 'All' });

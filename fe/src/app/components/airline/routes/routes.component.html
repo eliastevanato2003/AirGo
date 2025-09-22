@@ -14,24 +14,33 @@
       </div>
 
       <div class="input-group">
-        <label>Aeroporto di partenza</label>
-        <select formControlName="departure">
-          <option value="">Tutti</option>
-          @for(airport of airports; track airport.IdAeroporto) {
-            <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
-          }
-        </select>
-      </div>
+          <label>Aeroporto di partenza</label>
+          <ng-select
+            formControlName="departure"
+            [items]="airports"
+            bindLabel="Citta"
+            bindValue="IdAeroporto"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+            </ng-template>
+          </ng-select>
+        </div>
 
-      <div class="input-group">
-        <label>Aeroporto di arrivo</label>
-        <select formControlName="arrival">
-          <option value="">Tutti</option>
-          @for(airport of airports; track airport.IdAeroporto) {
-            <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
-          }
-        </select>
-      </div>
+        <div class="input-group">
+          <label>Aeroporto di arrivo</label>
+          <ng-select
+            formControlName="arrival"
+            [items]="airports"
+            bindLabel="Citta"
+            bindValue="IdAeroporto"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+            </ng-template>
+          </ng-select>
+        </div>
+
 
       <button class="search-btn" type="submit" (click)="filtra()">&#10141;</button>
       <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
@@ -72,21 +81,34 @@
       <h3>Nuova rotta</h3>
       <form [formGroup]="newRouteForm" (ngSubmit)="addRoute()">
 
-        <label>Aeroporto di partenza</label>
-        <select formControlName="from">
-        <option value="" disabled>Seleziona un aeroporto</option>
-        @for(airport of airports; track airport.IdAeroporto) {
-            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
-        }
-        </select>
+        <div class="input-group">
+          <label>Aeroporto di partenza</label>
+          <ng-select
+            formControlName="from"
+            [items]="airports"
+            bindLabel="Citta"
+            bindValue="IdAeroporto"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+            </ng-template>
+          </ng-select>
+        </div>
 
-        <label>Aeroporto di arrivo</label>
-        <select formControlName="to">
-        <option value="" disabled>Seleziona un aeroporto</option>
-        @for(airport of airports; track airport.IdAeroporto) {
-            <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
-        }
-        </select>
+        <div class="input-group">
+          <label>Aeroporto di arrivo</label>
+          <ng-select
+            formControlName="to"
+            [items]="airports"
+            bindLabel="Citta"
+            bindValue="IdAeroporto"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+            </ng-template>
+          </ng-select>
+        </div>
+
 
         <div class="modal-buttons">
           <button type="submit" class="add-btn" [disabled]="newRouteForm.invalid">Aggiungi</button>
@@ -134,21 +156,33 @@
               <form [formGroup]="editRouteForm" (ngSubmit)="saveEdit()">
 
 
+                <div class="input-group">
                 <label>Aeroporto di partenza</label>
-                <select formControlName="from">
-                <option value="" disabled>Seleziona un aeroporto</option>
-                @for(airport of airports; track airport.IdAeroporto) {
-                    <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
-                }
-                </select>
+                <ng-select
+                  formControlName="from"
+                  [items]="airports"
+                  bindLabel="Citta"
+                  bindValue="IdAeroporto"
+                  [searchable]="true">
+                  <ng-template ng-option-tmp let-item="item">
+                    {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+                  </ng-template>
+                </ng-select>
+              </div>
 
+              <div class="input-group">
                 <label>Aeroporto di arrivo</label>
-                <select formControlName="to">
-                <option value="" disabled>Seleziona un aeroporto</option>
-                @for(airport of airports; track airport.IdAeroporto) {
-                    <option [value]="airport.IdAeroporto">{{ airport.Citta }}({{ airport.CodiceIdentificativo }})</option>
-                }
-                </select>
+                <ng-select
+                  formControlName="to"
+                  [items]="airports"
+                  bindLabel="Citta"
+                  bindValue="IdAeroporto"
+                  [searchable]="true">
+                  <ng-template ng-option-tmp let-item="item">
+                    {{ item.Citta }} ({{ item.CodiceIdentificativo }})
+                  </ng-template>
+                </ng-select>
+              </div>
 
                 <div class="modal-buttons">
                   <button type="submit" class="save-btn">Salva</button>

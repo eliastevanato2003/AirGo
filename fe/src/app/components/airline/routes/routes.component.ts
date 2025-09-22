@@ -9,13 +9,14 @@ import { AirportService } from '../../../services/airline/airport.service';
 import { Airport } from '../../../models/airline/airport.model';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @Component({
   selector: 'app-routes',
-  imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './routes.component.html',
-  styleUrl: './routes.component.css',
+  styleUrls: ['./routes.component.css'],
   standalone: true
 })
 export class RoutesComponent implements OnInit{
@@ -77,8 +78,8 @@ export class RoutesComponent implements OnInit{
     const form = this.newRouteForm.value;
 
     this.newRoute = {
-      departureAirportId: form.from,
-      destinationAirportId: form.to
+      departure: form.from,
+      arrival: form.to
     };
 
     this.routeService.addRoute(this.newRoute).subscribe({

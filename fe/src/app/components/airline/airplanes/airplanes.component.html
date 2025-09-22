@@ -11,22 +11,24 @@
     <div class="search-box filter-inside" [formGroup]="filterForm">
       <div class="input-group">
         <label>ID Aereo</label>
-        <input type="number" formControlName="id" placeholder="ID aereo">
+        <input type="number" formControlName="id">
       </div>
 
       <div class="input-group">
         <label>Modello</label>
-        <select formControlName="model">
-          <option value="">Tutti</option>
-          @for(model of models; track model.IdModello) {
-            <option [value]="model.IdModello">{{ model.Nome }}</option>
-          }
-        </select>
+        <ng-select
+          formControlName="model"
+          [items]="models"
+          bindLabel="Nome"
+          bindValue="IdModello"
+          [searchable]="true">
+        </ng-select>
       </div>
+
 
       <div class="input-group">
         <label>Anno di costruzione</label>
-        <input type="number" formControlName="constructionYear" placeholder="Es. 2015">
+        <input type="number" formControlName="constructionYear">
       </div>
 
       <div class="input-group">
@@ -77,12 +79,16 @@
         <form [formGroup]="newPlaneForm" (ngSubmit)="addPlane()">
           <label>Modello</label>
           <div class="containerb">
-            <select formControlName="model">
-              <option value="" disabled>Seleziona un modello</option>
-              @for(model of models; track model.IdModello) {
-                <option [value]="model.IdModello">{{ model.Nome }}</option>
-              }
-            </select>
+            <div class="input-group">
+              <label>Modello</label>
+              <ng-select
+                formControlName="model"
+                [items]="models"
+                bindLabel="Nome"
+                bindValue="IdModello"
+                [searchable]="true">
+              </ng-select>
+            </div>
             <button type="button" class="add-btn" (click)="toCreate()">Crea</button>
           </div>
 

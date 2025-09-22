@@ -10,13 +10,15 @@ import { forkJoin } from 'rxjs';
 import { Model, NewModel } from '../../../models/airline/model.model';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 
 
 @Component({
   selector: 'app-airplanes',
   templateUrl: './airplanes.component.html',
   styleUrls: ['./airplanes.component.css'],
-  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule],
+  imports: [NavbarComponent, FooterComponent, ReactiveFormsModule, CommonModule, NgSelectModule],
   standalone: true
 })
 export class AirplanesComponent implements OnInit {

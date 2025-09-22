@@ -23,6 +23,7 @@
     "@angular/router": "^20.2.4",
     "@angular/ssr": "^20.2.2",
     "@fontsource/roboto": "^5.2.7",
+    "@ng-select/ng-select": "^20.2.0",
     "@ngneat/tailwind": "^7.0.3",
     "express": "^4.18.2",
     "font-awesome": "^4.7.0",
