@@ -79,4 +79,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/tickets'])
   }
 
+  stats(){
+    this.router.navigate(['/stats'])
+  }
 }

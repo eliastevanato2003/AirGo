@@ -45,3 +45,18 @@ exports.deleteAirline = async (id) => {
     const result = await pool.query(sql, [id]);
     return result.rowCount;
 }
+
+exports.getStatsRoute = async (id, order) => {
+    let sql = 'SELECT * FROM "statistiche" WHERE "CompagniaAerea" = $1 ';
+    const order1 = 'ORDER BY ("BigliettiPrimaClasse" + "BigliettiEconomy" + "BigliettiBusiness") / ("PostiEconomyTotali" + "PostiBusinessTotali" + "PostiPrimaClasseTotali") DESC';
+    const order2 = 'ORDER BY ("BigliettiPrimaClasse" + "BigliettiEconomy" + "BigliettiBusiness") DESC';
+    sql += order == 1 ? order1 : order2;
+    const result = await pool.query(sql, [id]);
+    return result.rows;
+}
+
+exports.getStatsFlight = async (id, route) => {
+    let sql = 'SELECT * FROM "aereiposti" AS "A" JOIN "Rotte" AS "R" ON "A"."Rotta" = "R"."IdRotta" AND ("A"."Rotta" = $2 OR $2 IS NULL) WHERE "CompagniaAerea" = $1 ';
+    const result = await pool.query(sql, [id, route]);
+    return result.rows;
+}

@@ -1,0 +1,34 @@
+<app-navbar></app-navbar>
+<div>
+@if(stats.length === 0) {
+<div>
+    Nessun volo trovato
+</div>
+}@else if(stats.length > 0) {
+<table>
+    <thead>
+        <tr>
+            <th>Stato</th>
+            <th>Data partenza e arrivo previste</th>
+            <th>Data partenza e arrivo effettive</th>
+            <th>Posti prima classe totali (occupati)</th>
+            <th>Posti business totali (occupati)</th>
+            <th>Posti economy totali (occupati)</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(stat of stats; track stat) {
+        <tr>
+            <td> {{ stat.Stato }} </td>
+            <td> {{ stat.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm' }} <br> {{ stat.DataArrivoPrev | date:'dd/MM/yyyy HH:mm' }} </td>
+            <td> {{ stat.DataPartenzaEff | date:'dd/MM/yyyy HH:mm' }} <br> {{ stat.DataArrivoEff | date:'dd/MM/yyyy HH:mm' }} </td>
+            <td> {{ stat.PostiPc }} ({{ stat.PostiOccPc }}) </td>
+            <td> {{ stat.PostiB }} ({{ stat.PostiOccB }}) </td>
+            <td> {{ stat.PostiE }} ({{ stat.PostiOccE }}) </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+</div>
+<app-footer></app-footer>

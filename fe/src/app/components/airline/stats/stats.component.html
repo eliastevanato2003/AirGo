@@ -1,0 +1,30 @@
+<app-navbar></app-navbar>
+<div>
+@if(stats.length === 0) {
+<div>
+    Nessuna rotta trovata
+</div>
+}@else if(stats.length > 0) {
+<table>
+    <thead>
+        <tr>
+            <th>Rotta</th>
+            <th>Voli</th>
+            <th>Passeggeri totali</th>
+            <th>Incasso totale</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for(stat of stats; track stat) {
+        <tr routerLink="/routestats" [queryParams]="{ id: stat.Rotta }" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+            <td> {{ stat.Partenza }} - {{ stat.Destinazione }} </td>
+            <td> {{ stat.VoliTotali }} </td>
+            <td> {{ stat.BigliettiTotali }} </td>
+            <td> {{ (stat.GuadagnoTotale ? stat.GuadagnoTotale : 0) | currency:'EUR':'symbol':'1.2-2' }} </td>
+        </tr>
+        }
+    </tbody>
+</table>
+}
+</div>
+<app-footer></app-footer>

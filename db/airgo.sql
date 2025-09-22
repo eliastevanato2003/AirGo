@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict WTUz8V74FvGli4p32tyGFlTVwETiz4eobPukUn38YRVeJMH6UkQ3orArq65pVFR
+\restrict 99fRNLMn2gNjHsyQYtAmeoWLItibMdDdgSvTwL2iVQ7zEqcFVhHrhMaf1LIQO6c
 
 -- Dumped from database version 16.10 (Debian 16.10-1.pgdg13+1)
 -- Dumped by pg_dump version 16.10 (Debian 16.10-1.pgdg13+1)
@@ -88,7 +88,7 @@ ALTER TABLE public."Aeroporti" ALTER COLUMN "IdAeroporto" ADD GENERATED ALWAYS A
 
 CREATE TABLE public."Biglietti" (
     "IdBiglietto" integer NOT NULL,
-    "Utente" integer NOT NULL,
+    "Utente" integer,
     "Volo" integer NOT NULL,
     "Nome" text NOT NULL,
     "Cognome" text NOT NULL,
@@ -129,7 +129,7 @@ CREATE TABLE public."CompagnieAeree" (
     "Nome" text NOT NULL,
     "CodiceIdentificativo" text NOT NULL,
     "Password" text NOT NULL,
-    "IsActive" boolean DEFAULT true NOT NULL,
+    "IsActive" boolean DEFAULT false NOT NULL,
     "Mail" integer NOT NULL
 );
 
@@ -376,6 +376,82 @@ SELECT
 ALTER VIEW public.aereiposti OWNER TO admin;
 
 --
+-- Name: postitotali; Type: VIEW; Schema: public; Owner: admin
+--
+
+CREATE VIEW public.postitotali AS
+ SELECT "R"."IdRotta",
+    sum(("M"."ColonneE" * "M"."RigheE")) AS "PostiEconomyTotali",
+    sum(("M"."ColonneB" * "M"."RigheB")) AS "PostiBusinessTotali",
+    sum("M"."PostiPc") AS "PostiPrimaClasseTotali"
+   FROM (((public."Voli" "V"
+     JOIN public."Rotte" "R" ON ((("V"."Rotta" = "R"."IdRotta") AND ("R"."IsActive" = true))))
+     JOIN public."Aerei" "A" ON ((("V"."Aereo" = "A"."IdAereo") AND ("A"."IsActive" = true))))
+     JOIN public."Modelli" "M" ON ((("A"."Modello" = "M"."IdModello") AND ("M"."IsActive" = true))))
+  GROUP BY "R"."IdRotta";
+
+
+ALTER VIEW public.postitotali OWNER TO admin;
+
+--
+-- Name: statistiche; Type: VIEW; Schema: public; Owner: admin
+--
+
+CREATE VIEW public.statistiche AS
+ SELECT "R"."CompagniaAerea",
+    "F"."Rotta",
+    "C"."IdCompagniaAerea",
+    "A1"."Citta" AS "Partenza",
+    "A2"."Citta" AS "Destinazione",
+    count(DISTINCT "F"."IdVolo") AS "VoliTotali",
+    count(DISTINCT "B"."IdBiglietto") AS "BigliettiTotali",
+    sum("B"."Costo") AS "GuadagnoTotale",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Prima'::text THEN "B"."Costo"
+            ELSE (0)::real
+        END) AS "GuadagnoPrimaClasse",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Business'::text THEN "B"."Costo"
+            ELSE (0)::real
+        END) AS "GuadagnoBusiness",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Economy'::text THEN "B"."Costo"
+            ELSE (0)::real
+        END) AS "GuadagnoEconomy",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Prima'::text THEN 1
+            ELSE 0
+        END) AS "BigliettiPrimaClasse",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Business'::text THEN 1
+            ELSE 0
+        END) AS "BigliettiBusiness",
+    sum(
+        CASE "B"."Classe"
+            WHEN 'Economy'::text THEN 1
+            ELSE 0
+        END) AS "BigliettiEconomy",
+    min("PT"."PostiEconomyTotali") AS "PostiEconomyTotali",
+    min("PT"."PostiBusinessTotali") AS "PostiBusinessTotali",
+    min("PT"."PostiPrimaClasseTotali") AS "PostiPrimaClasseTotali"
+   FROM ((((((public.aereiposti "F"
+     JOIN public."Rotte" "R" ON ((("F"."Rotta" = "R"."IdRotta") AND ("R"."IsActive" = true))))
+     JOIN public."CompagnieAeree" "C" ON ((("R"."CompagniaAerea" = "C"."IdCompagniaAerea") AND ("C"."IsActive" = true))))
+     LEFT JOIN public."Biglietti" "B" ON (("B"."Volo" = "F"."IdVolo")))
+     JOIN public."Aeroporti" "A1" ON (("R"."Partenza" = "A1"."IdAeroporto")))
+     JOIN public."Aeroporti" "A2" ON (("R"."Destinazione" = "A2"."IdAeroporto")))
+     JOIN public.postitotali "PT" ON (("PT"."IdRotta" = "F"."Rotta")))
+  GROUP BY "F"."Rotta", "C"."IdCompagniaAerea", "A1"."Citta", "A2"."Citta", "R"."CompagniaAerea";
+
+
+ALTER VIEW public.statistiche OWNER TO admin;
+
+--
 -- Data for Name: Aerei; Type: TABLE DATA; Schema: public; Owner: admin
 --
 
@@ -389,6 +465,9 @@ COPY public."Aerei" ("IdAereo", "CompagniaAerea", "Modello", "AnnoCostruzione", 
 5	11	3	2019	f	f
 9	11	1	2021	t	t
 10	11	3	2021	t	t
+11	8	28	2021	t	t
+12	12	28	2024	f	t
+14	22	28	2024	t	t
 \.
 
 
@@ -400,11 +479,16 @@ COPY public."Aeroporti" ("IdAeroporto", "Citta", "Nazione", "Nome", "CodiceIdent
 2	Venezia	Italia	Marco Polo	VCE	t
 7	Lamezia Terme	Italia	Sant'Eufemia	SUF	t
 8	Roma	Italia	Leonardo Da Vinci	FCO	t
-10	Milan	Italia	Enrico Fornalini	LIN	t
 9	Roma	Italia	G. B. Pastine	CIA	t
 14	Treviso	Italia	Sant'Angelo	TSF	t
-20	Verona	Italia	Valerio Catullo	VRN	t
 28	Torino	Italia	Sandro Pertini	TRN	t
+30	Parigi	Francia	Charles de Gaulle	CDG	t
+33	Londra	Regno Unito	London City Airport	LCY	t
+35	Berlino	Germania	Willy Brandt	BER	t
+36	Madrid	Spagna	Adolfo Su├árez	MAD	t
+10	Milano	Italia	Enrico Fornalini	LIN	t
+37	Barcellona	Spagna	Josep Tarradellas	BCN	t
+20	Verona	Italia	Valerio Catullo	VRN	t
 \.
 
 
@@ -633,11 +717,199 @@ COPY public."Biglietti" ("IdBiglietto", "Utente", "Volo", "Nome", "Cognome", "Do
 343	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	39	1
 344	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	34	30
 345	45	12	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	t	84	15
-346	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	\N	\N	f	30	\N
 347	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	t	34	29
 348	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	t	39	2
 349	45	12	Dario	Caberlotto	2003-09-24	Economy	2	t	C	\N	t	60	2
 350	39	12	Dario	Caberlotto	2003-09-24	Economy	2	t	D	\N	t	60	2
+346	45	12	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	30
+352	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	20
+353	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	20
+354	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	20
+356	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	20
+358	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	19
+359	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	19
+360	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	19
+361	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	19
+362	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	19
+364	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	18
+365	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	18
+366	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	18
+367	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	18
+368	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	18
+369	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	17
+370	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	17
+372	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	17
+373	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	17
+374	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	17
+375	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	16
+376	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	16
+377	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	16
+378	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	16
+379	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	16
+381	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	15
+382	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	15
+384	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	15
+385	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	15
+386	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	15
+387	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	14
+388	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	14
+389	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	14
+391	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	14
+392	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	14
+393	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	13
+394	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	13
+395	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	13
+396	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	13
+397	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	13
+399	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	12
+400	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	12
+401	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	12
+402	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	12
+403	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	12
+404	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	12
+405	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	11
+407	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	11
+408	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	11
+409	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	11
+410	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	11
+411	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	10
+412	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	10
+413	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	10
+414	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	10
+416	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	10
+417	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	9
+418	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	9
+419	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	9
+420	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	9
+421	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	9
+422	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	9
+424	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	8
+425	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	8
+426	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	8
+427	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	8
+428	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	8
+429	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	7
+430	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	7
+432	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	7
+433	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	7
+434	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	7
+435	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	6
+436	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	6
+437	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	6
+438	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	6
+439	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	6
+441	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	5
+442	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	5
+443	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	5
+444	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	5
+445	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	5
+446	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	5
+447	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	4
+449	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	4
+450	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	4
+451	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	4
+452	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	4
+453	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	3
+454	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	3
+455	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	3
+457	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	3
+458	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	3
+459	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	2
+460	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	2
+461	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	2
+462	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	2
+463	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	2
+464	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	2
+466	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	1
+467	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	1
+468	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	1
+469	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	1
+470	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	1
+355	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	20
+363	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	18
+371	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	17
+380	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	16
+383	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	15
+390	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	14
+398	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	13
+406	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	11
+415	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	B	\N	f	30	10
+423	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	8
+431	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	D	\N	f	30	7
+440	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	A	\N	f	30	6
+448	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	4
+456	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	C	\N	f	30	3
+465	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	1
+509	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	t	84	1
+510	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	t	84	2
+471	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	10
+472	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	10
+473	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	10
+474	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	10
+475	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	9
+476	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	9
+477	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	9
+478	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	9
+479	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	8
+480	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	8
+481	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	8
+482	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	8
+483	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	7
+484	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	7
+485	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	7
+486	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	7
+487	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	6
+488	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	6
+489	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	6
+490	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	6
+491	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	5
+492	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	5
+493	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	5
+494	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	5
+495	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	4
+496	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	4
+351	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	E	\N	f	30	20
+498	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	4
+499	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	3
+500	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	3
+497	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	4
+502	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	A	\N	f	80	3
+503	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	2
+504	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	2
+505	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	2
+506	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	D	\N	f	80	1
+507	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	C	\N	f	80	1
+508	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	1
+511	39	8	Dario	Caberlotto	2003-09-24	Prima	1	t	\N	20	f	120.5	\N
+512	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	19	f	131	\N
+513	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	16	f	131	\N
+514	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	5	f	131	\N
+515	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	18	f	131	\N
+516	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	17	f	131	\N
+517	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	2	f	131	\N
+518	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	15	f	131	\N
+519	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	14	f	131	\N
+520	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	13	f	131	\N
+521	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	12	f	131	\N
+522	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	11	f	131	\N
+523	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	10	f	131	\N
+524	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	9	f	131	\N
+525	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	8	f	131	\N
+526	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	7	f	131	\N
+527	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	6	f	131	\N
+501	39	8	Dario	Caberlotto	2003-09-24	Business	0	t	B	\N	f	80	3
+529	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	4	f	131	\N
+530	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	3	f	131	\N
+528	39	8	Dario	Caberlotto	2003-09-24	Prima	2	t	\N	1	f	131	\N
+357	39	8	Dario	Caberlotto	2003-09-24	Economy	0	t	F	\N	f	30	19
+533	61	17	Elia	Stevanato	2003-12-08	Business	0	t	C	\N	t	23	5
+534	61	17	Elia	Stevanato	2003-12-08	Business	0	t	D	\N	t	23	5
+535	61	17	Elia	Stevanato	2003-12-08	Business	0	t	D	\N	t	23	4
+536	61	17	Elia	Stevanato	2003-12-08	Business	1	t	B	\N	t	26	4
+531	61	17	Elia	Stevanato	2003-12-08	Economy	0	t	F	\N	f	10	20
+537	61	17	Dario	Caberlotto	2025-09-24	Business	1	t	D	\N	f	23	10
+538	61	17	Dario	Caberlotto	2025-09-24	Business	3	t	C	\N	f	29	10
+532	61	17	Elia	Stevanato	2003-12-08	Economy	3	f	C	\N	t	22	5
 \.
 
 
@@ -650,6 +922,7 @@ COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo"
 10	Easyjet	U2	$2b$10$X1iVlNXZNMog.Pj4hbN3Ru25PqCf7mqcyti2/1BA6rGmThESHbmPC	t	27
 11	Volotea	V7	$2b$10$DznFWksihS3yWV2SKABj9.5FNXApgrtRFCwtGC.iY41PX96x6k9B2	t	28
 12	Air France	AF	$2b$10$i40yVwnd0GXW2Ve0oYbDeODVK3xt3Rn/Jy18lXx.korxioyHTCmda	t	66
+22	Lufthansa	LH	$2b$10$K4dQ2havh/XAl3/EqzKZ7ucZiTAQ5wdpg3BspUclcVKbeDHZ/q/H2	t	83
 \.
 
 
@@ -658,16 +931,18 @@ COPY public."CompagnieAeree" ("IdCompagniaAerea", "Nome", "CodiceIdentificativo"
 --
 
 COPY public."IndirizziEmail" ("IdEmail", "Email", "IsActive") FROM stdin;
-5	elia.stevanato@example.com	t
 11	filippo.pizzo@example.com	t
 14	dario.caberlotto@example.com	t
 19	alitalia@example.com	t
 27	easyjet@example.com	t
 28	volotea@example.com	t
-34	francesco.pasqualato@example.com	t
 60	irene.massarotto@example.com	t
 66	airfrance@example.com	t
-54	francesca.pasqualato@example.com	t
+81	mario.rossi@example.com	f
+54	francesca.pasqualato@example.com	f
+5	elia.stevanato@example.com	t
+34	francesco.pasqualato@example.com	t
+83	lufthansa@example.com	f
 \.
 
 
@@ -682,6 +957,8 @@ COPY public."Modelli" ("IdModello", "Nome", "PostiPc", "RigheB", "ColonneB", "Ri
 22	Boeing 737v9	0	15	4	30	4	t
 24	Boeing 737v5	0	15	2	30	4	t
 26	Boeing 737v6	0	0	0	0	0	t
+28	Boeing 736	0	5	4	20	6	t
+31	Boeing 736v3	10	10	4	20	6	f
 \.
 
 
@@ -699,6 +976,19 @@ COPY public."RigheExtraLegRoom" ("IdRiga", "Modello", "NRiga", "IsActive") FROM 
 18	24	2	t
 19	26	1	t
 20	26	30	t
+21	28	1	t
+22	28	2	t
+23	28	3	t
+24	31	1	f
+25	31	1	f
+26	31	2	f
+27	31	3	f
+28	31	30	f
+29	31	3	f
+30	31	3	f
+31	31	3	f
+32	31	3	f
+33	31	3	f
 \.
 
 
@@ -710,7 +1000,6 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 1	2	7	8	t
 4	2	8	8	t
 5	7	8	8	t
-6	7	8	10	t
 7	7	9	11	t
 8	7	8	11	t
 9	7	2	8	t
@@ -719,10 +1008,14 @@ COPY public."Rotte" ("IdRotta", "Partenza", "Destinazione", "CompagniaAerea", "I
 12	8	2	11	t
 13	8	2	10	t
 15	8	10	10	t
-16	28	2	10	t
 17	2	28	10	t
 18	2	10	11	t
 19	10	28	11	t
+21	35	36	10	t
+6	10	36	10	t
+16	2	35	10	t
+23	20	36	10	f
+24	33	36	22	t
 \.
 
 
@@ -734,9 +1027,10 @@ COPY public."Utenti" ("IdUtente", "Nome", "Cognome", "Password", "Telefono", "Do
 37	Filippo	Pizzo	$2b$10$segRmt2k.cO0MRwH041VAOx/tdqECfSsr7TZGQ8iFdHcDNgWRx9Du	2234567890	2003-11-06	f	t	11
 39	Dario	Caberlotto	$2b$10$pEeh21J1f7R4wIyDaZ4UuOLKAZTWdAK12WrW8XEMY.pfh0YwPjKFS	3234567890	2003-09-24	f	t	14
 31	Elia	Stevanato	$2b$10$Pu4B/XGjeYgs9jUrb461cebDWk6yarcir4RMjvJDpqLrkNDQd9HA.	1234567890	2003-12-08	t	t	5
-45	Francesco	Pasqualato	$2b$10$mZszo8lBAPR2p/ZN.jKXjueC1bJhNok5qx6yZTfg1eu7Mz4SLogyi	4234567890	2003-10-19	f	t	34
 62	Irene	Massarotto	$2b$10$QesnwrPmIQajlfm/f.xlz.3Kl1Q8T9/aOqSmQXlAQWBcUKCKHLFX6	6234567890	2002-05-22	f	t	60
-61	Francesca	Pasqualato	$2b$10$dvdbFaWYkRYxdZb5HZyUMOExkzue.25n69dHOZioiCCXZ6Rs/ESc2	5234567890	2003-10-20	f	t	54
+66	Mario	Rossi	$2b$10$GtQANjeIX53hWuV0SALCNOjb5A9gDnu5JrxdXBHeydPq1AP8qwsEy	7234567890	2003-10-13	f	f	81
+61	Francesca	Pasqualato	$2b$10$dvdbFaWYkRYxdZb5HZyUMOExkzue.25n69dHOZioiCCXZ6Rs/ESc2	5234567890	2003-10-20	f	f	54
+45	Francesco	Pasqualato	$2b$10$L2iJ9jMxTTtpUJdLox8cbOnIWuYwTyfGAjsFhqqBfxtvEBj6G8RjS	8234567890	2003-10-20	f	t	34
 \.
 
 
@@ -752,9 +1046,12 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoP
 7	4	12	2025-10-14 22:30:00	2025-10-15 00:15:00	2025-09-15 16:10:38.903	2025-09-16 16:10:38.903	Atterrato	100	70	20	20.25	10	3	t
 4	3	1	2025-10-14 10:30:00	2025-10-14 11:45:00	\N	\N	Programmato	80	20	1	20.25	10	3	f
 5	1	11	2025-10-17 10:30:00	2025-10-17 11:45:00	\N	\N	Programmato	100	70	25.5	20.25	10	3	f
-16	9	18	2025-11-20 10:00:00	2025-11-20 12:00:00	\N	\N	Programmato	30	20	10	3	3	3	t
-17	9	19	2025-11-20 13:00:00	2025-11-20 15:00:00	\N	\N	Programmato	30	20	10	3	3	3	t
-15	8	17	2025-11-20 00:00:00	2025-11-20 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+15	8	17	2025-11-21 00:00:00	2025-11-21 15:45:00	\N	\N	Programmato	110	80	30	10.5	5	4	t
+16	9	18	2025-11-19 10:00:00	2025-11-20 01:00:00	\N	\N	Programmato	30	20	10	3	3	3	t
+18	1	11	2025-11-20 13:00:00	2025-11-20 15:00:00	\N	\N	Programmato	80	40	20	3	3	3	t
+19	1	11	2025-12-08 14:00:00	2025-12-08 17:15:00	2025-09-19 05:10:38.903	2025-09-19 07:10:38.903	Atterrato	30	20	10	3	3	3	f
+17	9	19	2025-11-20 13:00:00	2025-11-20 15:00:00	2025-09-19 10:18:29.943	\N	Decollato	30	20	10	3	3	3	t
+20	14	24	2025-12-08 14:00:00	2025-12-08 17:15:00	2025-09-19 14:28:48.856	2025-09-19 14:29:06.534	Atterrato	30	20	10	3	3	3	t
 \.
 
 
@@ -762,70 +1059,70 @@ COPY public."Voli" ("IdVolo", "Aereo", "Rotta", "DataPartenzaPrev", "DataArrivoP
 -- Name: Aerei_IdAereo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 10, true);
+SELECT pg_catalog.setval('public."Aerei_IdAereo_seq"', 14, true);
 
 
 --
 -- Name: Aereoporti_IdAeroporto_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 29, true);
+SELECT pg_catalog.setval('public."Aereoporti_IdAeroporto_seq"', 37, true);
 
 
 --
 -- Name: Biglietti_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 350, true);
+SELECT pg_catalog.setval('public."Biglietti_IdVolo_seq"', 538, true);
 
 
 --
 -- Name: CompagnieAeree_IdCompagniaAerea_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 19, true);
+SELECT pg_catalog.setval('public."CompagnieAeree_IdCompagniaAerea_seq"', 25, true);
 
 
 --
 -- Name: IndirizziEmail_IdEmail_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 75, true);
+SELECT pg_catalog.setval('public."IndirizziEmail_IdEmail_seq"', 88, true);
 
 
 --
 -- Name: Modelli_IdModello_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Modelli_IdModello_seq"', 26, true);
+SELECT pg_catalog.setval('public."Modelli_IdModello_seq"', 31, true);
 
 
 --
 -- Name: RigheExtraLegRoom_IdRiga_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 20, true);
+SELECT pg_catalog.setval('public."RigheExtraLegRoom_IdRiga_seq"', 33, true);
 
 
 --
 -- Name: Rotte_IdRotta_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 19, true);
+SELECT pg_catalog.setval('public."Rotte_IdRotta_seq"', 24, true);
 
 
 --
 -- Name: Utenti_IdUtente_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 63, true);
+SELECT pg_catalog.setval('public."Utenti_IdUtente_seq"', 66, true);
 
 
 --
 -- Name: Voli_IdVolo_seq; Type: SEQUENCE SET; Schema: public; Owner: admin
 --
 
-SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 17, true);
+SELECT pg_catalog.setval('public."Voli_IdVolo_seq"', 20, true);
 
 
 --
@@ -1044,7 +1341,7 @@ ALTER TABLE ONLY public."Aerei"
 --
 
 ALTER TABLE ONLY public."Biglietti"
-    ADD CONSTRAINT "Biglietti_Utente_fkey" FOREIGN KEY ("Utente") REFERENCES public."Utenti"("IdUtente") ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT "Biglietti_Utente_fkey" FOREIGN KEY ("Utente") REFERENCES public."Utenti"("IdUtente") ON UPDATE SET NULL ON DELETE SET NULL NOT VALID;
 
 
 --
@@ -1123,5 +1420,5 @@ ALTER TABLE ONLY public."Voli"
 -- PostgreSQL database dump complete
 --
 
-\unrestrict WTUz8V74FvGli4p32tyGFlTVwETiz4eobPukUn38YRVeJMH6UkQ3orArq65pVFR
+\unrestrict 99fRNLMn2gNjHsyQYtAmeoWLItibMdDdgSvTwL2iVQ7zEqcFVhHrhMaf1LIQO6c
 

@@ -63,7 +63,7 @@
     </div>
 
     <button type="submit" class="submit-button" routerLink="/baggageselection"
-        [queryParams]="{ flightId: flightId, chseat: chseat | json, seatclass: getSeatClass() | json, ticketCount: ticketCount | json, price: price, seats: getSelectedSeats() | json }"
+        [queryParams]="{ flightId: flightId, chseat: chseat | json, seatclass: getSeatClass() | json, ticketCount: ticketCount | json, price: price | json, seats: getSelectedSeats() | json, extraBagPrice: flight?.CostoBag | json}"
         routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Continua</button>
 </div>
 
