@@ -14,6 +14,7 @@
             <th>Posti prima classe totali (occupati)</th>
             <th>Posti business totali (occupati)</th>
             <th>Posti economy totali (occupati)</th>
+            <th>Guadagno</th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,7 @@
             <td> {{ stat.PostiPc }} ({{ stat.PostiOccPc }}) </td>
             <td> {{ stat.PostiB }} ({{ stat.PostiOccB }}) </td>
             <td> {{ stat.PostiE }} ({{ stat.PostiOccE }}) </td>
+            <td> {{ (stat.Guadagno ? stat.Guadagno : 0) | currency:'EUR':'symbol':'1.2-2' }} </td>
         </tr>
         }
     </tbody>

@@ -19,8 +19,6 @@ export class TicketService {
             'Authorization': `Bearer ${token}`
         });
 
-        console.log(token);
-
         let params = new HttpParams();
         if (filters) {
             if (filters.id) params = params.set('id', filters.id.toString());

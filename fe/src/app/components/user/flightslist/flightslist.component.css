@@ -1,54 +1,102 @@
+/* Contenitore principale */
 .flight-container {
-  max-width: 800px;
+  max-width: 900px;
   margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  padding: 30px 20px;
+  font-family: system-ui, sans-serif;
+  color: #2c3e50;
 }
 
-h1 {
-  text-align: center;
+/* Titolo della pagina */
+.flight-container h1 {
+  text-align: left;
+  font-size: 1.8rem;
   margin-bottom: 30px;
+  color: #1a1a1a;
 }
 
+/* Nessun volo trovato */
 .no-flights {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #555;
-}
-
-.flight-card {
-  border: 1px solid #ddd;
-  border-radius: 8px;
+  background-color: #f8d7da;
+  color: #721c24;
   padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  border-radius: 6px;
+  text-align: center;
+  font-weight: 500;
 }
 
-.flight-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
+/* Scheda del volo */
+.flight-card {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 16px;
+  margin-bottom: 20px;
+  background-color: #fafafa;
+  transition: background-color 0.2s ease;
+}
+
+.flight-card:hover {
+  background-color: #f0f0f0;
+}
+
+.flight-card.multi {
+  border-left: 5px solid #f39c12;
+  background-color: #fff9ec;
+}
+
+/* Badge multi-tratta */
+.badge {
+  display: inline-block;
+  background-color: #f39c12;
+  color: white;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 3px;
   margin-bottom: 10px;
 }
 
+/* Header della card */
+.flight-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Compagnia */
+.airline {
+  color: #0052cc;
+}
+
+/* Prezzo */
+.price {
+  color: #00a676;
+  font-weight: 600;
+}
+
+/* Dettagli del volo */
 .flight-details {
   display: flex;
-  gap: 20px;
-  font-size: 0.9rem;
+  flex-wrap: wrap;
+  gap: 10px 20px;
+  font-size: 0.95rem;
+  margin-bottom: 16px;
 }
 
-.book-btn {
-  background-color: #007bff;
-  border: none;
-  color: white;
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
+.flight-details div {
+  flex: 1 1 45%;
 }
 
-.book-btn:hover {
-  background-color: #0056b3;
+/* Mobile responsive */
+@media (max-width: 600px) {
+  .flight-header {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .flight-details {
+    flex-direction: column;
+  }
 }
