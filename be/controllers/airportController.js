@@ -14,8 +14,8 @@ exports.getAirports = async (req, res, next) => {
 
 exports.getAirportsLike = async (req, res, next) => {
     try {
-        const { city } = req.query ?? {};
-        console.log("icoa")
+        let { city } = req.query ?? {};
+        if (city == undefined) city = "";
         const airports = await airportService.getAirportsLike(city);
         res.json(airports);
     } catch (err) {
