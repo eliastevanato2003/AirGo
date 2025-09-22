@@ -59,7 +59,7 @@ exports.updateFlight = async (id, effdepdate, effarrdate, status, pcprice, bpric
 }
 
 exports.deleteFlight = async (id) => {
-    const sql = 'UPDATE "Voli" SET "IsActive" = false WHERE "IdVolo" = $1 AND "IsActive" = true';
+    const sql = 'UPDATE "Voli" SET "Stato" = "Cancellato" false WHERE "IdVolo" = $1 AND "IsActive" = true';
     const result = await pool.query(sql, [id]);
     return result.rowCount;
 }
