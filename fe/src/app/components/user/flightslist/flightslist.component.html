@@ -1,31 +1,37 @@
+<app-navbar></app-navbar>
 <div class="flight-container">
   <h1>Risultati della ricerca voli</h1>
-  @if(flights.length === 0) {
-    <div class="no-flights">
-      Nessun volo trovato
-    </div>
+
+  @if(flightGroups.length === 0) {
+  <div class="no-flights">Nessun volo trovato</div>
   }
-  @for(flight of flights; track flight.id) {
-    <div class="flight-card">
-      <div class="flight-header">
-        <span class="airline">{{ flight.airline }}</span>
-        <span class="price">€{{ flight.price }}</span>
-      </div>
-      <div class="flight-details">
-        <div>
-          <strong>Da:</strong> {{ flight.from }}
-        </div>
-        <div>
-          <strong>A:</strong> {{ flight.to }}
-        </div>
-        <div>
-          <strong>Partenza:</strong> {{ flight.departure | date: 'dd/MM/yyyy HH:mm' }}
-        </div>
-        <div>
-          <strong>Arrivo:</strong> {{ flight.arrival | date: 'dd/MM/yyyy HH:mm' }}
-        </div>
-      </div>
-      <button class="book-btn" (click)="buy()" routerLink="/seatselection" [queryParams]="{ id: flight.id }" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Acquista</button>
+
+  @for(group of flightGroups; track group.segments[0].id) {
+  <div class="flight-card" [ngClass]="{ 'multi': group.isMultiSegment }">
+    <div class="flight-header">
+      <span class="airline">{{ group.segments[0].airline || '' }}
+        {{ group.segments[1] ? ' - ' + group.segments[1].airline : '' }}</span>
+      <span class="price">A partire da €{{ (group.segments[0].price || 0) + (group.segments[1] ?
+        group.segments[1].price : 0) }}</span>
     </div>
+
+    @if(group.isMultiSegment) {
+    <span class="badge">Volo con scalo ✈️</span>
+    }
+
+    @for(segment of group.segments; track segment.id) {
+    <div class="flight-details">
+      <div><strong>Da:</strong> {{ segment.from }}</div>
+      <div><strong>A:</strong> {{ segment.to }}</div>
+      <div><strong>Partenza:</strong> {{ segment.departure | date: 'dd/MM/yyyy HH:mm' }}</div>
+      <div><strong>Arrivo:</strong> {{ segment.arrival | date: 'dd/MM/yyyy HH:mm' }}</div>
+      <button class="action-btn" (click)="buy()" routerLink="/seatselection" [queryParams]="{ id: segment.id }"
+      routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Acquista</button>
+    </div>
+    }
+
+    
+  </div>
   }
 </div>
+<app-footer></app-footer>

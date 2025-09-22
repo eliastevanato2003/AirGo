@@ -19,7 +19,8 @@ export interface FlightDb {
     CodicePartenza: string,
     NomeArrivo: string,
     CittaArrivo: string,
-    CodiceArrivo: string
+    CodiceArrivo: string,
+    NomeCompagnia: string
 }
 
 export interface Flight {
@@ -60,5 +61,11 @@ export interface FlightStatus {
     PostiOccPc: string,
     PostiOccB: string,
     PostiOccE: string,
-    RigheExtraLeg: []
+    RigheExtraLeg: [],
+    Guadagno: number
+}
+
+export interface FlightGroup {
+    isMultiSegment: boolean;
+    segments: Flight[];
 }

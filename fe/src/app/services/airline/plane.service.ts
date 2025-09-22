@@ -12,7 +12,6 @@ export class PlaneService {
 
   private getHeaders(): HttpHeaders {
     const token = this.authService.getToken();
-    console.log(token);
     return new HttpHeaders({
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`
