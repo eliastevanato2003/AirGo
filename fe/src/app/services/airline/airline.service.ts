@@ -1,15 +1,15 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthService } from "../auth.service";
-import { Airline } from "../../models/admin/airline.model";
-import { Observable, map, tap} from "rxjs";
+import { tap} from "rxjs";
+import { Stats } from "../../models/airline/stats.model";
 
 @Injectable({ providedIn: 'root' })
 export class AirlineService {
 
     constructor(private http: HttpClient, private authService: AuthService) { }
 
-    getData()  {
+    getData() {
         const url = 'http://localhost:3000/api/airlines/getAirline';
 
         const token = this.authService.getToken();
@@ -20,14 +20,10 @@ export class AirlineService {
         });
 
         return this.http.get(url, { headers: headers }).pipe(tap());
-    
     }
        
-    
-
-    private url = 'http://localhost:3000/api/airlines/updateAirline';
-
     editData(name: string, code: string, mail:string, password: string) {
+        const url = 'http://localhost:3000/api/airlines/updateAirline';
         const message = {
             name: name,
             code: code,
@@ -36,14 +32,12 @@ export class AirlineService {
         }
 
         const token = this.authService.getToken();
-
         const headers = new HttpHeaders({
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         });
 
-      
-        this.http.post(this.url, message, { headers: headers }).subscribe({
+        this.http.post(url, message, { headers: headers }).subscribe({
             next: () => {
                 alert('Dati aggiornati');
             },
@@ -63,7 +57,7 @@ export class AirlineService {
             pw2: pw2
         }
 
-        this.http.post(this.url, message).subscribe({
+        this.http.post(url, message).subscribe({
             next: () => {
                 alert('Airline attivata');
             },
@@ -72,6 +66,18 @@ export class AirlineService {
                 // Gestisci l'errore, magari mostrando un messaggio all'utente
             }
         });
+    }
+
+    getStats() {
+        const url = 'http://localhost:3000/api/airlines/getStatsRoute';
+        const token = this.authService.getToken();
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.get<Stats[]>(url, { headers: headers }).pipe(tap());
     }
 
 }

@@ -8,7 +8,7 @@ import { Airport } from '../../models/user/airport.model';
 })
 export class AirportService {
 
-  private url = 'http://localhost:3000/api/airports/getAirports';
+  private url = 'http://localhost:3000/api/airports/getAirportsLike';
 
   constructor(private http: HttpClient) {}
 
@@ -25,7 +25,6 @@ export class AirportService {
     if (!query.trim()) {
       return of([]);
     }
-    console.log("Searching airports with query:", query);
-    return this.http.get<any[]>(this.url, { params: { city: query + '%' } });
+    return this.http.get<any[]>(this.url, { params: { city: query } });
   }
 }
