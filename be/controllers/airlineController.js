@@ -109,3 +109,13 @@ exports.getStatsRoute = async(req, res, next) => {
         next(err);
     }
 }
+
+exports.getStatsFlight = async(req, res, next) => {
+    try {
+        const { route } = req.body ?? {};
+        const stats = await airlineService.getStatsFlight(req.id, route);
+        res.json(stats);
+    } catch (err) {
+        next(err);
+    }
+}
