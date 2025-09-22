@@ -1,36 +1,42 @@
+<div class="air-go-container">
 <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione Aeroporti</h2>
-      <p>Qui puoi aggiungere, modificare o eliminare aerporti</p>
-    </div>
+    <div class="hero hero-airports">
+      <h2  style="color: white;">Gestione Aeroporti</h2>
+      <p  style="color: white;">Qui puoi aggiungere, modificare o eliminare aerporti</p>
     <button class="add-btn" (click)="showModal=true">Nuovo aeroporto</button>
-  </div>
-</div>
 
-<div class="filters">
-  <h3>Filtra Aeroporti</h3>
-  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
 
-    <label>ID</label>
-    <input type="number" formControlName="id">
 
+
+  <div [formGroup]="filterForm"  (ngSubmit)="filtra()" class="search-box filter-inside">
+
+    <div class="input-group">
+      <label>ID</label>
+      <input type="number" formControlName="id">
+    </div>
+
+    <div class="input-group">
     <label>Città</label>
     <input type="text" formControlName="city">
+    </div>
 
+
+    <div class="input-group">
     <label>Nazione</label>
     <input type="text" formControlName="country">
+    </div>  
 
+
+    <div class="input-group">
     <label>Codice identificativo</label>
     <input type="text" formControlName="code">
-
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica</button>
-      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
     </div>
-  </form>
+    
+      <button type="submit" class="search-btn">&#10141;</button>
+      <button type="button" class="search-btn reset" (click)=reset() >Reset</button>
+
+  </div>
 </div>
 
 <div class="second-container">
@@ -137,3 +143,4 @@
 </div>
 
 <app-footer></app-footer>
+</div>

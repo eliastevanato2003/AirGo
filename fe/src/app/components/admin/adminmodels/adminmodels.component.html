@@ -1,31 +1,30 @@
-<app-navbar></app-navbar>
+<div class="air-go-container">
+  <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione Modelli</h2>
-      <p>Qui puoi aggiungere, modificare o eliminare modelli di aerei</p>
+  <!-- Hero con filtri e pulsante aggiungi -->
+  <div class="hero hero-models">
+    <h1 style="color:#1a1a1a;">Gestione Modelli</h1>
+    <p style="color:#1a1a1a;">Qui puoi aggiungere, modificare o eliminare modelli di aerei</p>
+
+    <button class="add-btn hero-add-btn" (click)="showModal=true">Nuovo modello</button>
+
+    <div class="search-box filter-inside" [formGroup]="filterForm">
+      <div class="input-group">
+        <label>ID</label>
+        <input type="number" formControlName="id">
+      </div>
+
+      <div class="input-group">
+        <label>Nome</label>
+        <input type="text" formControlName="name">
+      </div>
+
+      <button class="search-btn" type="submit" (click)="filtra()">&#10141;</button>
+      <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
     </div>
-    <button class="add-btn" (click)="showModal=true">Nuovo modello</button>
+
+    
   </div>
-</div>
-
-<div class="filters">
-  <h3>Filtra Modelli</h3>
-  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="filters-form">
-
-    <label>ID</label>
-    <input type="number" formControlName="id">
-
-    <label>Nome</label>
-    <input type="text" formControlName="name">
-
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica</button>
-      <button type="button" class="cancel-btn" (click)=reset() >Reset</button>
-    </div>
-  </form>
-</div>
 
 
 <div class="second-container">
@@ -33,11 +32,7 @@
     @for(model of models; track model.IdModello) {
       <div class="model-bar">
         <div class="model-info">
-          <p><strong>Modello:</strong> {{ model.Nome }} - {{ model.IdModello }}</p>
-          <p><strong>Posti Prima Classe:</strong> {{ model.PostiPc }}</p>
-          <p><strong>Business:</strong> Righe={{ model.RigheB }} , Colonne={{ model.ColonneB }}</p>
-          <p><strong>Economy:</strong> Righe={{ model.RigheE }} , Colonne={{ model.ColonneE }}</p>
-          <p><strong>Righe con extra legroom:</strong> {{getExtraLegString(model)}}</p>
+          <h4>{{ model.Nome }} - {{ model.IdModello }}</h4>
         </div>
         <button class="action-btn" (click)="gestisci(model)">Gestisci</button>
       </div>
@@ -194,6 +189,9 @@
     </div>
     }
 
-</div>
+  </div>
+
 
 <app-footer></app-footer>
+
+</div>

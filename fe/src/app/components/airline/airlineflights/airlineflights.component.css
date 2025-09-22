@@ -2,6 +2,7 @@
 .flight-list {
     display: flex;
     flex-direction: column;
+    margin-top: 3rem;
     gap: 15px;
 }
 
@@ -71,38 +72,6 @@
     flex-direction: row;
 }
 
-.filters-form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.filter-row {
-  display: flex;
-  gap: 16px;
-}
-
-.filter-item {
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-}
-
-.filter-block {
-  border: 1px solid #ccc;
-  padding: 12px;
-  border-radius: 6px;
-}
-
-.filter-block h4 {
-  margin: 0 0 8px 0;
-}
-
-.filter-buttons {
-  display: flex;
-  gap: 8px;
-}
-
 
 .info-box {
   border: 1px solid #ccc;
@@ -138,4 +107,11 @@
 
 .check-btn:hover {
     background: #eab308;
+}
+
+
+.hero.hero-flights {
+  background-image: url('../../../assets/img/plane.png');
+  background-size: cover;
+  background-position: center;
 }

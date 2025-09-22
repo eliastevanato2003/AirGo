@@ -18,7 +18,7 @@
           <li><button class="log-in-btn" (click)="airlineprofile()">Profilo</button></li>
         }
         @if(userRole === 2) {
-          <li><button class="norm-btn">I miei voli</button></li>
+          <li><button class="norm-btn" (click)="tickets()">I miei voli</button></li>
           <li><button class="log-in-btn" (click)="profile()">Profilo</button></li>
         }
         <li><button class="norm-btn" (click)="logout()">Esci</button></li>

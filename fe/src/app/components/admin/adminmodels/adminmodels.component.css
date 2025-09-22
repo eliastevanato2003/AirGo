@@ -1,35 +1,8 @@
 
-.models-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 30px auto 50px auto;
-    padding: 20px;
-}
-
-.models-container .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.models-container .header h2 {
-    font-size: 26px;
-    color: #3b5998;
-    margin-bottom: 8px;
-}
-
-.models-container .header p {
-    font-size: 14px;
-    color: #777;
-    margin-bottom: 20px;
-}
-
-
-
 .model-list {
     display: flex;
     flex-direction: column;
+    margin-top: 3rem;
     gap: 15px;
 }
 
@@ -54,92 +27,8 @@
 }
 
 
-
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5); 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow-y: auto; 
-  padding: 1rem; 
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  max-height: 90vh; 
-  width: 500px;      
-  overflow-y: auto;  
-  padding: 1.5rem;
-  border-radius: 10px;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
-
-.modal-content h3 {
-  margin-top: 0;
-  font-size: 20px;
-  color: #3b5998;
-  margin-bottom: 15px;
-}
-
-.modal-content label {
-  display: block;
-  font-size: 14px;
-  color: #444;
-  font-weight: 500;
-  margin-bottom: 6px;
-  margin-top: 10px;
-}
-
-.modal-content input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 15px;
-}
-
-.modal-content input:focus {
-  border-color: #ff7f50;
-  outline: none;
-  box-shadow: 0 0 4px rgba(255, 127, 80, 0.3);
-}
-
-.modal-content select {
-  width: 100%;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-  font-size: 15px;
-  background-color: #fff; 
-  appearance: none;       
-  -webkit-appearance: none;
-  -moz-appearance: none;
-}
-
-.modal-content select:focus {
-  border-color: #ff7f50;
-  outline: none;
-  box-shadow: 0 0 4px rgba(255, 127, 80, 0.3);
-}
-
-.modal-buttons {
-  margin-top: 20px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-.containerb{
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
+.hero.hero-models {
+  background-image: url('../../../assets/img/model.png');
+  background-size: cover;
+  background-position: center;
 }

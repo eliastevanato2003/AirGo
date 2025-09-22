@@ -1,67 +1,69 @@
-<app-navbar></app-navbar>
+<div class="air-go-container">
+  <app-navbar></app-navbar>
 
-<div class="first-container">
-  <div class="header">
-    <div class="title-group">
-      <h2>Gestione Rotte</h2>
-      <p>Qui puoi aggiungere, modificare o eliminare rotte attuate dalla tua compagnia</p>
-    </div>
-    <button class="add-btn" (click)="showModal=true">Nuova rotta</button>
-  </div>
-</div>
+  <!-- Hero con filtri -->
+  <div class="hero hero-routes">
+    <h1>Gestione Rotte</h1>
+    <p>Qui puoi aggiungere, modificare o eliminare rotte attuate dalla tua compagnia</p>
+    <button class="add-btn hero-add-btn" (click)="showModal=true">Nuova rotta</button>
 
-  <div class="filters">
-  <h3>Filtra Rotte</h3>
-  <form [formGroup]="filterForm" (ngSubmit)="filtra()" class="filters-form">
-    
-    <label>ID</label>
-    <input type="number" formControlName="id" placeholder="">
-
-    <label>Aeroporto di partenza</label>
-    <select formControlName="departure">
-      <option value="">Tutti</option>
-      @for(airport of airports; track airport.IdAeroporto) {
-        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
-      }
-    </select>
-
-    <label>Aeroporto di arrivo</label>
-    <select formControlName="arrival">
-      <option value="">Tutti</option>
-      @for(airport of airports; track airport.IdAeroporto) {
-        <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
-      }
-    </select>
-
-    <div class="filter-buttons">
-      <button type="submit" class="save-btn">Applica</button>
-      <button type="button" class="cancel-btn" (click)="reset()">Reset</button>
-    </div>
-  </form>
-</div>
-
-<div class="second-container">
-  <div class="route-list">
-  <div class="routes-grid">
-    @for(route of routes; track route.IdRotta) {
-      <div class="route-card">
-        <h4>Rotta {{route.IdRotta}}</h4>
-        <div class="route-codes">
-          <div class="route-left">
-            <p class="code">{{ route.CodicePartenza }}</p>
-            <p class="city">{{ route.CittaPartenza }}</p>
-          </div>
-          <div class="route-arrow">➔</div>
-          <div class="route-right">
-            <p class="code">{{ route.CodiceDestinazione }}</p>
-            <p class="city">{{ route.CittaDestinazione }}</p>
-          </div>
-        </div>
-        <button class="action-btn" (click)="gestisci(route)">Gestisci</button>
+    <div class="search-box filter-inside" [formGroup]="filterForm">
+      <div class="input-group">
+        <label>ID</label>
+        <input type="number" formControlName="id" placeholder="">
       </div>
-    }
+
+      <div class="input-group">
+        <label>Aeroporto di partenza</label>
+        <select formControlName="departure">
+          <option value="">Tutti</option>
+          @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+          }
+        </select>
+      </div>
+
+      <div class="input-group">
+        <label>Aeroporto di arrivo</label>
+        <select formControlName="arrival">
+          <option value="">Tutti</option>
+          @for(airport of airports; track airport.IdAeroporto) {
+            <option [value]="airport.IdAeroporto">{{ airport.Citta }} ({{ airport.CodiceIdentificativo }})</option>
+          }
+        </select>
+      </div>
+
+      <button class="search-btn" type="submit" (click)="filtra()">&#10141;</button>
+      <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
+    </div>
+
+    
   </div>
-</div>
+
+  <!-- Lista rotte -->
+  <div class="second-container">
+    <div class="route-list">
+      <div class="routes-grid">
+        @for(route of routes; track route.IdRotta) {
+          <div class="route-card">
+            <h4>Rotta {{route.IdRotta}}</h4>
+            <div class="route-codes">
+              <div class="route-left">
+                <p class="code">{{ route.CodicePartenza }}</p>
+                <p class="city">{{ route.CittaPartenza }}</p>
+              </div>
+              <div class="route-arrow">➔</div>
+              <div class="route-right">
+                <p class="code">{{ route.CodiceDestinazione }}</p>
+                <p class="city">{{ route.CittaDestinazione }}</p>
+              </div>
+            </div>
+            <button class="action-btn" (click)="gestisci(route)">Gestisci</button>
+          </div>
+        }
+      </div>
+    </div>
+  </div>
 
 
   @if(showModal) {
@@ -161,6 +163,7 @@
 
   </div>
 }
-</div>
+
 
 <app-footer></app-footer>
+</div>

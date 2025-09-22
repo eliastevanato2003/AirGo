@@ -1,3 +1,8 @@
+.hero.hero-routes {
+  background-image: url('../../../assets/img/routes.png');
+  background-size: cover;
+  background-position: center;
+}
 
 
 .modal-content {
@@ -12,7 +17,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 3rem;
 }
 
 .route-card {

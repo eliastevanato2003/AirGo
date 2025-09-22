@@ -1,0 +1,32 @@
+.ticket-list {
+    display: flex;
+    flex-direction: column;
+    margin-top: 3rem;
+    gap: 15px;
+}
+
+.ticket-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.ticket-info p {
+    margin: 4px 0;
+    font-size: 14px;
+    color: #444;
+}
+
+.ticket-info p strong {
+    color: #777;
+}
+
+.hero.hero-tickets {
+  background-image: url('../../../assets/img/ticket.png');
+  background-size: cover;
+  background-position: center;
+}
