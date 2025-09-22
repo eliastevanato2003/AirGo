@@ -2,6 +2,7 @@ const airlineService = require("../services/airlineService");
 const emailService = require("../services/emailService");
 const mailing = require("../middlewares/mail")
 const flightService = require("../services/flightService");
+const flightRouteService = require("../services/flightRouteService");
 
 exports.getAirlines = async (req, res, next) => {
     try {
@@ -94,29 +95,36 @@ exports.deleteAirline = async (req, res, next) => {
                 const nairline = await emailService.deactivateEmail(airline.IdEmail);
                 res.json({ nairline: nairline });
             }
-        } else res.status(400).json({message: "Airline not found"});
+        } else res.status(400).json({ message: "Airline not found" });
     } catch (err) {
         if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
         else next(err);
     }
 }
 
-exports.getStatsRoute = async(req, res, next) => {
+exports.getStatsRoute = async (req, res, next) => {
     try {
         const { order } = req.body ?? {};
+        if (order != 1 || order != 2) order = 1;
         const stats = await airlineService.getStatsRoute(req.id, order);
         res.json(stats);
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }
 
-exports.getStatsFlight = async(req, res, next) => {
+exports.getStatsFlight = async (req, res, next) => {
     try {
         const { route } = req.body ?? {};
-        const stats = await airlineService.getStatsFlight(req.id, route);
-        res.json(stats);
+        const routes = await flightRouteService.getFlightRoutes(route, undefined, undefined, undefined);
+        if (routes[0]) {
+            const stats = await airlineService.getStatsFlight(req.id, route);
+            res.json(stats);
+        }
+        else res.status(400).json({ message: "Route not found" });
     } catch (err) {
-        next(err);
+        if (err.code == '22P02') res.status(400).json({ message: "Invalid data" });
+        else next(err);
     }
 }
