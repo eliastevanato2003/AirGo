@@ -4,7 +4,7 @@ export interface TicketDB {
   Volo: number;
   Nome: string;
   Cognome: string;
-  DoB: string; // ISO date string
+  DoB: string;
   Classe: string;
   NBagagliExtra: number;
   IsActive: boolean;

@@ -15,7 +15,7 @@
         <!-- Mappa dei posti -->
         <div class="seat-map">
             <!-- Prima classe (First Class) -->
-            <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected}"
+            <div class="seat firstclass" [ngClass]="{'selected': getSeat(0, '0')?.selected, 'unavailable': getSeat(0, '0')?.unavailable}"
                 (click)="selectSeat(getSeat(0, '0')!)">
                 Prima classe
             </div>
@@ -33,7 +33,7 @@
                   'unavailable': seat.unavailable,
                   'extralegroom': seat.extraLegroom
                 }" (click)="selectSeat(seat)">
-                    {{ seat.row }}{{ seat.column }}
+                    {{ seat.displayRow }}{{ seat.column }}
                 </div>
                 }
 
@@ -49,7 +49,7 @@
                   'unavailable': seat.unavailable,
                   'extralegroom': seat.extraLegroom
                 }" (click)="selectSeat(seat)">
-                    {{ seat.row }}{{ seat.column }}
+                    {{ seat.displayRow }}{{ seat.column }}
                 </div>
                 }
                 }
@@ -58,13 +58,11 @@
         </div>
 
         <!-- Etichette per le classi con icone -->
-        <div class="business-label" [ngClass]="businessLabel" (click)="selectRandomSeat('business')">Business</div>
-        <div class="economy-label" [ngClass]="economyLabel" (click)="selectRandomSeat('economy')">Economy</div>
+        <div class="business-label" [ngClass]="{selected: businessLabel, 'unavailable': unavailableBusiness}" (click)="selectRandomSeat('business')">Business</div>
+        <div class="economy-label" [ngClass]="{selected: economyLabel, 'unavailable': unavailableEconomy}" (click)="selectRandomSeat('economy')">Economy</div>
     </div>
 
-    <button type="submit" class="submit-button" routerLink="/baggageselection"
-        [queryParams]="{ flightId: flightId, chseat: chseat | json, seatclass: seatclass | json, ticketCount: ticketCount | json, price: price | json, seats: getSelectedSeats() | json, extraBagPrice: flight?.CostoBag | json}"
-        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Continua</button>
+    <button type="submit" class="submit-button" (click)="submit()">Continua</button>
 </div>
 
 <app-footer></app-footer>
