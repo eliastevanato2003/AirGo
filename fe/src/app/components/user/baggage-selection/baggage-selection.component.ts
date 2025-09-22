@@ -27,21 +27,23 @@ export class BaggageSelectionComponent {
   submitted = false;
 
   options = [
-    { id: 0, name: 'Nessun bagaglio aggiuntivo', price: 0.00 },
-    { id: 1, name: 'Bagaglio aggiuntivo', price: 17.49 }
+    { id: 0, name: 'Nessun bagaglio aggiuntivo', price: 0.00 }
   ];
 
   selectedOption: number[] = [];
 
   constructor(private route: ActivatedRoute, private fb: FormBuilder) {
     this.route.queryParams.subscribe(params => {
-      this.ticketCount = +params['ticketCount'] || 1;
-      this.price = parseInt(params['price'], 10) || 0;
+      this.ticketCount = parseInt(params['ticketCount'] || '1', 10);
+      this.price = parseFloat(params['price']) || 0.00;
       this.seats = JSON.parse(params['seats'] || '[]');
       this.selectedOption = new Array(this.ticketCount).fill(0);
       this.chseat = JSON.parse(params['chseat'] || '[]');
       this.seatclass = JSON.parse(params['seatclass'] || '[]');
       this.flightId = params['flightId'];
+      let extraBagPrice = parseFloat(params['extraBagPrice']) || 0.00;
+
+      this.options.push({ id: 1, name: 'Bagaglio aggiuntivo', price: extraBagPrice });
 
       const passengersArray: FormArray = this.fb.array([]);
 
