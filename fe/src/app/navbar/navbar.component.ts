@@ -75,4 +75,7 @@ export class NavbarComponent implements OnInit {
     this.router.navigate(['/admin-models'])
   }
 
+  stats(){
+    this.router.navigate(['/stats'])
+  }
 }
