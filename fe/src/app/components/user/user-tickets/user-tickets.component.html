@@ -92,8 +92,8 @@
               </h4>
               @if(expandedSection === 'volo') {
                 <div class="info-content">
-                  <p><strong>Partenza:</strong> {{selectedTicket.Partenza}}</p>
-                  <p><strong>Destinazione:</strong> {{selectedTicket.Destinazione}}</p>
+                  <p><strong>Partenza:</strong> {{selectedTicket.CodicePartenza}}</p>
+                  <p><strong>Destinazione:</strong> {{selectedTicket.CodiceDestinazione}}</p>
                   <p><strong>Data Partenza:</strong> {{selectedTicket.DataPartenzaPrev | date:'dd/MM/yyyy HH:mm'}}</p>
                   <p><strong>Data Arrivo:</strong> {{selectedTicket.DataArrivoPrev | date:'dd/MM/yyyy HH:mm'}}</p>
                 </div>
