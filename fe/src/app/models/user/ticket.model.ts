@@ -36,5 +36,7 @@ export interface TicketDB {
   IdRotta: number;
   Partenza: number;
   Destinazione: number;
+  CodicePartenza: string,
+  CodiceDestinazoine: string,
   CompagniaAerea: number;
 }
