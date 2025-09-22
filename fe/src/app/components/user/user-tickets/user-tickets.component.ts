@@ -5,6 +5,8 @@ import { FooterComponent } from '../../../footer/footer.component';
 import { TicketDB } from '../../../models/user/ticket.model';
 import { TicketService } from '../../../services/user/ticket.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-user-tickets',
@@ -21,7 +23,11 @@ export class UserTicketsComponent implements OnInit{
   expandedSection: string |null=null;
   showEdit=false;
 
-  constructor(private ticketService: TicketService, private fb: FormBuilder,) {
+  constructor(private ticketService: TicketService, private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
     this.filterForm = this.fb.group({
     idTicket:[''],
     idFlight:['']

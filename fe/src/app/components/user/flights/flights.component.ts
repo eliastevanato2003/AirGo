@@ -7,6 +7,7 @@ import { JsonPipe, CommonModule, NgIf } from '@angular/common';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { AirportService } from '../../../services/user/airport.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-flight-search',
@@ -30,7 +31,6 @@ export class FlightsComponent implements OnInit {
     });
   }
 
-  // TODO: test
   ngOnInit(): void {
     this.fromAirports$ = this.searchFlightsForm.get('from')!.valueChanges.pipe(
       debounceTime(300),

@@ -4,6 +4,8 @@ import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { User, userProfile } from '../../../models/user/user.model';
 import { UserService } from '../../../services/user/user.service';
+import { Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -26,7 +28,11 @@ export class UserProfileComponent implements OnInit {
   personalForm: FormGroup;
   contactForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private userService: UserService) {
+  constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
     this.personalForm = this.fb.group({
       name: ['', Validators.required],
       surname: ['', Validators.required],
