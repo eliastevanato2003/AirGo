@@ -27,7 +27,7 @@ export class TicketBarComponent {
       this.currentStep = 'posti';
     } else if (url.includes('baggageselection')) {
       this.currentStep = 'bagagli';
-    } else if (url.includes('payment')) {
+    } else if (url.includes('ticketsummary')) {
       this.currentStep = 'pagamento';
     }
   }

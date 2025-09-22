@@ -13,7 +13,7 @@
       
         <div class="input-group">
           <label>ID Volo</label>
-          <input type="number" formControlName="id" placeholder="ID Volo">
+          <input type="number" formControlName="id">
         </div>
         <div class="input-group">
           <label>Stato</label>
@@ -29,36 +29,42 @@
 
       
         <div class="input-group">
-          <label>Partenza (Aeroporto ID)</label>
-          <input type="number" formControlName="departure">
+          <label for="departure">Partenza</label>
+          <ng-select 
+              formControlName="departure"
+              [items]="airports"
+              bindLabel="CodiceIdentificativo"
+              bindValue="IdAeroporto"
+              [searchable]="true">
+          </ng-select>
         </div>
+
         <div class="input-group">
-          <label>Data minima</label>
-          <input type="date" formControlName="mindatedeparture">
-        </div>
-        <div class="input-group">
-          <label>Data massima</label>
-          <input type="date" formControlName="maxdatedeparture">
+          <label>Data partenza</label>
+          <input type="date" formControlName="datedeparture">
         </div>
      
 
       
         <div class="input-group">
-          <label>Arrivo (Aeroporto ID)</label>
-          <input type="number" formControlName="arrival">
+          <label for="arrival">Arrivo</label>
+          <ng-select 
+              formControlName="arrival"
+              [items]="airports"
+              bindLabel="CodiceIdentificativo"
+              bindValue="IdAeroporto"
+              [searchable]="true">
+          </ng-select>
         </div>
+
         <div class="input-group">
-          <label>Data minima</label>
-          <input type="date" formControlName="mindatearrival">
-        </div>
-        <div class="input-group">
-          <label>Data massima</label>
-          <input type="date" formControlName="maxdatearrival">
+          <label>Data arrivo</label>
+          <input type="date" formControlName="datearrival">
         </div>
       
 
 
-        <button type="button" (click)="filtra()" class="search-btn">&#10141; Applica</button>
+        <button type="button" (click)="filtra()" class="search-btn">&#10141;</button>
         <button type="button" (click)="reset()" class="search-btn reset">Reset</button>
     </div>
 
@@ -107,21 +113,35 @@
       <h3>Aggiungi volo</h3>
       <form [formGroup]="newFlightForm" (ngSubmit)="addFlight()">
 
-        <label for="plane">Aereo</label>
-        <select formControlName="plane" required>
-          <option value="" disabled>Seleziona un Aereo</option>
-          @for(plane of planes; track plane.IdAereo) {
-            <option [value]="plane.IdAereo">{{ plane.NomeModello }}-{{ plane.IdAereo}}</option>
-          }
-        </select>
+        <div class="input-group">
+          <label for="plane">Aereo</label>
+          <ng-select
+            formControlName="plane"
+            [items]="planes"
+            bindLabel="NomeModello"
+            bindValue="IdAereo"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.NomeModello }} - {{ item.IdAereo }}
+            </ng-template>
+          </ng-select>
+        </div>
 
-        <label for="route">Rotta</label>
-        <select formControlName="route" required>
-          <option value="" disabled>Seleziona una Rotta</option>
-          @for(route of routes; track route.IdRotta) {
-            <option [value]="route.IdRotta">{{ route.CodicePartenza }}➔{{ route.CodiceDestinazione }}</option>
-          }
-        </select>
+        <div class="input-group">
+          <label for="route">Rotta</label>
+          <ng-select
+            formControlName="route"
+            [items]="routes"
+            bindLabel="label"
+            bindValue="IdRotta"
+            [searchable]="true">
+            <ng-template ng-option-tmp let-item="item">
+              {{ item.CodicePartenza }} ➔ {{ item.CodiceDestinazione }}
+            </ng-template>
+          </ng-select>
+        </div>
+
+
 
         <label for="schdepdate">Data partenza</label>
         <input type="datetime-local" id="schdepdate" formControlName="schdepdate" required>
@@ -243,7 +263,7 @@
             <button class="check-btn" (click)="checkin(selectedFlight.IdVolo)">Assegna posti</button>
             <button class="action-btn" (click)="decolloVolo(selectedFlight.IdVolo)">Decollo</button>
             <button class="add-btn" (click)="openEditPrices()">Modifica prezzi</button>
-            <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Elimina</button>
+            <button class="delete-btn" (click)="cancellaVolo(selectedFlight.IdVolo)">Cancella</button>
           }
           @if(selectedFlightStatus === 'Decollato') {
             <button class="action-btn" (click)="atterraggioVolo(selectedFlight.IdVolo)">Atterraggio</button>

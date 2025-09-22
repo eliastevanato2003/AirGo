@@ -7,7 +7,7 @@
     <p style="color:white;">Qui puoi aggiungere o eliminare compagnie aeree</p>
     <button class="add-btn" (click)="showModal=true">Aggiungi compagnia</button>
 
-  <div [formGroup]="filterForm"  (ngSubmit)="filtra()" class="search-box filter-inside">
+  <form [formGroup]="filterForm"  (ngSubmit)="filtra()" class="search-box filter-inside">
 
     <div class="input-group">
     <label>ID</label>
@@ -31,7 +31,7 @@
 
       <button type="submit" class="search-btn">&#10141;</button>
       <button type="button" class="search-btn reset" (click)=reset() >Reset</button>
-  </div>
+  </form>
 </div>
 
 

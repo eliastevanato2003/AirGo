@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Seat } from '../../../models/user/seat.model';
 import { NavbarComponent } from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
 import { TicketBarComponent } from '../ticket-bar/ticket-bar.component';
 import { JsonPipe, NgClass, NgFor } from '@angular/common';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-hand-baggage',
@@ -32,7 +33,11 @@ export class BaggageSelectionComponent {
 
   selectedOption: number[] = [];
 
-  constructor(private route: ActivatedRoute, private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute, private fb: FormBuilder, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
     this.route.queryParams.subscribe(params => {
       this.ticketCount = parseInt(params['ticketCount'] || '1', 10);
       this.price = parseFloat(params['price']) || 0.00;

@@ -288,6 +288,78 @@ html, body {
   width: 150px;
 }
 
+/* Contenitore principale */
+.input-group ng-select {
+  width: 150px;              /* stessa larghezza degli input */
+  font-size: 16px;
+  color: #555;
+  display: block;
+  background: transparent;
+}
+
+/* Campo selezione (container interno) */
+.input-group ng-select .ng-select-container {
+  border: 1px solid #ccc;    /* bordo come input normale */
+  border-radius: 4px;
+  padding: 5px 8px;
+  background-color: #fff;    /* bianco */
+  height: 36px;              /* altezza simile agli input */
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  color: #555;
+}
+
+/* Placeholder */
+.input-group ng-select .ng-placeholder {
+  color: #aaa;
+  font-size: 14px;
+}
+
+/* Focus */
+.input-group ng-select.ng-select-focused .ng-select-container {
+  border-color: #888;
+  box-shadow: 0 0 0 1px #888;
+}
+
+/* Dropdown panel */
+.input-group ng-select .ng-dropdown-panel {
+  background-color: #fff;   /* sfondo bianco */
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  color: #555;
+  z-index: 1000;             /* sopra altri elementi */
+}
+
+/* Opzioni */
+.input-group ng-select .ng-option {
+  background-color: #fff;   /* sfondo bianco */
+  color: #555;              /* testo leggibile */
+  padding: 5px 10px;
+}
+
+/* Hover */
+.input-group ng-select .ng-option:hover {
+  background-color: #f0f0f0;
+}
+
+/* Opzione selezionata */
+.input-group ng-select .ng-option-selected {
+  background-color: #ddd;
+  color: #000;
+}
+
+/* Freccia del select */
+.input-group ng-select .ng-arrow {
+  color: #555;
+}
+
+/* Rimuove bordi extra interni */
+.input-group ng-select .ng-value-container {
+  padding: 0;
+}
+
 .search-btn {
   background-color: #ff7f50;
   color: #ffffff;
@@ -416,4 +488,9 @@ html, body {
 
 .search-btn.reset:hover {
   background-color: #666;
+}
+
+.modal-content ng-select {
+  width: 100%;        
+  font-size: 16px;
 }

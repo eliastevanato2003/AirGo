@@ -9,13 +9,14 @@ import { AirportService } from '../../../services/airline/airport.service';
 import { Airport } from '../../../models/airline/airport.model';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { NgSelectModule } from '@ng-select/ng-select';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-routes',
-  imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule],
+  imports: [NavbarComponent, FooterComponent, CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './routes.component.html',
-  styleUrl: './routes.component.css',
+  styleUrls: ['./routes.component.css'],
   standalone: true
 })
 export class RoutesComponent implements OnInit{
@@ -33,7 +34,11 @@ export class RoutesComponent implements OnInit{
   showEdit=false;
 
 
-  constructor(private fb: FormBuilder, private routeService: RouteService, private authService: AuthService, private airportService: AirportService) {
+  constructor(private fb: FormBuilder, private routeService: RouteService, private authService: AuthService, private airportService: AirportService, private router: Router) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newRouteForm = this.fb.group({
       from: ['', Validators.required],
       to: ['', Validators.required]
@@ -77,8 +82,8 @@ export class RoutesComponent implements OnInit{
     const form = this.newRouteForm.value;
 
     this.newRoute = {
-      departureAirportId: form.from,
-      destinationAirportId: form.to
+      departure: form.from,
+      arrival: form.to
     };
 
     this.routeService.addRoute(this.newRoute).subscribe({
@@ -145,19 +150,20 @@ export class RoutesComponent implements OnInit{
   }
 
   saveEdit(): void {
-  if (!this.selectedRoute || this.editRouteForm.invalid) return;
+    if (!this.selectedRoute || this.editRouteForm.invalid) return;
 
-  const f = this.editRouteForm.value;
-  if (f.from === this.selectedRoute.IdPartenza && f.to === this.selectedRoute.IdDestinazione) {
-    this.closeEdit();
-    return;
-  }
+    const f = this.editRouteForm.value;
+    if (f.from === this.selectedRoute.IdPartenza && f.to === this.selectedRoute.IdDestinazione) {
+      this.closeEdit();
+      return;
+    }
 
-  this.routeService.updateRoute(
+    this.routeService.updateRoute(
     this.selectedRoute.IdRotta,
-    f.from,
+    f.from, 
     f.to
-  ).subscribe({
+  )
+  .subscribe({
     next: () => {
       alert('Rotta aggiornata con successo');
       this.closeEdit();
@@ -169,6 +175,7 @@ export class RoutesComponent implements OnInit{
       alert(err.error?.message || 'Errore durante l\'aggiornamento');
     }
   });
+
 }
 
 

@@ -16,6 +16,6 @@ export interface Route {
 }
 
 export interface NewRoute {
-    departureAirportId: number;
-    destinationAirportId: number;
+    departure: number;
+    arrival: number;
 }

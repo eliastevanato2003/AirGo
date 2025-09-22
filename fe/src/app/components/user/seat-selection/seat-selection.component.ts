@@ -5,12 +5,13 @@ import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
 import { TicketService } from '../../../services/user/ticket.service';
 import { ExtraLegRow } from '../../../models/airline/model.model';
 import { TicketDB } from '../../../models/user/ticket.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-seat-selection',
@@ -36,7 +37,12 @@ export class SeatSelectionComponent implements OnInit {
   public flightId: number = 0;
   public flight: FlightStatus | null = null;
 
-  constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService) { }
+  constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
@@ -71,10 +77,9 @@ export class SeatSelectionComponent implements OnInit {
 
   this.ticketService.getTickets({ flight: this.flight.IdVolo }).subscribe({
     next: (bookedSeats: TicketDB[]) => {  
-      console.log('Booked Seats:', bookedSeats);
-
       this.seats = [];
 
+      // PRIMA CLASSE
       this.seats.push({
         id: '00',
         row: 0,
@@ -180,20 +185,6 @@ export class SeatSelectionComponent implements OnInit {
 
   getSelectedSeats() {
     return this.seats.filter(seat => seat.selected);
-  }
-
-  getSeatClass(): string[] {
-    this.seatclass = []; // Reset the array
-    this.getSelectedSeats().forEach(seat => {
-      if (seat.type === 'firstclass') {
-        this.seatclass.push('Prima');
-      } else if (seat.type === 'business') {
-        this.seatclass.push('Business');
-      } else {
-        this.seatclass.push('Economy');
-      }
-    });
-    return this.seatclass;
   }
 
   getSeat(row: number, col: string): Seat | undefined {

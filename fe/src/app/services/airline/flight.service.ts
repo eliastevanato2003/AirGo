@@ -105,4 +105,15 @@ export class FlightService {
     });
   }
 
+   cancelFlight(id: number): Observable<any> {
+    const url = `${this.baseUrl}/cancelFlight`;
+
+   
+    return this.http.post<any>(
+      url,
+      { id:id },
+      { headers: this.getHeaders() }
+    );
+  }
+
 }

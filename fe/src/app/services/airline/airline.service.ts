@@ -90,6 +90,6 @@ export class AirlineService {
             'Authorization': `Bearer ${token}`
         });
 
-        return this.http.get<FlightStatus[]>(url, { headers: headers, params: { routeId } }).pipe(tap());
+        return this.http.get<FlightStatus[]>(url, { headers: headers, params: { route: routeId } }).pipe(tap());
     }
 }

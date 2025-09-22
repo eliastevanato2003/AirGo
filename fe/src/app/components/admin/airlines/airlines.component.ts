@@ -5,6 +5,8 @@ import { ReactiveFormsModule, FormControl, FormGroup, FormBuilder, Validators} f
 import { CommonModule } from '@angular/common';
 import { NavbarComponent} from '../../../navbar/navbar.component';
 import { FooterComponent } from '../../../footer/footer.component';
+import { AuthService } from '../../../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-airlines',
@@ -20,7 +22,11 @@ export class AirlinesComponent implements OnInit {
   filterForm: FormGroup;
   airlineForm: FormGroup | any;
 
-  constructor(private airlineService: AirlineService, private fb: FormBuilder) {
+  constructor(private router: Router, private authService: AuthService, private airlineService: AirlineService, private fb: FormBuilder) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.airlineForm = this.fb.group({
       name:  ['', Validators.required],
       email: ['', Validators.required],
@@ -60,9 +66,10 @@ export class AirlinesComponent implements OnInit {
 
     this.airlineService.addAirline(this.newAirline).subscribe({
       next:() => {
-      this.airlineForm.reset();
-      this.loadAirlines();
-      this.closeModal();
+        alert('Nuova compagnia aerea creata');
+        this.airlineForm.reset();
+        this.loadAirlines();
+        this.closeModal();
     },
         error: (err) => {
           console.error('Errore creazione compagnia aerea', err);
@@ -110,7 +117,5 @@ export class AirlinesComponent implements OnInit {
     this.filterForm.reset();
     this.loadAirlines();
   }
-
-
 
 }

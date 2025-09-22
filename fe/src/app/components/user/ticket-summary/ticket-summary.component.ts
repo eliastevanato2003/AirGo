@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Seat } from '../../../models/user/seat.model';
 import { TicketService } from '../../../services/user/ticket.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-ticket-summary',
@@ -32,9 +33,13 @@ export class TicketSummaryComponent implements OnInit {
   public paymentForm!: FormGroup;
   public confirmed = false;
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private ticketService: TicketService) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private ticketService: TicketService, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
     this.route.queryParams.subscribe(params => {
-      this.totalPrice = parseFloat(params['price']) || 0.00;
+      this.totalPrice = parseFloat(params['price'] || '0.00');
       this.selectedSeats = JSON.parse(params['seats'] || '[]');
       JSON.parse(params['extraBag'] || '[]').forEach((res: boolean) => {
         if (res) this.extraBags++;
@@ -59,11 +64,9 @@ export class TicketSummaryComponent implements OnInit {
     });
   }
 
-  // TODO: addTicket non funziona (price non corretto)
   confirmPayment() {
     if (this.paymentForm.valid) {
       this.confirmed = true;
-      // TODO: Ticket activation
       for (let i = 0; i < this.ticketCount; i++) {
         const chseat = !!this.chseat.find(seat => seat.id === this.selectedSeats[i].id);
         this.ticketService.addTicket(this.flightId, this.names[i], this.surnames[i], this.dobs[i], this.seatclass[i], this.extraBags, chseat, this.totalPrice, chseat ? this.selectedSeats[i].row.toString() : undefined, chseat ? this.selectedSeats[i].column : undefined).subscribe({

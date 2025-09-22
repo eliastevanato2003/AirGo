@@ -7,6 +7,7 @@ import { Model, NewModel } from '../../../models/admin/model.model';
 import { AuthService } from '../../../services/auth.service';
 import { OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-adminmodels',
@@ -28,7 +29,11 @@ export class AdminModelsComponent implements OnInit{
   editModelForm!: FormGroup;
   filterForm: FormGroup;
 
-  constructor(private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
+  constructor(private router: Router, private modelService: ModelService, private authService: AuthService, private fb: FormBuilder) {
+    const token=this.authService.getToken();
+    if(!token){
+      this.router.navigate(['/login']);
+    }
     this.newModelForm = this.fb.group({
       name: ['', Validators.required],
       firstclass: ['', [Validators.required, Validators.min(0)]],
