@@ -53,8 +53,8 @@ export class FlightsComponent implements OnInit {
     });
   }
 
-  selectAirport(controlName: string, airportCode: string) {
-    this.searchFlightsForm.get(controlName)?.setValue(airportCode, { emitEvent: false });
+  selectAirport(controlName: string, airportCitta: string) {
+    this.searchFlightsForm.get(controlName)?.setValue(airportCitta, { emitEvent: false });
   }
 
   getData() {

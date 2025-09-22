@@ -9,8 +9,8 @@
         <input type="text" formControlName="from" placeholder="Partenza">
         <ul class="dropdown" *ngIf="fromAirports$ | async as fromAirports">
           @for(airport of fromAirports; track airport.id) {
-          <li (click)="selectAirport('from', airport.code)">
-            {{ airport.name }} ({{ airport.code }})
+          <li (click)="selectAirport('from', airport.Citta)">
+            {{ airport.Nome }} ({{ airport.Citta }})
           </li>
           }
         </ul>
@@ -20,8 +20,8 @@
         <input type="text" formControlName="to" placeholder="Destinazione">
         <ul class="dropdown" *ngIf="toAirports$ | async as toAirports">
           @for(airport of toAirports; track airport.id) {
-          <li (click)="selectAirport('to', airport.code)">
-            {{ airport.name }} ({{ airport.code }})
+          <li (click)="selectAirport('to', airport.Citta)">
+            {{ airport.Nome }} ({{ airport.Citta }})
           </li>
           }
         </ul>
