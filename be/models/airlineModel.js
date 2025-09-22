@@ -55,7 +55,7 @@ exports.getStatsRoute = async (id, order) => {
     return result.rows;
 }
 
-exports.getStatsFlight = async (id, route, order) => {
+exports.getStatsFlight = async (id, route) => {
     let sql = 'SELECT * FROM "aereiposti" AS "A" JOIN "Rotte" AS "R" ON "A"."Rotta" = "R"."IdRotta" AND ("A"."Rotta" = $2 OR $2 IS NULL) WHERE "CompagniaAerea" = $1 ';
     const result = await pool.query(sql, [id, route]);
     return result.rows;

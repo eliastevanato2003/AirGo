@@ -35,4 +35,4 @@ exports.deleteAirline = async (id) => await airlineModel.deleteAirline(id);
 
 exports.getStatsRoute = async (id, order) => await airlineModel.getStatsRoute(id, order);
 
-exports.getStatsFlight = async (id, route, order) => await airlineModel.getStatsFlight(id, route, order);
+exports.getStatsFlight = async (id, route) => await airlineModel.getStatsFlight(id, route);
