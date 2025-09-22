@@ -71,10 +71,9 @@ export class SeatSelectionComponent implements OnInit {
 
   this.ticketService.getTickets({ flight: this.flight.IdVolo }).subscribe({
     next: (bookedSeats: TicketDB[]) => {  
-      console.log('Booked Seats:', bookedSeats);
-
       this.seats = [];
 
+      // PRIMA CLASSE
       this.seats.push({
         id: '00',
         row: 0,
@@ -180,20 +179,6 @@ export class SeatSelectionComponent implements OnInit {
 
   getSelectedSeats() {
     return this.seats.filter(seat => seat.selected);
-  }
-
-  getSeatClass(): string[] {
-    this.seatclass = []; // Reset the array
-    this.getSelectedSeats().forEach(seat => {
-      if (seat.type === 'firstclass') {
-        this.seatclass.push('Prima');
-      } else if (seat.type === 'business') {
-        this.seatclass.push('Business');
-      } else {
-        this.seatclass.push('Economy');
-      }
-    });
-    return this.seatclass;
   }
 
   getSeat(row: number, col: string): Seat | undefined {

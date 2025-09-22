@@ -34,7 +34,7 @@ export class TicketSummaryComponent implements OnInit {
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private ticketService: TicketService) {
     this.route.queryParams.subscribe(params => {
-      this.totalPrice = parseFloat(params['price']) || 0.00;
+      this.totalPrice = parseFloat(params['price'] || '0.00');
       this.selectedSeats = JSON.parse(params['seats'] || '[]');
       JSON.parse(params['extraBag'] || '[]').forEach((res: boolean) => {
         if (res) this.extraBags++;

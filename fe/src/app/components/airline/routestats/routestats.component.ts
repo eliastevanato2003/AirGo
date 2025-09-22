@@ -29,7 +29,6 @@ export class RoutestatsComponent {
   fetchRouteStats(routeId: string) {
     this.airlineService.getRouteStats(routeId).subscribe((response) => {
       this.stats = response;
-      console.log(this.stats);
     });
   }
 }
