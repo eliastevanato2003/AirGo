@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { AuthService } from "../auth.service";
 import { tap} from "rxjs";
 import { Stats } from "../../models/airline/stats.model";
+import { FlightStatus } from "../../models/user/flight.model";
 
 @Injectable({ providedIn: 'root' })
 export class AirlineService {
@@ -80,4 +81,15 @@ export class AirlineService {
         return this.http.get<Stats[]>(url, { headers: headers }).pipe(tap());
     }
 
+    getRouteStats(routeId: string) {
+        const url = 'http://localhost:3000/api/airlines/getStatsFlight';
+        const token = this.authService.getToken();
+
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        return this.http.get<FlightStatus[]>(url, { headers: headers, params: { routeId } }).pipe(tap());
+    }
 }

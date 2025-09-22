@@ -1,0 +1,70 @@
+body {
+  line-height: 1.6;
+  background-color: #f4f4f4;
+  color: #333;
+  min-height: 100%;
+}
+
+/* Main content */
+div {
+  padding: 20px;
+}
+
+/* Message when no routes are found */
+div > div {
+  font-size: 1.2em;
+  color: #ff0000;
+  text-align: center;
+  padding: 30px;
+  background-color: #fff3f3;
+  border: 1px solid #ffcccc;
+  border-radius: 8px;
+  margin-top: 20px;
+}
+
+/* Table */
+table {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+table thead {
+  background-color: #3b5998;
+  color: #fff;
+}
+
+table th,
+table td {
+  padding: 12px 15px;
+  text-align: left;
+  border: 1px solid black;
+}
+
+table th {
+  font-size: 1.1em;
+  font-weight: bold;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+  table th,
+  table td {
+    font-size: 0.9em;
+    padding: 8px 12px;
+  }
+
+  table {
+    font-size: 0.9em;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  table th,
+  table td {
+    padding: 6px 10px;
+  }
+}
