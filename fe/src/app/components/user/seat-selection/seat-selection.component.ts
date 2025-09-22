@@ -5,12 +5,13 @@ import { NavbarComponent } from "../../../navbar/navbar.component";
 import { TicketBarComponent } from "../ticket-bar/ticket-bar.component";
 import { FooterComponent } from "../../../footer/footer.component";
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, RouterLink, RouterLinkActive } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink, RouterLinkActive } from "@angular/router";
 import { FlightService } from '../../../services/user/flight.service';
 import { FlightStatus } from '../../../models/user/flight.model';
 import { TicketService } from '../../../services/user/ticket.service';
 import { ExtraLegRow } from '../../../models/airline/model.model';
 import { TicketDB } from '../../../models/user/ticket.model';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-seat-selection',
@@ -36,7 +37,12 @@ export class SeatSelectionComponent implements OnInit {
   public flightId: number = 0;
   public flight: FlightStatus | null = null;
 
-  constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService) { }
+  constructor(private flightService: FlightService, private route: ActivatedRoute, private ticketService: TicketService, private authService: AuthService, private router: Router) {
+    const token = this.authService.getToken();
+    if(!token) {
+      this.router.navigate(['/login']);
+    }
+  }
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
