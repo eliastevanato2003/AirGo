@@ -56,7 +56,8 @@ exports.getStatsRoute = async (id, order) => {
 }
 
 exports.getStatsFlight = async (id, route) => {
-    let sql = 'SELECT * FROM "aereiposti" AS "A" JOIN "Rotte" AS "R" ON "A"."Rotta" = "R"."IdRotta" AND ("A"."Rotta" = $2 OR $2 IS NULL) WHERE "CompagniaAerea" = $1 ';
-    const result = await pool.query(sql, [id, route]);
+    let sql = 'SELECT "A"."IdVolo", "A"."Stato", "A"."DataPartenzaPrev", "A"."DataPartenzaEff", "A"."DataArrivoPrev", "A"."DataArrivoEff", "A"."PostiPc", "A"."PostiB", "A"."PostiE", "A"."PostiOccPc", "A"."PostiOccE", "A"."PostiOccB", SUM("B"."Costo") AS "Guadagno" FROM "aereiposti" AS "A" JOIN "Rotte" AS "R" ON "A"."Rotta" = "R"."IdRotta" AND ("A"."Rotta" = $2 OR $2 IS NULL) ';
+    const jo = 'JOIN "Biglietti" AS "B" ON "B"."Volo" = "A"."IdVolo" WHERE "CompagniaAerea" = $1 GROUP BY ("A"."IdVolo", "A"."Stato", "A"."DataPartenzaPrev", "A"."DataPartenzaEff", "A"."DataArrivoPrev", "A"."DataArrivoEff", "A"."PostiPc", "A"."PostiB", "A"."PostiE", "A"."PostiOccPc", "A"."PostiOccE", "A"."PostiOccB")';
+    const result = await pool.query(sql + jo, [id, route]);
     return result.rows;
 }
