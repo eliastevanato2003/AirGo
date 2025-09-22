@@ -32,7 +32,6 @@ router.get("/getAirline", authenticateToken, authorizeRoles(1), airlineControlle
  * @name Il nome della compagnia aerea
  * @identificationcode Il codice identificativo della compagnia aerea, che deve essere univoco
  * @email L'email della compagnia aerea, che deve essere univoca
- * @password La password della compagnia aerea
  * @returns {200} {nairline: number} Il numero di compagnie aeree create
  * @returns {400} {message: string} Dati mancanti
  * @returns {400} {message: string} Dati non validi
@@ -82,8 +81,19 @@ router.delete("/deleteAirline", authenticateToken, authorizeRoles(0), airlineCon
  */
 router.post("/activateAirline", airlineController.activateAirline);
 
+/**
+ * @route GET /api/airlines/getStatsRoute
+ * @description Restituisce le statistiche sulle rotte della compagnia aerea autenticata
+ * @returns {200} {object} Le statistiche di ogni rotta
+ */
 router.get("/getStatsRoute", authenticateToken, authorizeRoles(1), airlineController.getStatsRoute);
 
+/**
+ * @route GET /api/airlines/getStatsFlight
+ * @description Restituisce le statistiche dei voli della rotta indicata della compagnia aerea autenticata
+ * @returns {200} {object} Le statistiche di ogni volo
+ * @returns {400} {message: string} Rotta non trovata
+ */
 router.get("/getStatsFlight", authenticateToken, authorizeRoles(1), airlineController.getStatsFlight);
 
 

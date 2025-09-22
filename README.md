@@ -1,3 +1,19 @@
+# ISTRUZIONI AVVIO
+
+docker network create mynet
+
+cd /db
+docker build -t airgodb .
+docker run --env=POSTGRES_USER=admin --env=POSTGRES_PASSWORD=prova --env=POSTGRES_DB=AirGo --network=mynet -p 5433:5432 --name airgodb -d airgodb
+
+cd ../be
+docker build -t airgobe .
+docker run -p 3000:3000 --network mynet --name airgobe airgobe
+
+cd ../fe
+docker build -t airgofe .
+docker run -p 4000:4000 --network mynet --name airgofe airgofe
+
 # CREATE NETWORK:
 docker network create mynet
 (Only needed the first time)
