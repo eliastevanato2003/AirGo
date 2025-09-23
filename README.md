@@ -11,7 +11,7 @@ docker build -t airgobe .
 docker run -p 3000:3000 --network mynet --name airgobe airgobe
 
 cd ..\fe
-docker build -t airgofe .
+docker build -t airgofe . (potrebbe dare errore la prima volta scaricando i font)
 docker run -p 4000:4000 --network mynet --name airgofe airgofe
 
 # CREATE NETWORK:

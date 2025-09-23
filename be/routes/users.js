@@ -61,7 +61,7 @@ router.post("/updateUser", authenticateToken, authorizeRoles(2), userController.
 
 /**
  * @route DELETE /api/users/deleteUser
- * @access role: 2
+ * @access role: 0
  * @description Cancella l'utente indicato
  * @id L'id dell'utente da cancellare
  * @returns {200} {nuser: number} Il numero di utenti cancellati
