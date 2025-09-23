@@ -137,3 +137,24 @@ body {
 input.ng-invalid.ng-touched {
   border-color: red;
 }
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  background-color: #dc3545;
+  color: #fff;
+  cursor: pointer;
+  transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  background-color: #c82333;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
+}
+
+.btn:active {
+  background-color: #bd2130;
+}

@@ -160,4 +160,18 @@ export class UserTicketsComponent implements OnInit{
     }
   }
 
+  add() {
+    if (!this.selectedTicket) return;
+    console.log("Aggiunta bagaglio per biglietto ID:", this.selectedTicket);
+    this.ticketService.addExtraBaggage(this.selectedTicket.IdBiglietto, 1, this.selectedTicket.Costo + this.selectedTicket.CostoBag).subscribe({
+      next: () => {
+        alert("Bagaglio aggiunto con successo");
+      },
+      error: (err) => {
+        console.error("Errore aggiunta bagaglio", err);
+        alert(err.error?.message || "Errore durante l'aggiunta del bagaglio");
+      }
+    });
+  }
+
 }

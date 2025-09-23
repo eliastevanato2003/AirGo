@@ -132,6 +132,18 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
+  deleteAccount() {
+    if (confirm("Sei sicuro di voler eliminare il tuo account? Questa azione è irreversibile.")) {
+      this.userService.deleteAccount().subscribe({
+        next: () => {
+          // Logout e reindirizzamento alla pagina di login
+          this.authService.logout();
+          this.router.navigate(['/login']);
+        }
+      });
+    }
+  }
+
   get cf() {
     return this.contactForm.controls;
   }

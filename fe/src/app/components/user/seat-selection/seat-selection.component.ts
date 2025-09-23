@@ -81,8 +81,6 @@ export class SeatSelectionComponent implements OnInit {
       next: (bookedSeats: TicketDB[]) => {
         this.seats = [];
 
-        console.log('Booked Seats:', bookedSeats);
-
         this.unavailableBusiness = this.flight!.PostiOccB === this.flight!.PostiB;
         this.unavailableEconomy = this.flight!.PostiOccE === this.flight!.PostiE;
 

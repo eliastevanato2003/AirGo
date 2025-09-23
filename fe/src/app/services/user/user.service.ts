@@ -61,4 +61,23 @@ export class UserService {
         // Richiesta dei dati
         return this.http.post(this.url, message, { headers: headers });
     }
+
+    deleteAccount() {
+        const url = 'http://localhost:3000/api/users/deleteUser';
+
+        const token = this.authService.getToken();
+
+        // Crea l'intestazione di autorizzazione
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        const message = {
+            id: this.authService.getId()
+        };
+
+        // Richiesta dei dati
+        return this.http.delete(url, { headers: headers, body: message }).pipe(tap());
+    }
 }

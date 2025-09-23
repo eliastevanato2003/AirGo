@@ -1,7 +1,7 @@
 const pool = require("../db")
 
 exports.getTickets = async (airline, id, user, flight, row, col, clas) => {
-    const sel = 'SELECT "B".*, "A1"."CodiceIdentificativo" AS "CodicePartenza", "A2"."CodiceIdentificativo" AS "CodiceDestinazione" FROM "Biglietti" AS "B" ';
+    const sel = 'SELECT "B".*, "A1"."CodiceIdentificativo" AS "CodicePartenza", "A2"."CodiceIdentificativo" AS "CodiceDestinazione", "V"."CostoBag" FROM "Biglietti" AS "B" ';
     const jo1 = 'JOIN "Voli" AS "V" ON "Volo" = "IdVolo" AND "V"."IsActive" = true ';
     const jo2 = 'JOIN "Rotte" AS "R" ON "Rotta" = "IdRotta" AND ("CompagniaAerea" = $1 OR $1 IS NULL) AND "R"."IsActive" = true ';
     const jo3 = 'JOIN "Aeroporti" AS "A1" ON "R"."Partenza" = "A1"."IdAeroporto" AND "A1"."IsActive" = true ';
