@@ -82,4 +82,8 @@ export class NavbarComponent implements OnInit {
   stats(){
     this.router.navigate(['/stats'])
   }
+
+  adminusers(){
+    this.router.navigate(['/admin-users'])
+  }
 }

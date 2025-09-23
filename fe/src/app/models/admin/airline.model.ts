@@ -10,5 +10,4 @@ export interface NewAirline {
     name: string,
     code: string,
     email: string,
-    password: string
 }

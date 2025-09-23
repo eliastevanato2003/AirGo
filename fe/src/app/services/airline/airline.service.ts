@@ -4,11 +4,12 @@ import { AuthService } from "../auth.service";
 import { tap} from "rxjs";
 import { Stats } from "../../models/airline/stats.model";
 import { FlightStatus } from "../../models/user/flight.model";
+import { Router } from "@angular/router";
 
 @Injectable({ providedIn: 'root' })
 export class AirlineService {
 
-    constructor(private http: HttpClient, private authService: AuthService) { }
+    constructor(private http: HttpClient, private authService: AuthService, private router: Router) { }
 
     getData() {
         const url = 'http://localhost:3000/api/airlines/getAirline';
@@ -61,6 +62,7 @@ export class AirlineService {
         this.http.post(url, message).subscribe({
             next: () => {
                 alert('Airline attivata');
+                this.router.navigate(['/login']);
             },
             error: (error) => {
                 console.error('activateAirline error:', error);

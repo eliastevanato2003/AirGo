@@ -1,0 +1,78 @@
+<div class="air-go-container">
+  <app-navbar></app-navbar>
+
+
+  <div class="hero hero-users">
+    <h1 style="color:black;">Gestione Utenti</h1>
+    <p style="color:black;">Qui puoi visualizzare, filtrare o eliminare utenti</p>
+
+    <div class="search-box filter-inside" [formGroup]="filterForm">
+      <div class="input-group">
+        <label>ID</label>
+        <input type="number" formControlName="id">
+      </div>
+
+      <div class="input-group">
+        <label>Nome</label>
+        <input type="text" formControlName="name">
+      </div>
+
+      <div class="input-group">
+        <label>Cognome</label>
+        <input type="text" formControlName="surname">
+      </div>
+
+      <div class="input-group">
+        <label>Email</label>
+        <input type="email" formControlName="email">
+      </div>
+
+      <button class="search-btn" type="button" (click)="filtra()">&#10141;</button>
+      <button class="search-btn reset" type="button" (click)="reset()">Reset</button>
+    </div>
+  </div>
+
+  <div class="second-container">
+    <div class="user-list">
+      @for(user of users; track user.IdUtente) {
+        <div class="user-bar">
+          <div class="user-info">
+            <h4>{{ user.Nome }} {{ user.Cognome }} - ID: {{ user.IdUtente }}</h4>
+            <p>Email: {{ user.Email }}</p>
+          </div>
+          <button class="action-btn" (click)="gestisci(user)">Gestisci</button>
+        </div>
+      }
+    </div>
+
+    @if(showManage && selectedUser) {
+      <div class="modal-overlay">
+        <div class="modal-content manage-modal">
+          <h3>Gestisci utente #{{ selectedUser.IdUtente }}</h3>
+
+          <div class="manage-body containerb">
+            <div class="info-details">
+              <div class="info-box">
+                <h4>Informazioni</h4>
+                <p><strong>Nome:</strong> {{ selectedUser.Nome }}</p>
+                <p><strong>Cognome:</strong> {{ selectedUser.Cognome }}</p>
+                <p><strong>Email:</strong> {{ selectedUser.Email }}</p>
+                <p><strong>Data di nascita:</strong> {{ selectedUser.DoB | date:'dd/MM/yyyy' }}</p>
+              </div>
+            </div>
+
+            <div class="info-actions" style="margin-left:auto;">
+              <button class="delete-btn" (click)="deleteUser(selectedUser.IdUtente)">Elimina</button>
+            </div>
+          </div>
+
+          <div class="close-area">
+            <button class="cancel-btn" (click)="closeManage()">Chiudi</button>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+
+  <app-footer></app-footer>
+</div>

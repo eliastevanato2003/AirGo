@@ -166,6 +166,7 @@ export class AirlineFlightsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore creazione volo:', err);
+        alert(err.error?.message || 'Errore durante la creazione del volo');
       }
     });
   }
@@ -198,6 +199,7 @@ export class AirlineFlightsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore durante la partenza del volo:', err);
+        alert(err.error?.message || 'Errore durante il decollo del volo');
       }
     });
   }
@@ -211,6 +213,7 @@ export class AirlineFlightsComponent implements OnInit {
       },
       error: (err) => {
         console.error('Errore durante l\'atterraggio del volo:', err);
+        alert(err.error?.message || 'Errore durante il atterraggio del volo');
       }
     });
   }

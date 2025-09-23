@@ -19,6 +19,7 @@ import { AdminModelsComponent } from './components/admin/adminmodels/adminmodels
 import { UserTicketsComponent } from './components/user/user-tickets/user-tickets.component';
 import { StatsComponent } from './components/airline/stats/stats.component';
 import { RoutestatsComponent } from './components/airline/routestats/routestats.component';
+import { AdminusersComponent } from './components/admin/adminusers/adminusers.component';
 
 export const routes: Routes = [
     { path: '', component: FlightsComponent},
@@ -40,5 +41,6 @@ export const routes: Routes = [
     { path: 'admin-models', component: AdminModelsComponent },
     { path: 'stats', component: StatsComponent },
     { path: 'routestats', component: RoutestatsComponent },
-    { path: 'tickets', component: UserTicketsComponent}
+    { path: 'tickets', component: UserTicketsComponent},
+    { path: 'admin-users', component: AdminusersComponent}
 ];

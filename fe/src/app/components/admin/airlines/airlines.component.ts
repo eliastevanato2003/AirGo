@@ -31,7 +31,6 @@ export class AirlinesComponent implements OnInit {
       name:  ['', Validators.required],
       email: ['', Validators.required],
       code: ['', Validators.required],
-      password: ['', Validators.required]
     });
     
     this.filterForm = this.fb.group({
@@ -61,7 +60,6 @@ export class AirlinesComponent implements OnInit {
       name: formData.name,
       code: formData.code,
       email: formData.email,
-      password: formData.password
     };
 
     this.airlineService.addAirline(this.newAirline).subscribe({

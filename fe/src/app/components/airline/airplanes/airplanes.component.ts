@@ -74,14 +74,20 @@ export class AirplanesComponent implements OnInit {
       next: (planes) => {
         this.airplanes = planes;
       },
-      error: (err) => console.error('Errore caricamento aerei', err)
+      error: (err) => {
+        console.error('Errore caricamento aerei', err);
+        alert(err.error?.message || 'Errore durante il caricamento aerei');
+      }
     });
   }
 
   private loadModels(): void {
     this.modelService.getModels().subscribe({
       next: (models) => this.models = models,
-      error: (err) => console.error('Errore caricamento modelli', err)
+      error: (err) => {
+        console.error('Errore caricamento modelli', err);
+        alert(err.error?.message || 'Errore durante il caricamento modelli');
+      }
     });
   }
 
@@ -101,7 +107,10 @@ export class AirplanesComponent implements OnInit {
         this.closeModal();
         this.filtra();
       },
-      error: (err) => console.error('Errore creazione aereo', err)
+      error: (err) => {
+        console.error('Errore creazione aereo', err);
+        alert(err.error?.message || 'Errore durante la creazione');
+      }
     });
   }
 
@@ -112,7 +121,10 @@ export class AirplanesComponent implements OnInit {
         alert('Aereo rimosso');
         this.filtra();
       },
-      error: (err) => console.error('Errore rimozione aereo', err)
+      error: (err) => {
+        console.error('Errore rimozione aereo', err);
+        alert(err.error?.message || 'Errore durante la rimozione');
+      }
     })
   }
   
@@ -135,7 +147,10 @@ export class AirplanesComponent implements OnInit {
         alert('Aereo non più in servizio');
         this.filtra();
       },
-      error: (err) => console.error('Errore ritiro aereo', err)
+      error: (err) => {
+        console.error('Errore ritiro aereo', err);
+        alert(err.error?.message || 'Errore durante il ritiro');
+      }
     })
   }
 
@@ -145,7 +160,10 @@ export class AirplanesComponent implements OnInit {
         alert('Aereo ora in servizio');
         this.filtra();
       },
-      error: (err) => console.error('Errore attivazione aereo', err)
+      error: (err) => {
+        console.error('Errore attivazione aereo', err);
+        alert(err.error?.message || 'Errore durante la attivazione');
+      }
     })
   }
 

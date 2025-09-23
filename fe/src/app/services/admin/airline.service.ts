@@ -43,7 +43,6 @@ export class AirlineService {
             name: airline.name,
             identificationcode: airline.code,
             email: airline.email,
-            password: airline.password
         };
 
         return this.http.post(url, message, { headers: this.getHeaders() }).pipe(tap());

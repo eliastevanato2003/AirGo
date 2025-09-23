@@ -61,6 +61,7 @@ export class AirlineProfileComponent implements OnInit{
       },
       error: error => {
         console.error('Errore caricamento profilo', error);
+        alert(error.error?.message || 'Errore durante caricamento del profilo');
       }
     });
   }

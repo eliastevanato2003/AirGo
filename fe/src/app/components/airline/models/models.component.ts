@@ -65,7 +65,10 @@ export class ModelsComponent implements OnInit{
   private loadModels(filters:any={}): void {
     this.modelService.getModels(filters).subscribe({
       next: (models) => this.models = models,
-      error: (err) => console.error('Errore caricamento modelli', err)
+      error: (err) => {
+        console.error('Errore caricamento modelli', err);
+        alert(err.error?.message || 'Errore durante il caricamento modelli');
+      }
     });
   }
 
@@ -91,7 +94,10 @@ export class ModelsComponent implements OnInit{
         this.closeCreate();
         this.loadModels();
       },
-      error: (err) => console.error('Errore creazione modello', err)
+      error: (err) => {
+        console.error('Errore creazione modello', err);
+        alert(err.error?.message || 'Errore durante la creazione');
+      }
     });
   }
 
