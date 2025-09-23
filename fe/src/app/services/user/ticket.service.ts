@@ -83,4 +83,26 @@ export class TicketService {
         return this.http.post(url, body, { headers }).pipe(tap());
     }
 
+    addExtraBaggage(id: number, extraBaggages: number, price: number) {
+        const url = 'http://localhost:3000/api/tickets/addExtraBag';
+
+        const token = this.authService.getToken();
+
+        // Crea l'intestazione di autorizzazione
+        const headers = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        });
+
+        // Filtri della get
+        const message = {
+            id: id,
+            nextrabag: extraBaggages,
+            price: price
+        };
+
+        // Richiesta dei dati
+        return this.http.post(url, message, { headers: headers }).pipe(tap());
+    }
+
 }

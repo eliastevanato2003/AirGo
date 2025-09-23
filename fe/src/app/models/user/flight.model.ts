@@ -20,7 +20,8 @@ export interface FlightDb {
     NomeArrivo: string,
     CittaArrivo: string,
     CodiceArrivo: string,
-    NomeCompagnia: string
+    NomeCompagnia: string,
+    Pieno: boolean
 }
 
 export interface Flight {
@@ -31,6 +32,7 @@ export interface Flight {
     departure: string;
     arrival: string;
     price: number;
+    full: boolean;
 }
 
 export interface FlightStatus {

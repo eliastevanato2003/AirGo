@@ -6,6 +6,17 @@
   <div class="no-flights">Nessun volo trovato</div>
   }
 
+  <div class="sort-container">
+    <label for="sort">Ordina per:</label>
+    <select id="sort" [(ngModel)]="sortBy" (change)="sortFlights()">
+      <option value="priceAsc">Costo più basso</option>
+      <option value="priceDesc">Costo più alto</option>
+      <option value="departureAsc">Data di partenza più recente</option>
+      <option value="departureDesc">Data di partenza più lontana</option>
+    </select>
+  </div>
+
+
   @for(group of flightGroups; track group.segments[0].id) {
   <div class="flight-card" [ngClass]="{ 'multi': group.isMultiSegment }">
     <div class="flight-header">
@@ -25,12 +36,16 @@
       <div><strong>A:</strong> {{ segment.to }}</div>
       <div><strong>Partenza:</strong> {{ segment.departure | date: 'dd/MM/yyyy HH:mm' }}</div>
       <div><strong>Arrivo:</strong> {{ segment.arrival | date: 'dd/MM/yyyy HH:mm' }}</div>
+      @if(!segment.full) {
       <button class="action-btn" (click)="buy()" routerLink="/seatselection" [queryParams]="{ id: segment.id }"
-      routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Acquista</button>
+        routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Acquista</button>
+      } @else {
+      <button class="action-btn disabled" disabled>Posti esauriti</button>
+      }
     </div>
     }
 
-    
+
   </div>
   }
 </div>

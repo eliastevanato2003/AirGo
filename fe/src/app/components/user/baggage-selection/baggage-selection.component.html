@@ -10,6 +10,7 @@
     <div formArrayName="passengers" *ngFor="let passengerGroup of passengers.controls; let i = index">
       <div class="passenger-card" [formGroupName]="i">
         <h3>Passeggero {{ i + 1 }}</h3>
+        <h4>{{ seatclass[i] }}</h4>
 
         <div class="form-group-inline">
           <label for="name{{i}}">Nome</label>

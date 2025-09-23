@@ -7,18 +7,18 @@ import { AirportService } from '../../../services/user/airport.service';
 import { AuthService } from '../../../services/auth.service';
 import { NavbarComponent } from "../../../navbar/navbar.component";
 import { FooterComponent } from '../../../footer/footer.component';
-
-// TODO: scalo (?)
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-flightslist',
   templateUrl: './flightslist.component.html',
   styleUrls: ['./flightslist.component.css'],
-  imports: [CommonModule, RouterLink, RouterLinkActive, NavbarComponent, FooterComponent],
+  imports: [CommonModule, RouterLink, RouterLinkActive, NavbarComponent, FooterComponent, FormsModule],
   standalone: true
 })
 export class FlightsListComponent implements OnInit {
   flightGroups: FlightGroup[] = [];
+  sortBy: string = 'priceAsc';
 
   constructor(private authService: AuthService, private flightService: FlightService, private airportService: AirportService, private route: ActivatedRoute, private router: Router) { }
 
@@ -47,6 +47,7 @@ export class FlightsListComponent implements OnInit {
 
                   response.forEach((res) => {
                     if ('IdVolo' in res) {
+                      console.log('Single flight response:', res);
                       // Volo singolo
                       let flight = res as FlightDb;
                       this.flightGroups.push({
@@ -58,7 +59,8 @@ export class FlightsListComponent implements OnInit {
                           departure: flight.DataPartenzaPrev,
                           arrival: flight.DataArrivoPrev,
                           airline: flight.NomeCompagnia,
-                          price: flight.CostoE
+                          price: flight.CostoE,
+                          full: flight.Pieno
                         }]
                       });
                     } else {
@@ -72,7 +74,8 @@ export class FlightsListComponent implements OnInit {
                           departure: flightSegment.DataPartenzaPrev,
                           arrival: flightSegment.DataArrivoPrev,
                           airline: flightSegment.NomeCompagnia,
-                          price: flightSegment.CostoE
+                          price: flightSegment.CostoE,
+                          full: flightSegment.Pieno
                         };
                       });
 
@@ -94,6 +97,26 @@ export class FlightsListComponent implements OnInit {
           console.log('getAirportFrom error: ', error);
         }
       });
+    });
+  }
+
+  sortFlights() {
+    this.flightGroups.sort((a, b) => {
+      const aPrice = (a.segments[0]?.price || 0) + (a.segments[1]?.price || 0);
+      const bPrice = (b.segments[0]?.price || 0) + (b.segments[1]?.price || 0);
+
+      const aDate = new Date(a.segments[0]?.departure).getTime();
+      const bDate = new Date(b.segments[0]?.departure).getTime();
+
+      if (this.sortBy === 'priceDesc') {
+        return bPrice - aPrice;
+      } else if (this.sortBy === 'departureDesc') {
+        return bDate - aDate;
+      } else if (this.sortBy === 'departureAsc') {
+        return aDate - bDate;
+      } else { // Default to priceAsc
+        return aPrice - bPrice;
+      }
     });
   }
 
