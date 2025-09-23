@@ -31,7 +31,7 @@ router.get("/getPlanes", planeController.getPlanes);
 router.post("/newPlane", authenticateToken, authorizeRoles(1), planeController.newPlane);
 
 /**
- * @route POST /api/planes/newPlane
+ * @route POST /api/planes/changeService
  * @description Cambia lo stato di servizio di un aereo
  * @access role: 1
  * @id L'id dell'aereo

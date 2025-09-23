@@ -134,7 +134,7 @@ router.post("/updatePrices", authenticateToken, authorizeRoles(1), flightControl
 router.delete("/deleteFlight", authenticateToken, authorizeRoles(1), flightController.deleteFlight);
 
 /**
- * @route DELETE /api/flights/deleteFlight
+ * @route POST /api/flights/cancelFlight
  * @access role: 1
  * @description Mette un volo a stato cancellato
  * @id L'id del volo da cancellare
@@ -151,7 +151,7 @@ router.post("/cancelFlight", authenticateToken, authorizeRoles(1), flightControl
  * @description Assegna i posti casualmente agli utenti ancora senza
  * @id L'id dell'aereo a cui assegnare i posti
  * @returns {200} {nticket: number} Il numero di posti assegnati
- * @
+ * @returns {400}
  */
 router.post("/assignSeats", authenticateToken, authorizeRoles(1), flightController.assignSeats);
 
